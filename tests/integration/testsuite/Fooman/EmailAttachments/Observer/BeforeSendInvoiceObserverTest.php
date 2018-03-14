@@ -122,7 +122,7 @@ class BeforeSendInvoiceObserverTest extends Common
         $this->testWithAttachment();
         $this->checkReceivedHtmlTermsAttachment();
         $mail = $this->getLastEmail();
-        $this->assertContains('Bcc', $mail);
+        $this->assertEquals('copyto@example.com', $mail['Content']['Headers']['Bcc'][0]);
     }
 
     protected function getInvoice()
