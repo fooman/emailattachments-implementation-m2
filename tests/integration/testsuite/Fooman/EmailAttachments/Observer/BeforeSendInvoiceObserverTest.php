@@ -119,10 +119,10 @@ class BeforeSendInvoiceObserverTest extends Common
      */
     public function testWithBccRecipient()
     {
-        $invoice = $this->testWithAttachment();
-        $this->checkReceivedHtmlTermsAttachment(1);
-        $this->checkReceivedHtmlTermsAttachment(2);
-        $this->comparePdfs($invoice, 2);
+        $this->testWithAttachment();
+        $this->checkReceivedHtmlTermsAttachment();
+        $mail = $this->getLastEmail();
+        $this->assertContains('Bcc', $mail);
     }
 
     protected function getInvoice()

@@ -17,6 +17,11 @@ class SenderBuilder extends \Magento\Sales\Model\Order\Email\SenderBuilder
     protected $attachmentContainer;
 
     /**
+     * @var Api\AttachmentContainerInterface
+     */
+    private $copyToAttachmentsContainer;
+
+    /**
      * @param \Magento\Sales\Model\Order\Email\Container\Template          $templateContainer
      * @param \Magento\Sales\Model\Order\Email\Container\IdentityInterface $identityContainer
      * @param \Magento\Framework\Mail\Template\TransportBuilder            $transportBuilder
@@ -41,7 +46,10 @@ class SenderBuilder extends \Magento\Sales\Model\Order\Email\SenderBuilder
     }
 
     /**
-     * attach our attachments from the current sender to the message
+     * attach our attachments from the current sender to the message,
+     * clone to copyToAttachmentsContainer to be used in sendCopyTo
+     *
+     * @return void
      */
     public function send()
     {
@@ -49,24 +57,26 @@ class SenderBuilder extends \Magento\Sales\Model\Order\Email\SenderBuilder
             foreach ($this->attachmentContainer->getAttachments() as $attachment) {
                 $this->transportBuilder->addAttachment($attachment);
             }
-            $this->attachmentContainer->resetAttachments();
         }
 
         parent::send();
+
+        $this->copyToAttachmentsContainer = clone $this->attachmentContainer;
+        $this->attachmentContainer->resetAttachments();
     }
 
     /**
-     * attach our attachments from the current sender to the message
+     * @return void
      */
     public function sendCopyTo()
     {
-        if ($this->attachmentContainer->hasAttachments()) {
-            foreach ($this->attachmentContainer->getAttachments() as $attachment) {
+        if ($this->copyToAttachmentsContainer->hasAttachments()) {
+            foreach ($this->copyToAttachmentsContainer->getAttachments() as $attachment) {
                 $this->transportBuilder->addAttachment($attachment);
             }
-            $this->attachmentContainer->resetAttachments();
         }
         parent::sendCopyTo();
-        $this->attachmentContainer->resetAttachments();
+
+        $this->copyToAttachmentsContainer->resetAttachments();
     }
 }
