@@ -17,11 +17,6 @@ class SenderBuilder extends \Magento\Sales\Model\Order\Email\SenderBuilder
     protected $attachmentContainer;
 
     /**
-     * @var Api\AttachmentContainerInterface
-     */
-    private $copyToAttachmentsContainer;
-
-    /**
      * @param \Magento\Sales\Model\Order\Email\Container\Template          $templateContainer
      * @param \Magento\Sales\Model\Order\Email\Container\IdentityInterface $identityContainer
      * @param \Magento\Framework\Mail\Template\TransportBuilder            $transportBuilder
@@ -60,23 +55,6 @@ class SenderBuilder extends \Magento\Sales\Model\Order\Email\SenderBuilder
         }
 
         parent::send();
-
-        $this->copyToAttachmentsContainer = clone $this->attachmentContainer;
         $this->attachmentContainer->resetAttachments();
-    }
-
-    /**
-     * @return void
-     */
-    public function sendCopyTo()
-    {
-        if ($this->copyToAttachmentsContainer->hasAttachments()) {
-            foreach ($this->copyToAttachmentsContainer->getAttachments() as $attachment) {
-                $this->transportBuilder->addAttachment($attachment);
-            }
-        }
-        parent::sendCopyTo();
-
-        $this->copyToAttachmentsContainer->resetAttachments();
     }
 }
