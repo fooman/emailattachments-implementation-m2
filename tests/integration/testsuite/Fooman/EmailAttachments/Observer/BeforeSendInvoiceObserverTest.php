@@ -114,6 +114,29 @@ class BeforeSendInvoiceObserverTest extends Common
      * @magentoAppIsolation  enabled
      * @magentoConfigFixture current_store sales_email/invoice/attachagreement 1
      * @magentoConfigFixture current_store sales_email/invoice/attachpdf 1
+     * @magentoConfigFixture current_store sales_email/invoice/copy_method copy
+     * @magentoConfigFixture current_store sales_email/invoice/copy_to copyto@example.com,copyto2@example.com
+     */
+    public function testWithMultipleCopyToRecipients()
+    {
+        $invoice = $this->testWithAttachment();
+        $this->checkReceivedHtmlTermsAttachment(1);
+        $this->checkReceivedHtmlTermsAttachment(2);
+        $this->checkReceivedHtmlTermsAttachment(3);
+        $this->comparePdfs($invoice, 2);
+        $this->comparePdfs($invoice, 3);
+        $mail = $this->getLastEmail();
+
+        $allPdfAttachments = $this->getAllAttachmentsOfType($mail, 'application/pdf');
+        $this->assertCount(1, $allPdfAttachments);
+    }
+
+    /**
+     * @magentoDataFixture   Magento/Sales/_files/invoice.php
+     * @magentoDataFixture   Magento/CheckoutAgreements/_files/agreement_active_with_html_content.php
+     * @magentoAppIsolation  enabled
+     * @magentoConfigFixture current_store sales_email/invoice/attachagreement 1
+     * @magentoConfigFixture current_store sales_email/invoice/attachpdf 1
      * @magentoConfigFixture current_store sales_email/invoice/copy_method bcc
      * @magentoConfigFixture current_store sales_email/invoice/copy_to copyto@example.com
      */
@@ -123,6 +146,9 @@ class BeforeSendInvoiceObserverTest extends Common
         $this->checkReceivedHtmlTermsAttachment();
         $mail = $this->getLastEmail();
         $this->assertEquals('copyto@example.com', $mail['Content']['Headers']['Bcc'][0]);
+
+        $allPdfAttachments = $this->getAllAttachmentsOfType($mail, 'application/pdf');
+        $this->assertCount(1, $allPdfAttachments);
     }
 
     protected function getInvoice()

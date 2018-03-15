@@ -85,6 +85,66 @@ class BeforeSendShipmentObserverTest extends Common
         $this->checkReceivedHtmlTermsAttachment();
     }
 
+    /**
+     * @magentoDataFixture   Magento/Sales/_files/shipment.php
+     * @magentoDataFixture   Magento/CheckoutAgreements/_files/agreement_active_with_html_content.php
+     * @magentoAppIsolation  enabled
+     * @magentoConfigFixture current_store sales_email/shipment/attachagreement 1
+     * @magentoConfigFixture current_store sales_email/shipment/attachpdf 1
+     * @magentoConfigFixture current_store sales_email/shipment/copy_method copy
+     * @magentoConfigFixture current_store sales_email/shipment/copy_to copyto@example.com
+     */
+    public function testWithCopyToRecipient()
+    {
+        $shipment = $this->testWithAttachment();
+        $this->checkReceivedHtmlTermsAttachment(1);
+        $this->checkReceivedHtmlTermsAttachment(2);
+        $this->comparePdfs($shipment, 2);
+    }
+
+    /**
+     * @magentoDataFixture   Magento/Sales/_files/shipment.php
+     * @magentoDataFixture   Magento/CheckoutAgreements/_files/agreement_active_with_html_content.php
+     * @magentoAppIsolation  enabled
+     * @magentoConfigFixture current_store sales_email/shipment/attachagreement 1
+     * @magentoConfigFixture current_store sales_email/shipment/attachpdf 1
+     * @magentoConfigFixture current_store sales_email/shipment/copy_method copy
+     * @magentoConfigFixture current_store sales_email/shipment/copy_to copyto@example.com,copyto2@example.com
+     */
+    public function testWithMultipleCopyToRecipients()
+    {
+        $shipment = $this->testWithAttachment();
+        $this->checkReceivedHtmlTermsAttachment(1);
+        $this->checkReceivedHtmlTermsAttachment(2);
+        $this->checkReceivedHtmlTermsAttachment(3);
+        $this->comparePdfs($shipment, 2);
+        $this->comparePdfs($shipment, 3);
+        $mail = $this->getLastEmail();
+
+        $allPdfAttachments = $this->getAllAttachmentsOfType($mail, 'application/pdf');
+        $this->assertCount(1, $allPdfAttachments);
+    }
+
+    /**
+     * @magentoDataFixture   Magento/Sales/_files/shipment.php
+     * @magentoDataFixture   Magento/CheckoutAgreements/_files/agreement_active_with_html_content.php
+     * @magentoAppIsolation  enabled
+     * @magentoConfigFixture current_store sales_email/shipment/attachagreement 1
+     * @magentoConfigFixture current_store sales_email/shipment/attachpdf 1
+     * @magentoConfigFixture current_store sales_email/shipment/copy_method bcc
+     * @magentoConfigFixture current_store sales_email/shipment/copy_to copyto@example.com
+     */
+    public function testWithBccRecipient()
+    {
+        $this->testWithAttachment();
+        $this->checkReceivedHtmlTermsAttachment();
+        $mail = $this->getLastEmail();
+        $this->assertEquals('copyto@example.com', $mail['Content']['Headers']['Bcc'][0]);
+
+        $allPdfAttachments = $this->getAllAttachmentsOfType($mail, 'application/pdf');
+        $this->assertCount(1, $allPdfAttachments);
+    }
+
     protected function getShipment()
     {
         $collection = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->create(
