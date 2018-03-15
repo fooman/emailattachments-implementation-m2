@@ -1,5 +1,7 @@
 # Change Log
 
+## [Unreleased]
+
 ## [103.0.0] 2018-03-15
 ### Changed
 - Package name renamed to fooman/emailattachments-implementation-m2, installation should be via metapackage fooman/emailattachments-m2
