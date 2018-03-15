@@ -22,20 +22,27 @@ class BeforeSendShipmentObserverTest extends Common
      */
     public function testWithAttachment()
     {
-        $moduleManager = $this->objectManager->create('Magento\Framework\Module\Manager');
         $shipment = $this->sendEmail();
+        $this->comparePdfs($shipment);
+        return $shipment;
+    }
+
+    private function comparePdfs($shipment, $number = 1)
+    {
+        $moduleManager = $this->objectManager->create('Magento\Framework\Module\Manager');
         if ($moduleManager->isEnabled('Fooman_PdfCustomiser')) {
             $pdf = $this->objectManager
                 ->create('\Fooman\PdfCustomiser\Model\PdfRenderer\ShipmentAdapter')
                 ->getPdfAsString([$shipment]);
             $this->comparePdfAsStringWithReceivedPdf(
                 $pdf,
-                sprintf('PACKINGSLIP_%s.pdf', $shipment->getIncrementId())
+                sprintf('PACKINGSLIP_%s.pdf', $shipment->getIncrementId()),
+                $number
             );
         } else {
             $pdf = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()
                 ->create('\Magento\Sales\Model\Order\Pdf\Shipment')->getPdf([$shipment]);
-            $this->compareWithReceivedPdf($pdf);
+            $this->compareWithReceivedPdf($pdf, $number);
         }
     }
 
