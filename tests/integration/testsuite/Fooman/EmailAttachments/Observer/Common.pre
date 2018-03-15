@@ -57,6 +57,23 @@ class Common extends \PHPUnit\Framework\TestCase
         return false;
     }
 
+    public function getAllAttachmentsOfType($email, $type)
+    {
+        $parts = [];
+        if (isset($email['MIME']['Parts'])) {
+            foreach ($email['MIME']['Parts'] as $part) {
+                if (!isset($type, $part['Headers']['Content-Type'])) {
+                    continue;
+                }
+                if ($part['Headers']['Content-Type'][0] == $type) {
+                    $parts[] = $part;
+                }
+            }
+        }
+
+        return $parts;
+    }
+
     /**
      * @param $pdf
      * @param $number
