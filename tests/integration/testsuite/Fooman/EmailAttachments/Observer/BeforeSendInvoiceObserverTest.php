@@ -29,8 +29,7 @@ class BeforeSendInvoiceObserverTest extends Common
 
     private function comparePdfs($invoice, $number = 1)
     {
-        $moduleManager = $this->objectManager->create('Magento\Framework\Module\Manager');
-        if ($moduleManager->isEnabled('Fooman_PdfCustomiser')) {
+        if ($this->moduleManager->isEnabled('Fooman_PdfCustomiser')) {
             $pdf = $this->objectManager
                 ->create('\Fooman\PdfCustomiser\Model\PdfRenderer\InvoiceAdapter')
                 ->getPdfAsString([$invoice]);
@@ -88,7 +87,7 @@ class BeforeSendInvoiceObserverTest extends Common
     public function testMultipleAttachments()
     {
         $this->testWithAttachment();
-        $this->checkReceivedHtmlTermsAttachment();
+        $this->checkReceivedHtmlTermsAttachment(1, 1);
     }
 
     /**
@@ -103,8 +102,8 @@ class BeforeSendInvoiceObserverTest extends Common
     public function testWithCopyToRecipient()
     {
         $invoice = $this->testWithAttachment();
-        $this->checkReceivedHtmlTermsAttachment(1);
-        $this->checkReceivedHtmlTermsAttachment(2);
+        $this->checkReceivedHtmlTermsAttachment(1, 1);
+        $this->checkReceivedHtmlTermsAttachment(2, 1);
         $this->comparePdfs($invoice, 2);
     }
 
@@ -120,15 +119,19 @@ class BeforeSendInvoiceObserverTest extends Common
     public function testWithMultipleCopyToRecipients()
     {
         $invoice = $this->testWithAttachment();
-        $this->checkReceivedHtmlTermsAttachment(1);
-        $this->checkReceivedHtmlTermsAttachment(2);
-        $this->checkReceivedHtmlTermsAttachment(3);
+        $this->checkReceivedHtmlTermsAttachment(1, 1);
+        $this->checkReceivedHtmlTermsAttachment(2, 1);
+        $this->checkReceivedHtmlTermsAttachment(3, 1);
         $this->comparePdfs($invoice, 2);
         $this->comparePdfs($invoice, 3);
         $mail = $this->getLastEmail();
 
         $allPdfAttachments = $this->getAllAttachmentsOfType($mail, 'application/pdf');
-        $this->assertCount(1, $allPdfAttachments);
+        if ($this->moduleManager->isEnabled('Fooman_PdfCustomiser')) {
+            $this->assertCount(2, $allPdfAttachments);
+        } else {
+            $this->assertCount(1, $allPdfAttachments);
+        }
     }
 
     /**
@@ -143,12 +146,16 @@ class BeforeSendInvoiceObserverTest extends Common
     public function testWithBccRecipient()
     {
         $this->testWithAttachment();
-        $this->checkReceivedHtmlTermsAttachment();
+        $this->checkReceivedHtmlTermsAttachment(1, 1);
         $mail = $this->getLastEmail();
         $this->assertEquals('copyto@example.com', $mail['Content']['Headers']['Bcc'][0]);
 
         $allPdfAttachments = $this->getAllAttachmentsOfType($mail, 'application/pdf');
-        $this->assertCount(1, $allPdfAttachments);
+        if ($this->moduleManager->isEnabled('Fooman_PdfCustomiser')) {
+            $this->assertCount(2, $allPdfAttachments);
+        } else {
+            $this->assertCount(1, $allPdfAttachments);
+        }
     }
 
     protected function getInvoice()

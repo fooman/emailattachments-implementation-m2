@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased]
+### Changed
+- Adjusted tests to provide for Pdf Customiser transforming T&Cs to Pdfs
 
 ## [103.0.0] 2018-03-15
 ### Changed

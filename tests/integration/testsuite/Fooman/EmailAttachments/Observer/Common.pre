@@ -13,6 +13,7 @@ class Common extends \PHPUnit\Framework\TestCase
 {
     protected $mailhogClient;
     protected $objectManager;
+    protected $moduleManager;
 
     const BASE_URL = 'http://127.0.0.1:8025/api/';
 
@@ -29,6 +30,7 @@ class Common extends \PHPUnit\Framework\TestCase
                     => 'Fooman\EmailAttachments\Model\MailTransportBuilder']
             ]
         );
+        $this->moduleManager = $this->objectManager->create('Magento\Framework\Module\Manager');
     }
 
     public function getLastEmail($number = 1)
@@ -98,21 +100,62 @@ class Common extends \PHPUnit\Framework\TestCase
         }
     }
 
-    protected function checkReceivedHtmlTermsAttachment($number = 1)
+    protected function checkReceivedHtmlTermsAttachment($number = 1, $attachmentIndex = 0)
     {
-        $termsAttachment = $this->getAttachmentOfType($this->getLastEmail($number), 'text/html; charset=UTF-8');
-        $this->assertContains('Checkout agreement content: <b>HTML</b>', base64_decode($termsAttachment['Body']));
+        if ($this->moduleManager->isEnabled('Fooman_PdfCustomiser')) {
+            $pdfs = $this->getAllAttachmentsOfType($this->getLastEmail($number), 'application/pdf');
+            $this->assertEquals(
+                strlen($this->getExpectedPdfAgreementsString()),
+                strlen(base64_decode($pdfs[$attachmentIndex]['Body']))
+            );
+        } else {
+            $termsAttachment = $this->getAttachmentOfType(
+                $this->getLastEmail($number),
+                'text/html; charset=UTF-8'
+            );
+            $this->assertContains(
+                'Checkout agreement content: <b>HTML</b>',
+                base64_decode($termsAttachment['Body'])
+            );
+        }
     }
 
-    protected function checkReceivedTxtTermsAttachment($number = 1)
+    protected function checkReceivedTxtTermsAttachment($number = 1, $attachmentIndex = 0)
     {
-        $termsAttachment = $this->getAttachmentOfType($this->getLastEmail($number), 'text/plain');
-        $this->assertContains('Checkout agreement content: TEXT', base64_decode($termsAttachment['Body']));
+        if ($this->moduleManager->isEnabled('Fooman_PdfCustomiser')) {
+            $pdfs = $this->getAllAttachmentsOfType($this->getLastEmail($number), 'application/pdf');
+            $this->assertEquals(
+                strlen($this->getExpectedPdfAgreementsString()),
+                strlen(base64_decode($pdfs[$attachmentIndex]['Body']))
+            );
+        } else {
+            $termsAttachment = $this->getAttachmentOfType($this->getLastEmail($number), 'text/plain');
+            $this->assertContains(
+                'Checkout agreement content: TEXT',
+                base64_decode($termsAttachment['Body'])
+            );
+        }
     }
 
     protected function extractFilename($input)
     {
         $input = substr($input['Headers']['Content-Disposition'][0], strlen('attachment; filename="=?utf-8?B?'), -2);
         return base64_decode($input);
+    }
+
+    protected function getExpectedPdfAgreementsString()
+    {
+        $termsCollection = $this->objectManager->create(
+            'Magento\CheckoutAgreements\Model\ResourceModel\Agreement\Collection'
+        );
+        $termsCollection->addStoreFilter(1)->addFieldToFilter('is_active', 1);
+        $agreements = [];
+        foreach ($termsCollection as $agreement) {
+            $agreements[] = $agreement->setStoreId(1);
+        }
+
+        return $this->objectManager
+            ->create('\Fooman\PdfCustomiser\Model\PdfRenderer\TermsAndConditionsAdapter')
+            ->getPdfAsString($agreements);
     }
 }

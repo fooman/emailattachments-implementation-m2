@@ -22,10 +22,9 @@ class BeforeSendOrderCommentObserverTest extends Common
      */
     public function testWithAttachment()
     {
-        $moduleManager = $this->objectManager->create('Magento\Framework\Module\Manager');
         $order = $this->sendEmail();
 
-        if ($moduleManager->isEnabled('Fooman_PdfCustomiser')) {
+        if ($this->moduleManager->isEnabled('Fooman_PdfCustomiser')) {
             $pdf = $this->objectManager
                 ->create('\Fooman\PdfCustomiser\Model\PdfRenderer\OrderAdapter')
                 ->getPdfAsString([$order]);
@@ -34,8 +33,8 @@ class BeforeSendOrderCommentObserverTest extends Common
                 sprintf('ORDERCONFIRMATION_%s.pdf', $order->getIncrementId())
             );
         } else {
-            $this->assertTrue(true,'Make at least 1 assertion');
-            if ($moduleManager->isEnabled('Fooman_PrintOrderPdf')) {
+            $this->assertTrue(true, 'Make at least 1 assertion');
+            if ($this->moduleManager->isEnabled('Fooman_PrintOrderPdf')) {
                 $pdf = $this->objectManager->create('\Fooman\PrintOrderPdf\Model\Pdf\Order')->getPdf([$order]);
                 $this->compareWithReceivedPdf($pdf);
             }
@@ -86,7 +85,7 @@ class BeforeSendOrderCommentObserverTest extends Common
     public function testMultipleAttachments()
     {
         $this->testWithAttachment();
-        $this->checkReceivedHtmlTermsAttachment();
+        $this->checkReceivedHtmlTermsAttachment(1, 1);
     }
 
     protected function getOrder()

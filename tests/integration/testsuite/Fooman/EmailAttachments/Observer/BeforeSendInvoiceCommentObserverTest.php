@@ -22,9 +22,8 @@ class BeforeSendInvoiceCommentObserverTest extends Common
      */
     public function testWithAttachment()
     {
-        $moduleManager = $this->objectManager->create('Magento\Framework\Module\Manager');
         $invoice = $this->sendEmail();
-        if ($moduleManager->isEnabled('Fooman_PdfCustomiser')) {
+        if ($this->moduleManager->isEnabled('Fooman_PdfCustomiser')) {
             $pdf = $this->objectManager
                 ->create('\Fooman\PdfCustomiser\Model\PdfRenderer\InvoiceAdapter')
                 ->getPdfAsString([$invoice]);
@@ -80,7 +79,7 @@ class BeforeSendInvoiceCommentObserverTest extends Common
     public function testMultipleAttachments()
     {
         $this->testWithAttachment();
-        $this->checkReceivedHtmlTermsAttachment();
+        $this->checkReceivedHtmlTermsAttachment(1, 1);
     }
 
     protected function getInvoice()

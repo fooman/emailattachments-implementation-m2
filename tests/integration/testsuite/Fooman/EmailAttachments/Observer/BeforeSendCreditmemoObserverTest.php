@@ -29,8 +29,7 @@ class BeforeSendCreditmemoObserverTest extends Common
 
     private function comparePdfs($creditmemo, $number = 1)
     {
-        $moduleManager = $this->objectManager->create('Magento\Framework\Module\Manager');
-        if ($moduleManager->isEnabled('Fooman_PdfCustomiser')) {
+        if ($this->moduleManager->isEnabled('Fooman_PdfCustomiser')) {
             $pdf = $this->objectManager
                 ->create('\Fooman\PdfCustomiser\Model\PdfRenderer\CreditmemoAdapter')
                 ->getPdfAsString([$creditmemo]);
@@ -89,7 +88,7 @@ class BeforeSendCreditmemoObserverTest extends Common
     public function testMultipleAttachments()
     {
         $this->testWithAttachment();
-        $this->checkReceivedHtmlTermsAttachment();
+        $this->checkReceivedHtmlTermsAttachment(1, 1);
     }
 
     /**
@@ -104,8 +103,8 @@ class BeforeSendCreditmemoObserverTest extends Common
     public function testWithCopyToRecipient()
     {
         $creditmemo = $this->testWithAttachment();
-        $this->checkReceivedHtmlTermsAttachment(1);
-        $this->checkReceivedHtmlTermsAttachment(2);
+        $this->checkReceivedHtmlTermsAttachment(1, 1);
+        $this->checkReceivedHtmlTermsAttachment(2, 1);
         $this->comparePdfs($creditmemo, 2);
     }
 
@@ -121,15 +120,19 @@ class BeforeSendCreditmemoObserverTest extends Common
     public function testWithMultipleCopyToRecipients()
     {
         $creditmemo = $this->testWithAttachment();
-        $this->checkReceivedHtmlTermsAttachment(1);
-        $this->checkReceivedHtmlTermsAttachment(2);
-        $this->checkReceivedHtmlTermsAttachment(3);
+        $this->checkReceivedHtmlTermsAttachment(1, 1);
+        $this->checkReceivedHtmlTermsAttachment(2, 1);
+        $this->checkReceivedHtmlTermsAttachment(3, 1);
         $this->comparePdfs($creditmemo, 2);
         $this->comparePdfs($creditmemo, 3);
         $mail = $this->getLastEmail();
 
         $allPdfAttachments = $this->getAllAttachmentsOfType($mail, 'application/pdf');
-        $this->assertCount(1, $allPdfAttachments);
+        if ($this->moduleManager->isEnabled('Fooman_PdfCustomiser')) {
+            $this->assertCount(2, $allPdfAttachments);
+        } else {
+            $this->assertCount(1, $allPdfAttachments);
+        }
     }
 
     /**
@@ -144,12 +147,16 @@ class BeforeSendCreditmemoObserverTest extends Common
     public function testWithBccRecipient()
     {
         $this->testWithAttachment();
-        $this->checkReceivedHtmlTermsAttachment();
+        $this->checkReceivedHtmlTermsAttachment(1, 1);
         $mail = $this->getLastEmail();
         $this->assertEquals('copyto@example.com', $mail['Content']['Headers']['Bcc'][0]);
 
         $allPdfAttachments = $this->getAllAttachmentsOfType($mail, 'application/pdf');
-        $this->assertCount(1, $allPdfAttachments);
+        if ($this->moduleManager->isEnabled('Fooman_PdfCustomiser')) {
+            $this->assertCount(2, $allPdfAttachments);
+        } else {
+            $this->assertCount(1, $allPdfAttachments);
+        }
     }
 
     protected function getCreditmemo()
