@@ -30,7 +30,7 @@ class Common extends \PHPUnit\Framework\TestCase
                     => 'Fooman\EmailAttachments\Model\MailTransportBuilder']
             ]
         );
-        $this->moduleManager = $this->objectManager->create('Magento\Framework\Module\Manager');
+        $this->moduleManager = $this->objectManager->create(\Magento\Framework\Module\Manager::class);
     }
 
     public function getLastEmail($number = 1)
@@ -146,7 +146,7 @@ class Common extends \PHPUnit\Framework\TestCase
     protected function getExpectedPdfAgreementsString()
     {
         $termsCollection = $this->objectManager->create(
-            'Magento\CheckoutAgreements\Model\ResourceModel\Agreement\Collection'
+            \Magento\CheckoutAgreements\Model\ResourceModel\Agreement\Collection::class
         );
         $termsCollection->addStoreFilter(1)->addFieldToFilter('is_active', 1);
         $agreements = [];
@@ -155,7 +155,7 @@ class Common extends \PHPUnit\Framework\TestCase
         }
 
         return $this->objectManager
-            ->create('\Fooman\PdfCustomiser\Model\PdfRenderer\TermsAndConditionsAdapter')
+            ->create(\Fooman\PdfCustomiser\Model\PdfRenderer\TermsAndConditionsAdapter::class)
             ->getPdfAsString($agreements);
     }
 }
