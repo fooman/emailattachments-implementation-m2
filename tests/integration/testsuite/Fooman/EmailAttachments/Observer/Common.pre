@@ -26,8 +26,8 @@ class Common extends \PHPUnit\Framework\TestCase
         $this->objectManager->configure(
             [
                 'preferences' =>
-                    ['Magento\Framework\Mail\Template\TransportBuilder'
-                    => 'Fooman\EmailAttachments\Model\MailTransportBuilder']
+                    [\Magento\Framework\Mail\Template\TransportBuilder::class
+                    => \Fooman\EmailAttachments\Model\MailTransportBuilder::class]
             ]
         );
         $this->moduleManager = $this->objectManager->create(\Magento\Framework\Module\Manager::class);
