@@ -9,6 +9,8 @@
  */
 namespace Fooman\EmailAttachments\Observer;
 
+use Fooman\EmailAttachments\TransportBuilder;
+
 class Common extends \PHPUnit\Framework\TestCase
 {
     protected $mailhogClient;
@@ -22,7 +24,17 @@ class Common extends \PHPUnit\Framework\TestCase
         parent::setUp();
         $this->mailhogClient = new \Zend_Http_Client();
         $this->objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
-        $this->moduleManager = $this->objectManager->create('Magento\Framework\Module\Manager');
+        $this->objectManager->configure(
+            [
+                'preferences' =>
+                    [\Magento\Framework\Mail\TransportInterface::class
+                        => \Magento\Framework\Mail\Transport::class],
+                    [\Magento\Framework\Mail\Template\TransportBuilder::class
+                    => TransportBuilder::class]
+            ]
+        );
+
+        $this->moduleManager = $this->objectManager->create(\Magento\Framework\Module\Manager::class);
     }
 
     public function getLastEmail($number = 1)
@@ -147,7 +159,7 @@ class Common extends \PHPUnit\Framework\TestCase
         }
 
         return $this->objectManager
-            ->create('\Fooman\PdfCustomiser\Model\PdfRenderer\TermsAndConditionsAdapter')
+            ->create(\Fooman\PdfCustomiser\Model\PdfRenderer\TermsAndConditionsAdapter::class)
             ->getPdfAsString($agreements);
     }
 }
