@@ -16,6 +16,7 @@
             <module name="Magento_Backend"/>
             <module name="Magento_Sales"/>
             <module name="Magento_CheckoutAgreements"/>
+            <module name="Magento_Email"/>
         </sequence>
     </module>
 </config>
