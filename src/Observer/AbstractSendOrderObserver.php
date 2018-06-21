@@ -28,7 +28,7 @@ class AbstractSendOrderObserver extends AbstractObserver
                 $order->getStoreId()
             )
         ) {
-            $this->attachPdf(
+            $this->contentAttacher->addPdf(
                 $this->pdfRenderer->getPdfAsString([$order]),
                 $this->pdfRenderer->getFileName(__('Order') . $order->getIncrementId()),
                 $observer->getAttachmentContainer()

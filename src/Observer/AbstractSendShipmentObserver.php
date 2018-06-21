@@ -28,7 +28,7 @@ class AbstractSendShipmentObserver extends AbstractObserver
                 $shipment->getStoreId()
             )
         ) {
-            $this->attachPdf(
+            $this->contentAttacher->addPdf(
                 $this->pdfRenderer->getPdfAsString([$shipment]),
                 $this->pdfRenderer->getFileName(__('Packing Slip') . $shipment->getIncrementId()),
                 $observer->getAttachmentContainer()
