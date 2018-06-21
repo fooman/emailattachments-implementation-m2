@@ -22,14 +22,6 @@ class Common extends \PHPUnit\Framework\TestCase
         parent::setUp();
         $this->mailhogClient = new \Zend_Http_Client();
         $this->objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
-
-        $this->objectManager->configure(
-            [
-                'preferences' =>
-                    ['Magento\Framework\Mail\Template\TransportBuilder'
-                    => 'Fooman\EmailAttachments\Model\MailTransportBuilder']
-            ]
-        );
         $this->moduleManager = $this->objectManager->create('Magento\Framework\Module\Manager');
     }
 
