@@ -105,7 +105,7 @@ class BeforeSendCreditmemoObserverTest extends Common
         $creditmemo = $this->testWithAttachment();
         $this->checkReceivedHtmlTermsAttachment(1, 1);
         $this->checkReceivedHtmlTermsAttachment(2, 1);
-        $this->comparePdfs($creditmemo, 2);
+        $this->comparePdfs($creditmemo, 1);
     }
 
     /**
@@ -123,8 +123,7 @@ class BeforeSendCreditmemoObserverTest extends Common
         $this->checkReceivedHtmlTermsAttachment(1, 1);
         $this->checkReceivedHtmlTermsAttachment(2, 1);
         $this->checkReceivedHtmlTermsAttachment(3, 1);
-        $this->comparePdfs($creditmemo, 2);
-        $this->comparePdfs($creditmemo, 3);
+        $this->comparePdfs($creditmemo, 1);
         $mail = $this->getLastEmail();
 
         $allPdfAttachments = $this->getAllAttachmentsOfType($mail, 'application/pdf');

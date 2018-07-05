@@ -104,7 +104,7 @@ class BeforeSendInvoiceObserverTest extends Common
         $invoice = $this->testWithAttachment();
         $this->checkReceivedHtmlTermsAttachment(1, 1);
         $this->checkReceivedHtmlTermsAttachment(2, 1);
-        $this->comparePdfs($invoice, 2);
+        $this->comparePdfs($invoice, 1);
     }
 
     /**
@@ -122,8 +122,7 @@ class BeforeSendInvoiceObserverTest extends Common
         $this->checkReceivedHtmlTermsAttachment(1, 1);
         $this->checkReceivedHtmlTermsAttachment(2, 1);
         $this->checkReceivedHtmlTermsAttachment(3, 1);
-        $this->comparePdfs($invoice, 2);
-        $this->comparePdfs($invoice, 3);
+        $this->comparePdfs($invoice, 1);
         $mail = $this->getLastEmail();
 
         $allPdfAttachments = $this->getAllAttachmentsOfType($mail, 'application/pdf');

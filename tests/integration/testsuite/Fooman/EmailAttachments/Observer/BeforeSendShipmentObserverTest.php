@@ -105,7 +105,7 @@ class BeforeSendShipmentObserverTest extends Common
         $shipment = $this->testWithAttachment();
         $this->checkReceivedHtmlTermsAttachment(1, 1);
         $this->checkReceivedHtmlTermsAttachment(2, 1);
-        $this->comparePdfs($shipment, 2);
+        $this->comparePdfs($shipment, 1);
     }
 
     /**
@@ -123,8 +123,7 @@ class BeforeSendShipmentObserverTest extends Common
         $this->checkReceivedHtmlTermsAttachment(1, 1);
         $this->checkReceivedHtmlTermsAttachment(2, 1);
         $this->checkReceivedHtmlTermsAttachment(3, 1);
-        $this->comparePdfs($shipment, 2);
-        $this->comparePdfs($shipment, 3);
+        $this->comparePdfs($shipment, 1);
         $mail = $this->getLastEmail();
 
         $allPdfAttachments = $this->getAllAttachmentsOfType($mail, 'application/pdf');
