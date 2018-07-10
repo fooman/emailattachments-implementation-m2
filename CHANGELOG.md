@@ -1,6 +1,6 @@
 # Change Log
 
-## [Unreleased]
+## [104.0.1] 2018-07-10
 ### Changed
 - Fixed integration tests
 
