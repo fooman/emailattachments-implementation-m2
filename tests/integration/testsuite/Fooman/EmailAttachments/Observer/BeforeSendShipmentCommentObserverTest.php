@@ -25,7 +25,7 @@ class BeforeSendShipmentCommentObserverTest extends Common
         $shipment = $this->sendEmail();
         if ($this->moduleManager->isEnabled('Fooman_PdfCustomiser')) {
             $pdf = $this->objectManager
-                ->create('\Fooman\PdfCustomiser\Model\PdfRenderer\ShipmentAdapter')
+                ->create(\Fooman\PdfCustomiser\Model\PdfRenderer\ShipmentAdapter::class)
                 ->getPdfAsString([$shipment]);
             $this->comparePdfAsStringWithReceivedPdf(
                 $pdf,
@@ -33,7 +33,7 @@ class BeforeSendShipmentCommentObserverTest extends Common
             );
         } else {
             $pdf = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()
-                ->create('\Magento\Sales\Model\Order\Pdf\Shipment')->getPdf([$shipment]);
+                ->create(\Magento\Sales\Model\Order\Pdf\Shipment::class)->getPdf([$shipment]);
             $this->compareWithReceivedPdf($pdf);
         }
     }
@@ -87,7 +87,7 @@ class BeforeSendShipmentCommentObserverTest extends Common
     protected function getShipment()
     {
         $collection = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->create(
-            'Magento\Sales\Model\ResourceModel\Order\Shipment\Collection'
+            \Magento\Sales\Model\ResourceModel\Order\Shipment\Collection::class
         )->setPageSize(1);
         return $collection->getFirstItem();
     }
@@ -99,7 +99,7 @@ class BeforeSendShipmentCommentObserverTest extends Common
     {
         $shipment = $this->getShipment();
         $shipmentSender = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()
-            ->create('Magento\Sales\Model\Order\Email\Sender\ShipmentCommentSender');
+            ->create(\Magento\Sales\Model\Order\Email\Sender\ShipmentCommentSender::class);
 
         $shipmentSender->send($shipment);
         return $shipment;

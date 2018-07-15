@@ -31,7 +31,7 @@ class AttachmentContainerTest extends \PHPUnit\Framework\TestCase
     {
         $objectManager = new \Magento\Framework\TestFramework\Unit\Helper\ObjectManager($this);
         $this->attachment = $objectManager->getObject(
-            'Fooman\EmailAttachments\Model\Attachment',
+            \Fooman\EmailAttachments\Model\Attachment::class,
             [
                 'content'     => self::TEST_CONTENT,
                 'mimeType'    => self::TEST_MIME,
@@ -41,7 +41,7 @@ class AttachmentContainerTest extends \PHPUnit\Framework\TestCase
             ]
         );
         $this->attachmentContainer = $objectManager->getObject(
-            'Fooman\EmailAttachments\Model\AttachmentContainer'
+            \Fooman\EmailAttachments\Model\AttachmentContainer::class
         );
         $this->attachmentContainer->resetAttachments();
     }

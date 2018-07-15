@@ -25,12 +25,12 @@ class BeforeSendInvoiceCommentObserverTest extends Common
         $invoice = $this->sendEmail();
         if ($this->moduleManager->isEnabled('Fooman_PdfCustomiser')) {
             $pdf = $this->objectManager
-                ->create('\Fooman\PdfCustomiser\Model\PdfRenderer\InvoiceAdapter')
+                ->create(\Fooman\PdfCustomiser\Model\PdfRenderer\InvoiceAdapter::class)
                 ->getPdfAsString([$invoice]);
             $this->comparePdfAsStringWithReceivedPdf($pdf, sprintf('TAXINVOICE_%s.pdf', $invoice->getIncrementId()));
         } else {
             $pdf = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()
-                ->create('\Magento\Sales\Model\Order\Pdf\Invoice')->getPdf([$invoice]);
+                ->create(\Magento\Sales\Model\Order\Pdf\Invoice::class)->getPdf([$invoice]);
             $this->compareWithReceivedPdf($pdf);
         }
     }
@@ -85,7 +85,7 @@ class BeforeSendInvoiceCommentObserverTest extends Common
     protected function getInvoice()
     {
         $collection = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->create(
-            'Magento\Sales\Model\ResourceModel\Order\Invoice\Collection'
+            \Magento\Sales\Model\ResourceModel\Order\Invoice\Collection::class
         )->setPageSize(1);
         return $collection->getFirstItem();
     }
@@ -97,7 +97,7 @@ class BeforeSendInvoiceCommentObserverTest extends Common
     {
         $invoice = $this->getInvoice();
         $invoiceSender = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()
-            ->create('Magento\Sales\Model\Order\Email\Sender\InvoiceCommentSender');
+            ->create(\Magento\Sales\Model\Order\Email\Sender\InvoiceCommentSender::class);
 
         $invoiceSender->send($invoice);
         return $invoice;

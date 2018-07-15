@@ -25,7 +25,7 @@ class BeforeSendCreditmemoCommentObserverTest extends Common
         $creditmemo = $this->sendEmail();
         if ($this->moduleManager->isEnabled('Fooman_PdfCustomiser')) {
             $pdf = $this->objectManager
-                ->create('\Fooman\PdfCustomiser\Model\PdfRenderer\CreditmemoAdapter')
+                ->create(\Fooman\PdfCustomiser\Model\PdfRenderer\CreditmemoAdapter::class)
                 ->getPdfAsString([$creditmemo]);
             $this->comparePdfAsStringWithReceivedPdf(
                 $pdf,
@@ -33,7 +33,7 @@ class BeforeSendCreditmemoCommentObserverTest extends Common
             );
         } else {
             $pdf = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()
-                ->create('\Magento\Sales\Model\Order\Pdf\Creditmemo')->getPdf([$creditmemo]);
+                ->create(\Magento\Sales\Model\Order\Pdf\Creditmemo::class)->getPdf([$creditmemo]);
             $this->compareWithReceivedPdf($pdf);
         }
     }
@@ -87,7 +87,7 @@ class BeforeSendCreditmemoCommentObserverTest extends Common
     protected function getCreditmemo()
     {
         $collection = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->create(
-            'Magento\Sales\Model\ResourceModel\Order\Creditmemo\Collection'
+            \Magento\Sales\Model\ResourceModel\Order\Creditmemo\Collection::class
         )->setPageSize(1);
         return $collection->getFirstItem();
     }
@@ -99,7 +99,7 @@ class BeforeSendCreditmemoCommentObserverTest extends Common
     {
         $creditmemo = $this->getCreditmemo();
         $creditmemoSender = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()
-            ->create('Magento\Sales\Model\Order\Email\Sender\CreditmemoCommentSender');
+            ->create(\Magento\Sales\Model\Order\Email\Sender\CreditmemoCommentSender::class);
 
         $creditmemoSender->send($creditmemo);
         return $creditmemo;

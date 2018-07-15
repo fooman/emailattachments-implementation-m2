@@ -26,7 +26,7 @@ class BeforeSendOrderCommentObserverTest extends Common
 
         if ($this->moduleManager->isEnabled('Fooman_PdfCustomiser')) {
             $pdf = $this->objectManager
-                ->create('\Fooman\PdfCustomiser\Model\PdfRenderer\OrderAdapter')
+                ->create(\Fooman\PdfCustomiser\Model\PdfRenderer\OrderAdapter::class)
                 ->getPdfAsString([$order]);
             $this->comparePdfAsStringWithReceivedPdf(
                 $pdf,
@@ -35,7 +35,7 @@ class BeforeSendOrderCommentObserverTest extends Common
         } else {
             $this->assertTrue(true, 'Make at least 1 assertion');
             if ($this->moduleManager->isEnabled('Fooman_PrintOrderPdf')) {
-                $pdf = $this->objectManager->create('\Fooman\PrintOrderPdf\Model\Pdf\Order')->getPdf([$order]);
+                $pdf = $this->objectManager->create(\Fooman\PrintOrderPdf\Model\Pdf\Order::class)->getPdf([$order]);
                 $this->compareWithReceivedPdf($pdf);
             }
         }
@@ -91,7 +91,7 @@ class BeforeSendOrderCommentObserverTest extends Common
     protected function getOrder()
     {
         $collection = $this->objectManager->create(
-            'Magento\Sales\Model\ResourceModel\Order\Collection'
+            \Magento\Sales\Model\ResourceModel\Order\Collection::class
         )->setPageSize(1);
         return $collection->getFirstItem();
     }
@@ -103,7 +103,7 @@ class BeforeSendOrderCommentObserverTest extends Common
     {
         $order = $this->getOrder();
         $orderSender = $this->objectManager
-            ->create('Magento\Sales\Model\Order\Email\Sender\OrderCommentSender');
+            ->create(\Magento\Sales\Model\Order\Email\Sender\OrderCommentSender::class);
 
         $orderSender->send($order);
         return $order;
