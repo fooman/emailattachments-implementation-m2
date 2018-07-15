@@ -26,9 +26,9 @@ class Common extends \PHPUnit\Framework\TestCase
         $this->mailhogClient = new \Zend_Http_Client();
         $this->objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
         $this->objectManager->configure(
-            [
-                'preferences' => [\Magento\Framework\Mail\TransportInterface::class => \Magento\Framework\Mail\Transport::class],
-                    [\Magento\Framework\Mail\Template\TransportBuilder::class => TransportBuilder::class]
+            ['preferences' =>
+                [\Magento\Framework\Mail\TransportInterface::class => \Magento\Framework\Mail\Transport::class],
+                [\Magento\Framework\Mail\Template\TransportBuilder::class => TransportBuilder::class]
             ]
         );
 
@@ -148,7 +148,7 @@ class Common extends \PHPUnit\Framework\TestCase
     protected function getExpectedPdfAgreementsString()
     {
         $termsCollection = $this->objectManager->create(
-            'Magento\CheckoutAgreements\Model\ResourceModel\Agreement\Collection'
+            \Magento\CheckoutAgreements\Model\ResourceModel\Agreement\Collection::class
         );
         $termsCollection->addStoreFilter(1)->addFieldToFilter('is_active', 1);
         $agreements = [];
