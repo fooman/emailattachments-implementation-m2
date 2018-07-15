@@ -1,6 +1,6 @@
 # Change Log
 
-## [Unreleased]
+## [104.0.2] 2018-07-15
 ### Changed
 - Code Quality improvement - use class constants
 
