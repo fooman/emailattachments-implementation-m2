@@ -20,9 +20,6 @@
         "magento/module-checkout-agreements": "^100.0.2",
         "magento/module-email": "^100.1.0"
     },
-    "require-dev": {
-        "phpunit/phpunit": "^6.2"
-    },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "suggest": {

@@ -9,7 +9,9 @@
  */
 namespace Fooman\EmailAttachments\Test\Unit\Model;
 
-class AttachmentContainerTest extends \PHPUnit\Framework\TestCase
+use \Fooman\PhpunitBridge\BaseUnitTestCase;
+
+class AttachmentContainerTest extends BaseUnitTestCase
 {
     const TEST_CONTENT = 'Testing content';
     const TEST_MIME = 'text/plain';

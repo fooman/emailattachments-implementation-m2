@@ -11,8 +11,9 @@
 namespace Fooman\EmailAttachments\Observer;
 
 use Fooman\EmailAttachments\TransportBuilder;
+use \Fooman\PhpunitBridge\BaseUnitTestCase;
 
-class Common extends \PHPUnit\Framework\TestCase
+class Common extends BaseUnitTestCase
 {
     protected $mailhogClient;
     protected $objectManager;
