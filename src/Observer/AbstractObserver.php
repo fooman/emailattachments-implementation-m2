@@ -81,4 +81,17 @@ abstract class AbstractObserver implements \Magento\Framework\Event\ObserverInte
     {
         $this->termsAttacher->attachForStore($storeId, $attachmentContainer);
     }
+
+    public function getAttachmentFilename($path, $item)
+    {
+        $filenamemask = $this->scopeConfig->getValue(
+            $path,
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+            $item->getStoreId()
+        );
+        $incrementId = $item->getIncrementId();
+
+        $filename = str_replace('%number%', $incrementId, $filenamemask);
+        return($filename);
+    }
 }
