@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased]
+### Added
+- Ability to customise affect the final filename
 
 ## [104.0.3] 2018-07-23
 ### Changed

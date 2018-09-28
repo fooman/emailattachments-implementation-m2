@@ -65,14 +65,14 @@ class EmailEventDispatcher
                     $attachment->getMimeType(),
                     $attachment->getDisposition(),
                     $attachment->getEncoding(),
-                    $this->encodedFileName($attachment->getFilename())
+                    $this->getEncodedFileName($attachment)
                 );
             }
         }
     }
 
-    private function encodedFileName($subject)
+    public function getEncodedFileName($attachment)
     {
-        return sprintf('=?utf-8?B?%s?=', base64_encode($subject));
+        return sprintf('=?utf-8?B?%s?=', base64_encode($attachment->getFilename()));
     }
 }
