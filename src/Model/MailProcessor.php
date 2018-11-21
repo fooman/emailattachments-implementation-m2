@@ -17,7 +17,7 @@ use Zend\Mime\Part as MimePart;
 class MailProcessor implements Api\MailProcessorInterface
 {
     public function createMultipartMessage(
-        \Zend\Mail\Message $message,
+        \Magento\Framework\Mail\MailMessageInterface $message,
         Api\AttachmentContainerInterface $attachmentContainer
     ) {
         $body = new MimeMessage();
@@ -52,9 +52,7 @@ class MailProcessor implements Api\MailProcessorInterface
             $body->addPart($attachment);
         }
 
-        $message->setBody($body);
-        $message->getHeaders()->get('content-type')->setType('multipart/mixed');
-        $message->setEncoding('utf-8');
+        $message->setBodyText($body);
     }
 
     public function getEncodedFileName($attachment)
