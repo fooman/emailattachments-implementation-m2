@@ -11,6 +11,9 @@ namespace Fooman\EmailAttachments\Model;
 
 class Attachment implements Api\AttachmentInterface
 {
+    const ENCODING_BASE64          = 'base64';
+    const DISPOSITION_ATTACHMENT   = 'attachment';
+
     protected $content;
     protected $mimeType;
     protected $filename;
@@ -28,8 +31,8 @@ class Attachment implements Api\AttachmentInterface
         $content,
         $mimeType,
         $fileName,
-        $disposition = \Zend_Mime::DISPOSITION_ATTACHMENT,
-        $encoding = \Zend_Mime::ENCODING_BASE64
+        $disposition = self::DISPOSITION_ATTACHMENT,
+        $encoding = self::ENCODING_BASE64
     ) {
         $this->content = $content;
         $this->mimeType = $mimeType;
