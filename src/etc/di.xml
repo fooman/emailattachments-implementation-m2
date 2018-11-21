@@ -11,6 +11,8 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Fooman\EmailAttachments\Model\Api\MailProcessorInterface"
+                type="Fooman\EmailAttachments\Model\MailProcessor"/>
     <type name="Magento\Framework\Mail\Template\TransportBuilder">
         <plugin name="fooman_emailattachments_transportbuilder" type="Fooman\EmailAttachments\Plugin\TransportBuilder"/>
     </type>

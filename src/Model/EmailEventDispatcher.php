@@ -12,24 +12,43 @@ namespace Fooman\EmailAttachments\Model;
 
 class EmailEventDispatcher
 {
+    /**
+     * @var \Magento\Framework\Event\ManagerInterface
+     */
     private $eventManager;
 
+    /**
+     * @var NextEmailInfo
+     */
     private $nextEmailInfo;
 
+    /**
+     * @var Api\AttachmentContainerInterface
+     */
     private $attachmentContainer;
 
+    /**
+     * @var EmailIdentifier
+     */
     private $emailIdentifier;
+
+    /**
+     * @var MailProcessor
+     */
+    private $mailProcessor;
 
     public function __construct(
         \Magento\Framework\Event\ManagerInterface $eventManager,
         NextEmailInfo $nextEmailInfo,
         Api\AttachmentContainerInterface $attachmentContainer,
-        EmailIdentifier $emailIdentifier
+        EmailIdentifier $emailIdentifier,
+        Api\MailProcessorInterface $mailProcessor
     ) {
         $this->eventManager = $eventManager;
         $this->nextEmailInfo = $nextEmailInfo;
         $this->attachmentContainer = $attachmentContainer;
         $this->emailIdentifier = $emailIdentifier;
+        $this->mailProcessor = $mailProcessor;
     }
 
     public function dispatch(\Magento\Framework\Mail\MessageInterface $message)
@@ -59,20 +78,19 @@ class EmailEventDispatcher
     public function attachIfNeeded(\Magento\Framework\Mail\MessageInterface $message)
     {
         if ($this->attachmentContainer->hasAttachments()) {
-            foreach ($this->attachmentContainer->getAttachments() as $attachment) {
-                $message->createAttachment(
-                    $attachment->getContent(),
-                    $attachment->getMimeType(),
-                    $attachment->getDisposition(),
-                    $attachment->getEncoding(),
-                    $this->getEncodedFileName($attachment)
-                );
-            }
+            $this->mailProcessor->createMultipartMessage($message, $this->attachmentContainer);
         }
     }
 
+    /**
+     * @param $attachment
+     *
+     * @deprecated in 105.0.0
+     * @see MailProcessor::getEncodedFileName()
+     * @return string
+     */
     public function getEncodedFileName($attachment)
     {
-        return sprintf('=?utf-8?B?%s?=', base64_encode($attachment->getFilename()));
+        return $this->mailProcessor->getEncodedFileName($attachment);
     }
 }
