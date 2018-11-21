@@ -11,14 +11,11 @@ namespace Fooman\EmailAttachments\Model;
 
 class Attachment implements Api\AttachmentInterface
 {
-    const ENCODING_BASE64          = 'base64';
-    const DISPOSITION_ATTACHMENT   = 'attachment';
-
-    protected $content;
-    protected $mimeType;
-    protected $filename;
-    protected $disposition;
-    protected $encoding;
+    private $content;
+    private $mimeType;
+    private $filename;
+    private $disposition;
+    private $encoding;
 
     /**
      * @param        $content
@@ -31,8 +28,8 @@ class Attachment implements Api\AttachmentInterface
         $content,
         $mimeType,
         $fileName,
-        $disposition = self::DISPOSITION_ATTACHMENT,
-        $encoding = self::ENCODING_BASE64
+        $disposition = Api\AttachmentInterface::DISPOSITION_ATTACHMENT,
+        $encoding = Api\AttachmentInterface::ENCODING_BASE64
     ) {
         $this->content = $content;
         $this->mimeType = $mimeType;

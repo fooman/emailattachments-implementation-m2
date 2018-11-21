@@ -11,7 +11,7 @@ namespace Fooman\EmailAttachments\Model;
 
 class AttachmentContainer implements Api\AttachmentContainerInterface
 {
-    protected $attachments = [];
+    private $attachments = [];
 
     /**
      * @return bool
