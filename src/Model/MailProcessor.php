@@ -43,13 +43,13 @@ class MailProcessor implements Api\MailProcessorInterface
         $body->addPart($contentPart);
 
         foreach ($attachmentContainer->getAttachments() as $attachment) {
-            $attachment = new MimePart($attachment->getContent());
-            $attachment->filename = $this->getEncodedFileName($attachment);
-            $attachment->type = $attachment->getMimeType();
-            $attachment->encoding = $attachment->getEncoding();
-            $attachment->disposition = $attachment->getDisposition();
+            $mimeAttachment = new MimePart($attachment->getContent());
+            $mimeAttachment->filename = $this->getEncodedFileName($attachment);
+            $mimeAttachment->type = $attachment->getMimeType();
+            $mimeAttachment->encoding = $attachment->getEncoding();
+            $mimeAttachment->disposition = $attachment->getDisposition();
 
-            $body->addPart($attachment);
+            $body->addPart($mimeAttachment);
         }
 
         $message->setBodyText($body);
