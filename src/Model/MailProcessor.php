@@ -38,7 +38,7 @@ class MailProcessor implements Api\MailProcessorInterface
 
         $contentPart = new MimePart($content->generateMessage());
         $contentPart->type = 'multipart/alternative;' . PHP_EOL . ' boundary="' .
-            $contentPart->getMime()->boundary() . '"';
+            $content->getMime()->boundary() . '"';
 
         $body->addPart($contentPart);
 
