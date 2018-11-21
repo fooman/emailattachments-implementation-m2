@@ -1,6 +1,10 @@
 # Change Log
 
 ## [Unreleased]
+### Changed
+- Add compatibility with Magento 2.3.0 and handle upgrade of Zend_Mail
+Constructor change in Model\EmailEventDispatcher
+- explicitly state Zend\Mail and Zend\Mime dependencies
 
 ## [104.0.4] 2018-09-28
 ### Added

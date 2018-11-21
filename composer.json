@@ -3,7 +3,7 @@
     "license": "OSL-3.0",
     "description": "Automatically attach pdf and terms and conditions documents to outgoing sales emails.",
     "type": "magento2-module",
-    "version": "104.0.5",
+    "version": "105.0.0",
     "autoload": {
         "psr-4": {
             "Fooman\\EmailAttachments\\": "src/"
@@ -18,11 +18,13 @@
         "magento/module-backend": "^100.0.2 | ^101.0.0",
         "magento/module-sales": "^100.0.2 | ^101.0.0 | ^102.0.0",
         "magento/module-checkout-agreements": "^100.0.2",
-        "magento/module-email": "^100.1.0|^101.0.0"
+        "magento/module-email": "^100.1.0|^101.0.0",
+        "zendframework/zend-mail":"^2.9.0",
+        "zendframework/zend-mime": "^2.5"
     },
     "require-dev": {
         "phpunit/phpunit": "^4.1 | ^6.2",
-        "fooman/magento2-phpunit-bridge": "0.6.0"
+        "fooman/magento2-phpunit-bridge": "0.7.*"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
