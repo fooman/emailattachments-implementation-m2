@@ -15,6 +15,7 @@ use \Fooman\EmailAttachments\Model\Api\AttachmentContainerInterface as Container
 class ContentAttacher
 {
     const MIME_PDF = 'application/pdf';
+    const TYPE_OCTETSTREAM = 'application/octet-stream';
     const MIME_TXT = 'text/plain';
     const MIME_HTML = 'text/html; charset=UTF-8';
 
@@ -40,7 +41,7 @@ class ContentAttacher
 
     public function addPdf($pdfString, $pdfFilename, ContainerInterface $attachmentContainer)
     {
-        $this->addGeneric($pdfString, $pdfFilename, self::MIME_PDF, $attachmentContainer);
+        $this->addGeneric($pdfString, $pdfFilename, self::TYPE_OCTETSTREAM, $attachmentContainer);
     }
 
     public function addText($text, $filename, ContainerInterface $attachmentContainer)
