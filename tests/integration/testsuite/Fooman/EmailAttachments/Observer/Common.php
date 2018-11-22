@@ -161,4 +161,11 @@ class Common extends BaseUnitTestCase
             ->create(\Fooman\PdfCustomiser\Model\PdfRenderer\TermsAndConditionsAdapter::class)
             ->getPdfAsString($agreements);
     }
+
+    protected function tearDown()
+    {
+        $this->mailhogClient->resetParameters(true);
+        $this->mailhogClient->setUri(self::BASE_URL . 'v1/messages');
+        $this->mailhogClient->request('DELETE');
+    }
 }
