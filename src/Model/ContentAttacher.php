@@ -41,7 +41,7 @@ class ContentAttacher
 
     public function addPdf($pdfString, $pdfFilename, ContainerInterface $attachmentContainer)
     {
-        $this->addGeneric($pdfString, $pdfFilename, self::TYPE_OCTETSTREAM, $attachmentContainer);
+        $this->addGeneric($pdfString, $pdfFilename, self::MIME_PDF, $attachmentContainer);
     }
 
     public function addText($text, $filename, ContainerInterface $attachmentContainer)
