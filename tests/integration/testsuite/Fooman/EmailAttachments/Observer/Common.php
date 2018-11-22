@@ -85,7 +85,7 @@ class Common extends BaseUnitTestCase
      */
     protected function compareWithReceivedPdf($pdf, $number = 1)
     {
-        $pdfAttachment = $this->getAttachmentOfType($this->getLastEmail($number), 'application/pdf');
+        $pdfAttachment = $this->getAttachmentOfType($this->getLastEmail($number), 'application/octet-stream');
         $this->assertEquals(strlen($pdf->render()), strlen(base64_decode($pdfAttachment['Body'])));
     }
 
@@ -96,7 +96,7 @@ class Common extends BaseUnitTestCase
      */
     protected function comparePdfAsStringWithReceivedPdf($pdf, $title = false, $number = 1)
     {
-        $pdfAttachment = $this->getAttachmentOfType($this->getLastEmail($number), 'application/pdf');
+        $pdfAttachment = $this->getAttachmentOfType($this->getLastEmail($number), 'application/octet-stream');
         $this->assertEquals(strlen($pdf), strlen(base64_decode($pdfAttachment['Body'])));
         if ($title !== false) {
             $this->assertEquals($title, $this->extractFilename($pdfAttachment));
@@ -106,7 +106,7 @@ class Common extends BaseUnitTestCase
     protected function checkReceivedHtmlTermsAttachment($number = 1, $attachmentIndex = 0)
     {
         if ($this->moduleManager->isEnabled('Fooman_PdfCustomiser')) {
-            $pdfs = $this->getAllAttachmentsOfType($this->getLastEmail($number), 'application/pdf');
+            $pdfs = $this->getAllAttachmentsOfType($this->getLastEmail($number), 'application/octet-stream');
             $this->assertEquals(
                 strlen($this->getExpectedPdfAgreementsString()),
                 strlen(base64_decode($pdfs[$attachmentIndex]['Body']))
@@ -126,7 +126,7 @@ class Common extends BaseUnitTestCase
     protected function checkReceivedTxtTermsAttachment($number = 1, $attachmentIndex = 0)
     {
         if ($this->moduleManager->isEnabled('Fooman_PdfCustomiser')) {
-            $pdfs = $this->getAllAttachmentsOfType($this->getLastEmail($number), 'application/pdf');
+            $pdfs = $this->getAllAttachmentsOfType($this->getLastEmail($number), 'application/octet-stream');
             $this->assertEquals(
                 strlen($this->getExpectedPdfAgreementsString()),
                 strlen(base64_decode($pdfs[$attachmentIndex]['Body']))
