@@ -77,9 +77,7 @@ class EmailEventDispatcher
 
     public function attachIfNeeded(\Magento\Framework\Mail\MessageInterface $message)
     {
-        if ($this->attachmentContainer->hasAttachments()) {
-            $this->mailProcessor->createMultipartMessage($message, $this->attachmentContainer);
-        }
+        $this->mailProcessor->createMultipartMessage($message, $this->attachmentContainer);
     }
 
     /**

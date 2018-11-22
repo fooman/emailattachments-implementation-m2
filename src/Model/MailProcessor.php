@@ -20,39 +20,34 @@ class MailProcessor implements Api\MailProcessorInterface
         \Magento\Framework\Mail\MailMessageInterface $message,
         Api\AttachmentContainerInterface $attachmentContainer
     ) {
-        $body = new MimeMessage();
-        $content = new MimeMessage();
+        if ($attachmentContainer->hasAttachments()) {
+            $body = new MimeMessage();
+            $existingEmailBody = $message->getBody();
 
-        $existingEmailBody = $message->getBody();
+            if (is_object($existingEmailBody) && $existingEmailBody instanceof \Zend\Mime\Message) {
+                $htmlPart = $existingEmailBody->getParts()[0];
+                $htmlPart->type = Mime::TYPE_HTML;
+                $body->addPart($htmlPart);
+            } else {
+                $textPart = new MimePart($existingEmailBody);
+                $textPart->type = Mime::TYPE_TEXT;
+                $textPart->charset = 'utf-8';
+                $textPart->encoding = Mime::ENCODING_QUOTEDPRINTABLE;
+                $body->addPart($textPart);
+            }
 
-        if (is_object($existingEmailBody) && $existingEmailBody instanceof \Zend\Mime\Message) {
-            $content->addPart($existingEmailBody->getParts()[0]);
-        } else {
-            $textPart = new MimePart($existingEmailBody);
-            $textPart->type = Mime::TYPE_TEXT;
-            $textPart->charset = 'utf-8';
-            $textPart->encoding = Mime::ENCODING_QUOTEDPRINTABLE;
+            foreach ($attachmentContainer->getAttachments() as $attachment) {
+                $mimeAttachment = new MimePart($attachment->getContent());
+                $mimeAttachment->filename = $this->getEncodedFileName($attachment);
+                $mimeAttachment->type = $attachment->getMimeType();
+                $mimeAttachment->encoding = $attachment->getEncoding();
+                $mimeAttachment->disposition = $attachment->getDisposition();
 
-            $content->addPart($textPart);
+                $body->addPart($mimeAttachment);
+            }
+
+            $message->setBodyText($body);
         }
-
-        $contentPart = new MimePart($content->generateMessage());
-        $contentPart->type = 'multipart/alternative;' . PHP_EOL . ' boundary="' .
-            $content->getMime()->boundary() . '"';
-
-        $body->addPart($contentPart);
-
-        foreach ($attachmentContainer->getAttachments() as $attachment) {
-            $mimeAttachment = new MimePart($attachment->getContent());
-            $mimeAttachment->filename = $this->getEncodedFileName($attachment);
-            $mimeAttachment->type = $attachment->getMimeType();
-            $mimeAttachment->encoding = $attachment->getEncoding();
-            $mimeAttachment->disposition = $attachment->getDisposition();
-
-            $body->addPart($mimeAttachment);
-        }
-
-        $message->setBodyText($body);
     }
 
     public function getEncodedFileName($attachment)
