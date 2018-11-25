@@ -5,7 +5,7 @@
 - Add compatibility with Magento 2.3.0 and handle upgrade of Zend_Mail, for earlier versions of Magento use
 previous versions
 Constructor change in Model\EmailEventDispatcher
-- explicitly state Zend\Mail and Zend\Mime dependencies
+- explicitly state Zend\Mime dependency
 
 ## [104.0.4] 2018-09-28
 ### Added

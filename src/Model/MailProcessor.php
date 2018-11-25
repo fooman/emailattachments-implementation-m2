@@ -24,7 +24,9 @@ class MailProcessor implements Api\MailProcessorInterface
             $body = new MimeMessage();
             $existingEmailBody = $message->getBody();
 
-            if (is_object($existingEmailBody) && $existingEmailBody instanceof \Zend\Mime\Message) {
+            //For html emails Magento already creates a MimePart
+            //@see \Magento\Framework\Mail\Message::createHtmlMimeFromString()
+            if (\is_object($existingEmailBody) && $existingEmailBody instanceof \Zend\Mime\Message) {
                 $htmlPart = $existingEmailBody->getParts()[0];
                 $htmlPart->type = Mime::TYPE_HTML;
                 $body->addPart($htmlPart);
