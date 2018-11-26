@@ -1,6 +1,6 @@
 # Change Log
 
-## [Unreleased]
+## [105.0.0] 2018-11-26
 ### Changed
 - Add compatibility with Magento 2.3.0 and handle upgrade of Zend_Mail, for earlier versions of Magento use
 previous versions
