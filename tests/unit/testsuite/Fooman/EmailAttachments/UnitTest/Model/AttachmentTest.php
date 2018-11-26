@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * @author     Kristof Ringleff
  * @package    Fooman_EmailAttachments
@@ -13,11 +15,11 @@ use \Fooman\PhpunitBridge\BaseUnitTestCase;
 
 class AttachmentTest extends BaseUnitTestCase
 {
-    const TEST_CONTENT = 'Testing content';
-    const TEST_MIME = 'text/plain';
-    const TEST_FILENAME = 'filename.txt';
-    const TEST_DISPOSITION = 'Disposition';
-    const TEST_ENCODING = 'ENCODING';
+    private const TEST_CONTENT = 'Testing content';
+    private const TEST_MIME = 'text/plain';
+    private const TEST_FILENAME = 'filename.txt';
+    private const TEST_DISPOSITION = 'Disposition';
+    private const TEST_ENCODING = 'ENCODING';
 
     /**
      * @var \Fooman\EmailAttachments\Model\Attachment
@@ -39,27 +41,27 @@ class AttachmentTest extends BaseUnitTestCase
         );
     }
 
-    public function testGetContent()
+    public function testGetContent(): void
     {
         $this->assertEquals(self::TEST_CONTENT, $this->attachment->getContent());
     }
 
-    public function testGetMime()
+    public function testGetMime(): void
     {
         $this->assertEquals(self::TEST_MIME, $this->attachment->getMimeType());
     }
 
-    public function testGetFilename()
+    public function testGetFilename(): void
     {
         $this->assertEquals(self::TEST_FILENAME, $this->attachment->getFilename());
     }
 
-    public function testGetDispositon()
+    public function testGetDispositon(): void
     {
         $this->assertEquals(self::TEST_DISPOSITION, $this->attachment->getDisposition());
     }
 
-    public function testGetEncoding()
+    public function testGetEncoding(): void
     {
         $this->assertEquals(self::TEST_ENCODING, $this->attachment->getEncoding());
     }

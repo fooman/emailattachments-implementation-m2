@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * @author     Kristof Ringleff
  * @package    Fooman_EmailAttachments
@@ -20,14 +22,14 @@ class BeforeSendCreditmemoObserverTest extends Common
      * @magentoConfigFixture current_store sales_email/creditmemo/attachpdf 1
      * @magentoAppIsolation  enabled
      */
-    public function testWithAttachment()
+    public function testWithAttachment(): \Magento\Sales\Api\Data\CreditmemoInterface
     {
         $creditmemo = $this->sendEmail();
         $this->comparePdfs($creditmemo);
         return $creditmemo;
     }
 
-    private function comparePdfs($creditmemo, $number = 1)
+    private function comparePdfs($creditmemo, $number = 1): void
     {
         if ($this->moduleManager->isEnabled('Fooman_PdfCustomiser')) {
             $pdf = $this->objectManager
@@ -50,7 +52,7 @@ class BeforeSendCreditmemoObserverTest extends Common
      * @magentoDataFixture   Magento/CheckoutAgreements/_files/agreement_active_with_html_content.php
      * @magentoConfigFixture current_store sales_email/creditmemo/attachagreement 1
      */
-    public function testWithHtmlTermsAttachment()
+    public function testWithHtmlTermsAttachment(): void
     {
         $this->sendEmail();
         $this->checkReceivedHtmlTermsAttachment();
@@ -61,7 +63,7 @@ class BeforeSendCreditmemoObserverTest extends Common
      * @magentoDataFixture   Fooman/EmailAttachments/_files/agreement_active_with_text_content.php
      * @magentoConfigFixture current_store sales_email/creditmemo/attachagreement 1
      */
-    public function testWithTextTermsAttachment()
+    public function testWithTextTermsAttachment(): void
     {
         $this->sendEmail();
         $this->checkReceivedTxtTermsAttachment();
@@ -71,7 +73,7 @@ class BeforeSendCreditmemoObserverTest extends Common
      * @magentoDataFixture   Magento/Sales/_files/creditmemo_with_list.php
      * @magentoConfigFixture current_store sales_email/creditmemo/attachpdf 0
      */
-    public function testWithoutAttachment()
+    public function testWithoutAttachment(): void
     {
         $this->sendEmail();
 
@@ -85,7 +87,7 @@ class BeforeSendCreditmemoObserverTest extends Common
      * @magentoConfigFixture current_store sales_email/creditmemo/attachagreement 1
      * @magentoConfigFixture current_store sales_email/creditmemo/attachpdf 1
      */
-    public function testMultipleAttachments()
+    public function testMultipleAttachments(): void
     {
         $this->testWithAttachment();
         $this->checkReceivedHtmlTermsAttachment(1, 1);
@@ -100,7 +102,7 @@ class BeforeSendCreditmemoObserverTest extends Common
      * @magentoConfigFixture current_store sales_email/creditmemo/copy_method copy
      * @magentoConfigFixture current_store sales_email/creditmemo/copy_to copyto@example.com
      */
-    public function testWithCopyToRecipient()
+    public function testWithCopyToRecipient(): void
     {
         $creditmemo = $this->testWithAttachment();
         $this->checkReceivedHtmlTermsAttachment(1, 1);
@@ -117,7 +119,7 @@ class BeforeSendCreditmemoObserverTest extends Common
      * @magentoConfigFixture current_store sales_email/creditmemo/copy_method copy
      * @magentoConfigFixture current_store sales_email/creditmemo/copy_to copyto@example.com,copyto2@example.com
      */
-    public function testWithMultipleCopyToRecipients()
+    public function testWithMultipleCopyToRecipients(): void
     {
         $creditmemo = $this->testWithAttachment();
         $this->checkReceivedHtmlTermsAttachment(1, 1);
@@ -143,7 +145,7 @@ class BeforeSendCreditmemoObserverTest extends Common
      * @magentoConfigFixture current_store sales_email/creditmemo/copy_method bcc
      * @magentoConfigFixture current_store sales_email/creditmemo/copy_to copyto@example.com
      */
-    public function testWithBccRecipient()
+    public function testWithBccRecipient(): void
     {
         $this->testWithAttachment();
         $this->checkReceivedHtmlTermsAttachment(1, 1);
@@ -169,7 +171,7 @@ class BeforeSendCreditmemoObserverTest extends Common
     /**
      * @return \Magento\Sales\Api\Data\CreditmemoInterface
      */
-    protected function sendEmail()
+    protected function sendEmail(): \Magento\Sales\Api\Data\CreditmemoInterface
     {
         $creditmemo = $this->getCreditmemo();
         $creditmemoSender = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()

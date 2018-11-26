@@ -13,7 +13,7 @@ namespace Fooman\EmailAttachments\Block\Config;
 
 class PrintOrderPdf extends \Magento\Config\Block\System\Config\Form\Field
 {
-    const EXT_URL = 'http://store.fooman.co.nz/extensions/magento2/magento-extension-print-order-pdf-m2.html';
+    public const EXT_URL = 'http://store.fooman.co.nz/extensions/magento2/magento-extension-print-order-pdf-m2.html';
 
     protected $moduleList;
 

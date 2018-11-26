@@ -38,7 +38,7 @@ abstract class AbstractObserver implements \Magento\Framework\Event\ObserverInte
         $this->contentAttacher = $contentAttacher;
     }
 
-    public function attachContent($content, $pdfFilename, $mimeType, ContainerInterface $attachmentContainer)
+    public function attachContent($content, $pdfFilename, $mimeType, ContainerInterface $attachmentContainer): void
     {
         $this->contentAttacher->addGeneric($content, $pdfFilename, $mimeType, $attachmentContainer);
     }
@@ -50,7 +50,7 @@ abstract class AbstractObserver implements \Magento\Framework\Event\ObserverInte
      *
      * @deprecated see \Fooman\EmailAttachments\Model\ContentAttacher::addPdf()
      */
-    public function attachPdf($pdfString, $pdfFilename, ContainerInterface $attachmentContainer)
+    public function attachPdf($pdfString, $pdfFilename, ContainerInterface $attachmentContainer): void
     {
         $this->contentAttacher->addPdf($pdfString, $pdfFilename, $attachmentContainer);
     }
@@ -62,7 +62,7 @@ abstract class AbstractObserver implements \Magento\Framework\Event\ObserverInte
      *
      * @deprecated see \Fooman\EmailAttachments\Model\ContentAttacher::addText()
      */
-    public function attachTxt($text, $filename, ContainerInterface $attachmentContainer)
+    public function attachTxt($text, $filename, ContainerInterface $attachmentContainer): void
     {
         $this->contentAttacher->addText($text, $filename, $attachmentContainer);
     }
@@ -74,12 +74,12 @@ abstract class AbstractObserver implements \Magento\Framework\Event\ObserverInte
      *
      * @deprecated see \Fooman\EmailAttachments\Model\ContentAttacher::addHtml()
      */
-    public function attachHtml($html, $filename, ContainerInterface $attachmentContainer)
+    public function attachHtml($html, $filename, ContainerInterface $attachmentContainer): void
     {
         $this->contentAttacher->addHtml($html, $filename, $attachmentContainer);
     }
 
-    public function attachTermsAndConditions($storeId, ContainerInterface $attachmentContainer)
+    public function attachTermsAndConditions($storeId, ContainerInterface $attachmentContainer): void
     {
         $this->termsAttacher->attachForStore($storeId, $attachmentContainer);
     }

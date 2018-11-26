@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /**
  * @author     Kristof Ringleff
@@ -83,7 +84,7 @@ class Common extends BaseUnitTestCase
      * @param $pdf
      * @param $number
      */
-    protected function compareWithReceivedPdf($pdf, $number = 1)
+    protected function compareWithReceivedPdf($pdf, $number = 1): void
     {
         $pdfAttachment = $this->getAttachmentOfType($this->getLastEmail($number), 'application/pdf');
         $this->assertEquals(strlen($pdf->render()), strlen(base64_decode($pdfAttachment['Body'])));
@@ -94,7 +95,7 @@ class Common extends BaseUnitTestCase
      * @param bool $title
      * @param $number
      */
-    protected function comparePdfAsStringWithReceivedPdf($pdf, $title = false, $number = 1)
+    protected function comparePdfAsStringWithReceivedPdf($pdf, $title = false, $number = 1): void
     {
         $pdfAttachment = $this->getAttachmentOfType($this->getLastEmail($number), 'application/pdf');
         $this->assertEquals(strlen($pdf), strlen(base64_decode($pdfAttachment['Body'])));
@@ -103,7 +104,7 @@ class Common extends BaseUnitTestCase
         }
     }
 
-    protected function checkReceivedHtmlTermsAttachment($number = 1, $attachmentIndex = 0)
+    protected function checkReceivedHtmlTermsAttachment($number = 1, $attachmentIndex = 0): void
     {
         if ($this->moduleManager->isEnabled('Fooman_PdfCustomiser')) {
             $pdfs = $this->getAllAttachmentsOfType($this->getLastEmail($number), 'application/pdf');
@@ -123,7 +124,7 @@ class Common extends BaseUnitTestCase
         }
     }
 
-    protected function checkReceivedTxtTermsAttachment($number = 1, $attachmentIndex = 0)
+    protected function checkReceivedTxtTermsAttachment($number = 1, $attachmentIndex = 0): void
     {
         if ($this->moduleManager->isEnabled('Fooman_PdfCustomiser')) {
             $pdfs = $this->getAllAttachmentsOfType($this->getLastEmail($number), 'application/pdf');

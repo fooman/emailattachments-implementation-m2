@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * @author     Kristof Ringleff
  * @package    Fooman_EmailAttachments
@@ -13,11 +15,11 @@ use \Fooman\PhpunitBridge\BaseUnitTestCase;
 
 class AttachmentContainerTest extends BaseUnitTestCase
 {
-    const TEST_CONTENT = 'Testing content';
-    const TEST_MIME = 'text/plain';
-    const TEST_FILENAME = 'filename.txt';
-    const TEST_DISPOSITION = 'Disposition';
-    const TEST_ENCODING = 'ENCODING';
+    private const TEST_CONTENT = 'Testing content';
+    private const TEST_MIME = 'text/plain';
+    private const TEST_FILENAME = 'filename.txt';
+    private const TEST_DISPOSITION = 'Disposition';
+    private const TEST_ENCODING = 'ENCODING';
 
     /**
      * @var \Fooman\EmailAttachments\Model\AttachmentContainer
@@ -48,14 +50,14 @@ class AttachmentContainerTest extends BaseUnitTestCase
         $this->attachmentContainer->resetAttachments();
     }
 
-    public function testHasAttachments()
+    public function testHasAttachments(): void
     {
         $this->assertFalse($this->attachmentContainer->hasAttachments());
         $this->attachmentContainer->addAttachment($this->attachment);
         $this->assertTrue($this->attachmentContainer->hasAttachments());
     }
 
-    public function testResetAttachments()
+    public function testResetAttachments(): void
     {
         $this->attachmentContainer->addAttachment($this->attachment);
         $this->assertTrue($this->attachmentContainer->hasAttachments());
@@ -63,7 +65,7 @@ class AttachmentContainerTest extends BaseUnitTestCase
         $this->assertFalse($this->attachmentContainer->hasAttachments());
     }
 
-    public function testAttachments()
+    public function testAttachments(): void
     {
         $this->attachmentContainer->addAttachment($this->attachment);
         $this->assertEquals([$this->attachment], $this->attachmentContainer->getAttachments());

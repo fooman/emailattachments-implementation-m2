@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * @author     Kristof Ringleff
  * @package    Fooman_EmailAttachments
@@ -20,7 +22,7 @@ class BeforeSendShipmentCommentObserverTest extends Common
      * @magentoConfigFixture current_store sales_email/shipment_comment/attachpdf 1
      * @magentoAppIsolation  enabled
      */
-    public function testWithAttachment()
+    public function testWithAttachment(): void
     {
         $shipment = $this->sendEmail();
         if ($this->moduleManager->isEnabled('Fooman_PdfCustomiser')) {
@@ -43,7 +45,7 @@ class BeforeSendShipmentCommentObserverTest extends Common
      * @magentoDataFixture   Magento/CheckoutAgreements/_files/agreement_active_with_html_content.php
      * @magentoConfigFixture current_store sales_email/shipment_comment/attachagreement 1
      */
-    public function testWithHtmlTermsAttachment()
+    public function testWithHtmlTermsAttachment(): void
     {
         $this->sendEmail();
         $this->checkReceivedHtmlTermsAttachment();
@@ -54,7 +56,7 @@ class BeforeSendShipmentCommentObserverTest extends Common
      * @magentoDataFixture   Fooman/EmailAttachments/_files/agreement_active_with_text_content.php
      * @magentoConfigFixture current_store sales_email/shipment_comment/attachagreement 1
      */
-    public function testWithTextTermsAttachment()
+    public function testWithTextTermsAttachment(): void
     {
         $this->sendEmail();
         $this->checkReceivedTxtTermsAttachment();
@@ -64,7 +66,7 @@ class BeforeSendShipmentCommentObserverTest extends Common
      * @magentoDataFixture   Magento/Sales/_files/shipment.php
      * @magentoConfigFixture current_store sales_email/shipment_comment/attachpdf 0
      */
-    public function testWithoutAttachment()
+    public function testWithoutAttachment(): void
     {
         $this->sendEmail();
 
@@ -78,13 +80,13 @@ class BeforeSendShipmentCommentObserverTest extends Common
      * @magentoConfigFixture current_store sales_email/shipment_comment/attachagreement 1
      * @magentoConfigFixture current_store sales_email/shipment_comment/attachpdf 1
      */
-    public function testMultipleAttachments()
+    public function testMultipleAttachments(): void
     {
         $this->testWithAttachment();
         $this->checkReceivedHtmlTermsAttachment(1, 1);
     }
 
-    protected function getShipment()
+    protected function getShipment(): \Magento\Sales\Api\Data\ShipmentInterface
     {
         $collection = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->create(
             \Magento\Sales\Model\ResourceModel\Order\Shipment\Collection::class
@@ -95,7 +97,7 @@ class BeforeSendShipmentCommentObserverTest extends Common
     /**
      * @return \Magento\Sales\Api\Data\ShipmentInterface
      */
-    protected function sendEmail()
+    protected function sendEmail(): \Magento\Sales\Api\Data\ShipmentInterface
     {
         $shipment = $this->getShipment();
         $shipmentSender = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()
