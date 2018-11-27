@@ -1,5 +1,7 @@
 # Change Log
 
+## [Unreleased]
+
 ## [105.0.1] 2018-11-27
 ### Changed
 - Use newer php features (minimum 7.1)
