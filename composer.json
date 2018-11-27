@@ -25,6 +25,12 @@
         "phpunit/phpunit": "^4.1 | ^6.2",
         "fooman/magento2-phpunit-bridge": "0.7.*"
     },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://repo-magento-mirror.fooman.co.nz/"
+        }
+    ],
     "minimum-stability": "dev",
     "prefer-stable": true,
     "suggest": {
