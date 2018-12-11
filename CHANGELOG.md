@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased]
+### Changed
+- Reverse 7.1 features as Magento Marketplace does not yet support it
 
 ## [105.0.1] 2018-11-27
 ### Changed
