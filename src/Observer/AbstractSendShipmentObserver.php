@@ -13,8 +13,8 @@ namespace Fooman\EmailAttachments\Observer;
 
 class AbstractSendShipmentObserver extends AbstractObserver
 {
-    public const XML_PATH_ATTACH_PDF = 'sales_email/shipment/attachpdf';
-    public const XML_PATH_ATTACH_AGREEMENT = 'sales_email/shipment/attachagreement';
+    const XML_PATH_ATTACH_PDF = 'sales_email/shipment/attachpdf';
+    const XML_PATH_ATTACH_AGREEMENT = 'sales_email/shipment/attachagreement';
 
     public function execute(\Magento\Framework\Event\Observer $observer): void
     {

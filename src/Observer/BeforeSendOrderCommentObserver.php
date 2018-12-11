@@ -13,6 +13,6 @@ namespace Fooman\EmailAttachments\Observer;
 
 class BeforeSendOrderCommentObserver extends AbstractSendOrderObserver
 {
-    public const XML_PATH_ATTACH_PDF = 'sales_email/order_comment/attachpdf';
-    public const XML_PATH_ATTACH_AGREEMENT = 'sales_email/order_comment/attachagreement';
+    const XML_PATH_ATTACH_PDF = 'sales_email/order_comment/attachpdf';
+    const XML_PATH_ATTACH_AGREEMENT = 'sales_email/order_comment/attachagreement';
 }
