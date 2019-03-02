@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <test name="CheckInvoiceEmailSend">
+        <annotations>
+            <features value="Check The Invoice Email Send"/>
+            <stories value="Check that invoice email attachment works correctly"/>
+            <title value="Check that invoice email attachment works correctly"/>
+            <description value="Check that invoice email attachment works correctly"/>
+
+            <severity value="CRITICAL"/>
+            <group value="Fooman_All"/>
+            <group value="Fooman_EmailAttachments"/>
+        </annotations>
+        <before>
+            <createData entity="_defaultCategory" stepKey="createCategory"/>
+            <createData entity="_defaultProduct" stepKey="createSimpleProduct">
+                <requiredEntity createDataKey="createCategory"/>
+            </createData>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="foomanEmailAttachmentsSettingsActionGroup" stepKey="resetSettings" />
+        </before>
+    </test>
+</tests>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="foomanEmailAttachmentsSettingsActionGroup">
+        <amOnPage url="{{EmailAttachmentsConfigurationPage.url}}" stepKey="navigateToAdminEmailAttachmentsSettings"/>
+        <waitForPageLoad stepKey="waitForPageLoadStep"/>
+        <seeInCurrentUrl url="{{EmailAttachmentsConfigurationPage.url}}" stepKey="seeConfigPage"/>
+        <conditionalClick selector="{{EmailAttachmentsSettingsSection.GeneralSettingsTab}}" dependentSelector="{{EmailAttachmentsSettingsSection.CheckIfTabExpand}}" stepKey="checkIfTabOpen" visible="true"/>
+        <selectOption selector="{{EmailAttachmentsSettingsSection.attachpdf}}" userInput="Yes" stepKey="enableInvoiceAttachPdf" />
+        <scrollToTopOfPage stepKey="scrollToTop"/>
+        <click stepKey="saveEmailAttachmentsOptions" selector="{{AdminCategoryMainActionsSection.SaveButton}}"/>
+        <see stepKey="seeSuccess" selector="{{AdminCategoryMessagesSection.SuccessMessage}}" userInput="You saved the configuration."/>
+    </actionGroup>
+</actionGroups>
