@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * @author     Kristof Ringleff
  * @package    Fooman_EmailAttachments
@@ -20,12 +22,12 @@ class BeforeSendCreditmemoCommentObserverTest extends Common
      * @magentoConfigFixture current_store sales_email/creditmemo_comment/attachpdf 1
      * @magentoAppIsolation  enabled
      */
-    public function testWithAttachment()
+    public function testWithAttachment(): void
     {
         $creditmemo = $this->sendEmail();
         if ($this->moduleManager->isEnabled('Fooman_PdfCustomiser')) {
             $pdf = $this->objectManager
-                ->create('\Fooman\PdfCustomiser\Model\PdfRenderer\CreditmemoAdapter')
+                ->create(\Fooman\PdfCustomiser\Model\PdfRenderer\CreditmemoAdapter::class)
                 ->getPdfAsString([$creditmemo]);
             $this->comparePdfAsStringWithReceivedPdf(
                 $pdf,
@@ -33,7 +35,7 @@ class BeforeSendCreditmemoCommentObserverTest extends Common
             );
         } else {
             $pdf = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()
-                ->create('\Magento\Sales\Model\Order\Pdf\Creditmemo')->getPdf([$creditmemo]);
+                ->create(\Magento\Sales\Model\Order\Pdf\Creditmemo::class)->getPdf([$creditmemo]);
             $this->compareWithReceivedPdf($pdf);
         }
     }
@@ -43,7 +45,7 @@ class BeforeSendCreditmemoCommentObserverTest extends Common
      * @magentoDataFixture   Magento/CheckoutAgreements/_files/agreement_active_with_html_content.php
      * @magentoConfigFixture current_store sales_email/creditmemo_comment/attachagreement 1
      */
-    public function testWithHtmlTermsAttachment()
+    public function testWithHtmlTermsAttachment(): void
     {
         $this->sendEmail();
         $this->checkReceivedHtmlTermsAttachment();
@@ -54,7 +56,7 @@ class BeforeSendCreditmemoCommentObserverTest extends Common
      * @magentoDataFixture   Fooman/EmailAttachments/_files/agreement_active_with_text_content.php
      * @magentoConfigFixture current_store sales_email/creditmemo_comment/attachagreement 1
      */
-    public function testWithTextTermsAttachment()
+    public function testWithTextTermsAttachment(): void
     {
         $this->sendEmail();
         $this->checkReceivedTxtTermsAttachment();
@@ -64,7 +66,7 @@ class BeforeSendCreditmemoCommentObserverTest extends Common
      * @magentoDataFixture   Magento/Sales/_files/creditmemo_with_list.php
      * @magentoConfigFixture current_store sales_email/creditmemo_comment/attachpdf 0
      */
-    public function testWithoutAttachment()
+    public function testWithoutAttachment(): void
     {
         $this->sendEmail();
 
@@ -78,7 +80,7 @@ class BeforeSendCreditmemoCommentObserverTest extends Common
      * @magentoConfigFixture current_store sales_email/creditmemo_comment/attachagreement 1
      * @magentoConfigFixture current_store sales_email/creditmemo_comment/attachpdf 1
      */
-    public function testMultipleAttachments()
+    public function testMultipleAttachments(): void
     {
         $this->testWithAttachment();
         $this->checkReceivedHtmlTermsAttachment(1, 1);
@@ -87,7 +89,7 @@ class BeforeSendCreditmemoCommentObserverTest extends Common
     protected function getCreditmemo()
     {
         $collection = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->create(
-            'Magento\Sales\Model\ResourceModel\Order\Creditmemo\Collection'
+            \Magento\Sales\Model\ResourceModel\Order\Creditmemo\Collection::class
         )->setPageSize(1);
         return $collection->getFirstItem();
     }
@@ -95,11 +97,11 @@ class BeforeSendCreditmemoCommentObserverTest extends Common
     /**
      * @return \Magento\Sales\Api\Data\CreditmemoInterface
      */
-    protected function sendEmail()
+    protected function sendEmail(): \Magento\Sales\Api\Data\CreditmemoInterface
     {
         $creditmemo = $this->getCreditmemo();
         $creditmemoSender = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()
-            ->create('Magento\Sales\Model\Order\Email\Sender\CreditmemoCommentSender');
+            ->create(\Magento\Sales\Model\Order\Email\Sender\CreditmemoCommentSender::class);
 
         $creditmemoSender->send($creditmemo);
         return $creditmemo;

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * @author     Kristof Ringleff
  * @package    Fooman_EmailAttachments
@@ -11,11 +13,11 @@ namespace Fooman\EmailAttachments\Model;
 
 class Attachment implements Api\AttachmentInterface
 {
-    protected $content;
-    protected $mimeType;
-    protected $filename;
-    protected $disposition;
-    protected $encoding;
+    private $content;
+    private $mimeType;
+    private $filename;
+    private $disposition;
+    private $encoding;
 
     /**
      * @param        $content
@@ -28,8 +30,8 @@ class Attachment implements Api\AttachmentInterface
         $content,
         $mimeType,
         $fileName,
-        $disposition = \Zend_Mime::DISPOSITION_ATTACHMENT,
-        $encoding = \Zend_Mime::ENCODING_BASE64
+        $disposition = Api\AttachmentInterface::DISPOSITION_ATTACHMENT,
+        $encoding = Api\AttachmentInterface::ENCODING_BASE64
     ) {
         $this->content = $content;
         $this->mimeType = $mimeType;

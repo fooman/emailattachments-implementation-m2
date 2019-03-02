@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * @author     Kristof Ringleff
  * @package    Fooman_EmailAttachments
@@ -14,7 +16,7 @@ class AbstractSendShipmentObserver extends AbstractObserver
     const XML_PATH_ATTACH_PDF = 'sales_email/shipment/attachpdf';
     const XML_PATH_ATTACH_AGREEMENT = 'sales_email/shipment/attachagreement';
 
-    public function execute(\Magento\Framework\Event\Observer $observer)
+    public function execute(\Magento\Framework\Event\Observer $observer): void
     {
 
         /**
@@ -28,7 +30,7 @@ class AbstractSendShipmentObserver extends AbstractObserver
                 $shipment->getStoreId()
             )
         ) {
-            $this->attachPdf(
+            $this->contentAttacher->addPdf(
                 $this->pdfRenderer->getPdfAsString([$shipment]),
                 $this->pdfRenderer->getFileName(__('Packing Slip') . $shipment->getIncrementId()),
                 $observer->getAttachmentContainer()

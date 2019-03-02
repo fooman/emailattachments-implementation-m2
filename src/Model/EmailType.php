@@ -9,23 +9,29 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Fooman\EmailAttachments\Model;
 
-class NoneRenderer implements Api\PdfRendererInterface
+class EmailType
 {
+    private $type;
+    private $varCode;
 
-    public function getPdfAsString(array $salesObject)
-    {
-        return '';
+    public function __construct(
+        $type,
+        $varCode
+    ) {
+        $this->type = $type;
+        $this->varCode = $varCode;
     }
 
-    public function getFileName($input = '')
+    public function getType()
     {
-        return sprintf('%s.pdf', $input);
+        return $this->type;
     }
 
-    public function canRender()
+    public function getVarCode()
     {
-        return false;
+        return $this->varCode;
     }
 }

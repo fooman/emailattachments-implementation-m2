@@ -2,6 +2,41 @@
 
 ## [Unreleased]
 
+## [105.0.2] 2018-12-11
+### Changed
+- Reverse 7.1 features as Magento Marketplace does not yet support it
+
+## [105.0.1] 2018-11-27
+### Changed
+- Use newer php features (minimum 7.1)
+
+## [105.0.0] 2018-11-26
+### Changed
+- Add compatibility with Magento 2.3.0 and handle upgrade of Zend_Mail, for earlier versions of Magento use
+previous versions
+Constructor change in Model\EmailEventDispatcher
+- explicitly state Zend\Mime dependency
+
+## [104.0.4] 2018-09-28
+### Added
+- Ability to customise affect the final filename
+
+## [104.0.3] 2018-07-23
+### Changed
+- Reorganised unit tests
+
+## [104.0.2] 2018-07-15
+### Changed
+- Code Quality improvement - use class constants
+
+## [104.0.1] 2018-07-10
+### Changed
+- Fixed integration tests
+
+## [104.0.0] 2018-06-25
+### Changed
+- Major rewrite - removed all preferences, use plugins on TransportBuilder and TransportFactory instead
+
 ## [103.0.1] 2018-03-20
 ### Changed
 - Adjusted tests to provide for Pdf Customiser transforming T&Cs to Pdfs

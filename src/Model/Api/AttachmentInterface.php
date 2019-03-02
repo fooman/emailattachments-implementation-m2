@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * @author     Kristof Ringleff
  * @package    Fooman_EmailAttachments
@@ -11,6 +13,9 @@ namespace Fooman\EmailAttachments\Model\Api;
 
 interface AttachmentInterface
 {
+    const ENCODING_BASE64          = 'base64';
+    const DISPOSITION_ATTACHMENT   = 'attachment';
+
     public function getMimeType();
 
     public function getFilename();

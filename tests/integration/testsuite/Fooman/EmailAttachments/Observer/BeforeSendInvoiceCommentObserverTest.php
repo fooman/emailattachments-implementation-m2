@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * @author     Kristof Ringleff
  * @package    Fooman_EmailAttachments
@@ -20,17 +22,17 @@ class BeforeSendInvoiceCommentObserverTest extends Common
      * @magentoConfigFixture current_store sales_email/invoice_comment/attachpdf 1
      * @magentoAppIsolation  enabled
      */
-    public function testWithAttachment()
+    public function testWithAttachment(): void
     {
         $invoice = $this->sendEmail();
         if ($this->moduleManager->isEnabled('Fooman_PdfCustomiser')) {
             $pdf = $this->objectManager
-                ->create('\Fooman\PdfCustomiser\Model\PdfRenderer\InvoiceAdapter')
+                ->create(\Fooman\PdfCustomiser\Model\PdfRenderer\InvoiceAdapter::class)
                 ->getPdfAsString([$invoice]);
             $this->comparePdfAsStringWithReceivedPdf($pdf, sprintf('TAXINVOICE_%s.pdf', $invoice->getIncrementId()));
         } else {
             $pdf = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()
-                ->create('\Magento\Sales\Model\Order\Pdf\Invoice')->getPdf([$invoice]);
+                ->create(\Magento\Sales\Model\Order\Pdf\Invoice::class)->getPdf([$invoice]);
             $this->compareWithReceivedPdf($pdf);
         }
     }
@@ -40,7 +42,7 @@ class BeforeSendInvoiceCommentObserverTest extends Common
      * @magentoDataFixture   Magento/CheckoutAgreements/_files/agreement_active_with_html_content.php
      * @magentoConfigFixture current_store sales_email/invoice_comment/attachagreement 1
      */
-    public function testWithHtmlTermsAttachment()
+    public function testWithHtmlTermsAttachment(): void
     {
         $this->sendEmail();
         $this->checkReceivedHtmlTermsAttachment();
@@ -51,7 +53,7 @@ class BeforeSendInvoiceCommentObserverTest extends Common
      * @magentoDataFixture   Fooman/EmailAttachments/_files/agreement_active_with_text_content.php
      * @magentoConfigFixture current_store sales_email/invoice_comment/attachagreement 1
      */
-    public function testWithTextTermsAttachment()
+    public function testWithTextTermsAttachment(): void
     {
         $this->sendEmail();
         $this->checkReceivedTxtTermsAttachment();
@@ -62,7 +64,7 @@ class BeforeSendInvoiceCommentObserverTest extends Common
      * @magentoDataFixture   Magento/Sales/_files/invoice.php
      * @magentoConfigFixture current_store sales_email/invoice_comment/attachpdf 0
      */
-    public function testWithoutAttachment()
+    public function testWithoutAttachment(): void
     {
         $this->sendEmail();
 
@@ -76,7 +78,7 @@ class BeforeSendInvoiceCommentObserverTest extends Common
      * @magentoConfigFixture current_store sales_email/invoice_comment/attachagreement 1
      * @magentoConfigFixture current_store sales_email/invoice_comment/attachpdf 1
      */
-    public function testMultipleAttachments()
+    public function testMultipleAttachments(): void
     {
         $this->testWithAttachment();
         $this->checkReceivedHtmlTermsAttachment(1, 1);
@@ -85,7 +87,7 @@ class BeforeSendInvoiceCommentObserverTest extends Common
     protected function getInvoice()
     {
         $collection = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->create(
-            'Magento\Sales\Model\ResourceModel\Order\Invoice\Collection'
+            \Magento\Sales\Model\ResourceModel\Order\Invoice\Collection::class
         )->setPageSize(1);
         return $collection->getFirstItem();
     }
@@ -93,11 +95,11 @@ class BeforeSendInvoiceCommentObserverTest extends Common
     /**
      * @return \Magento\Sales\Api\Data\InvoiceInterface
      */
-    protected function sendEmail()
+    protected function sendEmail(): \Magento\Sales\Api\Data\InvoiceInterface
     {
         $invoice = $this->getInvoice();
         $invoiceSender = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()
-            ->create('Magento\Sales\Model\Order\Email\Sender\InvoiceCommentSender');
+            ->create(\Magento\Sales\Model\Order\Email\Sender\InvoiceCommentSender::class);
 
         $invoiceSender->send($invoice);
         return $invoice;

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * @author     Kristof Ringleff
  * @package    Fooman_EmailAttachments
@@ -20,18 +22,18 @@ class BeforeSendShipmentObserverTest extends Common
      * @magentoConfigFixture current_store sales_email/shipment/attachpdf 1
      * @magentoAppIsolation  enabled
      */
-    public function testWithAttachment()
+    public function testWithAttachment(): \Magento\Sales\Api\Data\ShipmentInterface
     {
         $shipment = $this->sendEmail();
         $this->comparePdfs($shipment);
         return $shipment;
     }
 
-    private function comparePdfs($shipment, $number = 1)
+    private function comparePdfs($shipment, $number = 1): void
     {
         if ($this->moduleManager->isEnabled('Fooman_PdfCustomiser')) {
             $pdf = $this->objectManager
-                ->create('\Fooman\PdfCustomiser\Model\PdfRenderer\ShipmentAdapter')
+                ->create(\Fooman\PdfCustomiser\Model\PdfRenderer\ShipmentAdapter::class)
                 ->getPdfAsString([$shipment]);
             $this->comparePdfAsStringWithReceivedPdf(
                 $pdf,
@@ -40,7 +42,7 @@ class BeforeSendShipmentObserverTest extends Common
             );
         } else {
             $pdf = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()
-                ->create('\Magento\Sales\Model\Order\Pdf\Shipment')->getPdf([$shipment]);
+                ->create(\Magento\Sales\Model\Order\Pdf\Shipment::class)->getPdf([$shipment]);
             $this->compareWithReceivedPdf($pdf, $number);
         }
     }
@@ -50,7 +52,7 @@ class BeforeSendShipmentObserverTest extends Common
      * @magentoDataFixture   Magento/CheckoutAgreements/_files/agreement_active_with_html_content.php
      * @magentoConfigFixture current_store sales_email/shipment/attachagreement 1
      */
-    public function testWithHtmlTermsAttachment()
+    public function testWithHtmlTermsAttachment(): void
     {
         $this->sendEmail();
         $this->checkReceivedHtmlTermsAttachment();
@@ -61,7 +63,7 @@ class BeforeSendShipmentObserverTest extends Common
      * @magentoDataFixture   Fooman/EmailAttachments/_files/agreement_active_with_text_content.php
      * @magentoConfigFixture current_store sales_email/shipment/attachagreement 1
      */
-    public function testWithTextTermsAttachment()
+    public function testWithTextTermsAttachment(): void
     {
         $this->sendEmail();
         $this->checkReceivedTxtTermsAttachment();
@@ -71,7 +73,7 @@ class BeforeSendShipmentObserverTest extends Common
      * @magentoDataFixture   Magento/Sales/_files/shipment.php
      * @magentoConfigFixture current_store sales_email/shipment/attachpdf 0
      */
-    public function testWithoutAttachment()
+    public function testWithoutAttachment(): void
     {
         $this->sendEmail();
 
@@ -85,7 +87,7 @@ class BeforeSendShipmentObserverTest extends Common
      * @magentoConfigFixture current_store sales_email/shipment/attachagreement 1
      * @magentoConfigFixture current_store sales_email/shipment/attachpdf 1
      */
-    public function testMultipleAttachments()
+    public function testMultipleAttachments(): void
     {
         $this->testWithAttachment();
         $this->checkReceivedHtmlTermsAttachment(1, 1);
@@ -100,12 +102,12 @@ class BeforeSendShipmentObserverTest extends Common
      * @magentoConfigFixture current_store sales_email/shipment/copy_method copy
      * @magentoConfigFixture current_store sales_email/shipment/copy_to copyto@example.com
      */
-    public function testWithCopyToRecipient()
+    public function testWithCopyToRecipient(): void
     {
         $shipment = $this->testWithAttachment();
         $this->checkReceivedHtmlTermsAttachment(1, 1);
         $this->checkReceivedHtmlTermsAttachment(2, 1);
-        $this->comparePdfs($shipment, 2);
+        $this->comparePdfs($shipment, 1);
     }
 
     /**
@@ -117,14 +119,13 @@ class BeforeSendShipmentObserverTest extends Common
      * @magentoConfigFixture current_store sales_email/shipment/copy_method copy
      * @magentoConfigFixture current_store sales_email/shipment/copy_to copyto@example.com,copyto2@example.com
      */
-    public function testWithMultipleCopyToRecipients()
+    public function testWithMultipleCopyToRecipients(): void
     {
         $shipment = $this->testWithAttachment();
         $this->checkReceivedHtmlTermsAttachment(1, 1);
         $this->checkReceivedHtmlTermsAttachment(2, 1);
         $this->checkReceivedHtmlTermsAttachment(3, 1);
-        $this->comparePdfs($shipment, 2);
-        $this->comparePdfs($shipment, 3);
+        $this->comparePdfs($shipment, 1);
         $mail = $this->getLastEmail();
 
         $allPdfAttachments = $this->getAllAttachmentsOfType($mail, 'application/pdf');
@@ -144,7 +145,7 @@ class BeforeSendShipmentObserverTest extends Common
      * @magentoConfigFixture current_store sales_email/shipment/copy_method bcc
      * @magentoConfigFixture current_store sales_email/shipment/copy_to copyto@example.com
      */
-    public function testWithBccRecipient()
+    public function testWithBccRecipient(): void
     {
         $this->testWithAttachment();
         $this->checkReceivedHtmlTermsAttachment(1, 1);
@@ -159,10 +160,10 @@ class BeforeSendShipmentObserverTest extends Common
         }
     }
 
-    protected function getShipment()
+    protected function getShipment(): \Magento\Sales\Api\Data\ShipmentInterface
     {
         $collection = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->create(
-            'Magento\Sales\Model\ResourceModel\Order\Shipment\Collection'
+            \Magento\Sales\Model\ResourceModel\Order\Shipment\Collection::class
         )->setPageSize(1);
         return $collection->getFirstItem();
     }
@@ -170,11 +171,11 @@ class BeforeSendShipmentObserverTest extends Common
     /**
      * @return \Magento\Sales\Api\Data\ShipmentInterface
      */
-    protected function sendEmail()
+    protected function sendEmail(): \Magento\Sales\Api\Data\ShipmentInterface
     {
         $shipment = $this->getShipment();
         $shipmentSender = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()
-            ->create('Magento\Sales\Model\Order\Email\Sender\ShipmentSender');
+            ->create(\Magento\Sales\Model\Order\Email\Sender\ShipmentSender::class);
 
         $shipmentSender->send($shipment);
         return $shipment;

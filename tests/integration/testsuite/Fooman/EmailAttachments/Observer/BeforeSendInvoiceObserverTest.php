@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * @author     Kristof Ringleff
  * @package    Fooman_EmailAttachments
@@ -20,18 +22,18 @@ class BeforeSendInvoiceObserverTest extends Common
      * @magentoConfigFixture current_store sales_email/invoice/attachpdf 1
      * @magentoAppIsolation  enabled
      */
-    public function testWithAttachment()
+    public function testWithAttachment(): \Magento\Sales\Api\Data\InvoiceInterface
     {
         $invoice = $this->sendEmail();
         $this->comparePdfs($invoice);
         return $invoice;
     }
 
-    private function comparePdfs($invoice, $number = 1)
+    private function comparePdfs($invoice, $number = 1): void
     {
         if ($this->moduleManager->isEnabled('Fooman_PdfCustomiser')) {
             $pdf = $this->objectManager
-                ->create('\Fooman\PdfCustomiser\Model\PdfRenderer\InvoiceAdapter')
+                ->create(\Fooman\PdfCustomiser\Model\PdfRenderer\InvoiceAdapter::class)
                 ->getPdfAsString([$invoice]);
             $this->comparePdfAsStringWithReceivedPdf(
                 $pdf,
@@ -39,7 +41,7 @@ class BeforeSendInvoiceObserverTest extends Common
                 $number
             );
         } else {
-            $pdf = $this->objectManager->create('\Magento\Sales\Model\Order\Pdf\Invoice')->getPdf([$invoice]);
+            $pdf = $this->objectManager->create(\Magento\Sales\Model\Order\Pdf\Invoice::class)->getPdf([$invoice]);
             $this->compareWithReceivedPdf($pdf, $number);
         }
     }
@@ -49,7 +51,7 @@ class BeforeSendInvoiceObserverTest extends Common
      * @magentoDataFixture   Magento/CheckoutAgreements/_files/agreement_active_with_html_content.php
      * @magentoConfigFixture current_store sales_email/invoice/attachagreement 1
      */
-    public function testWithHtmlTermsAttachment()
+    public function testWithHtmlTermsAttachment(): void
     {
         $this->sendEmail();
         $this->checkReceivedHtmlTermsAttachment();
@@ -60,7 +62,7 @@ class BeforeSendInvoiceObserverTest extends Common
      * @magentoDataFixture   Fooman/EmailAttachments/_files/agreement_active_with_text_content.php
      * @magentoConfigFixture current_store sales_email/invoice/attachagreement 1
      */
-    public function testWithTextTermsAttachment()
+    public function testWithTextTermsAttachment(): void
     {
         $this->sendEmail();
         $this->checkReceivedTxtTermsAttachment();
@@ -70,7 +72,7 @@ class BeforeSendInvoiceObserverTest extends Common
      * @magentoDataFixture   Magento/Sales/_files/invoice.php
      * @magentoConfigFixture current_store sales_email/invoice/attachpdf 0
      */
-    public function testWithoutAttachment()
+    public function testWithoutAttachment(): void
     {
         $this->sendEmail();
 
@@ -84,7 +86,7 @@ class BeforeSendInvoiceObserverTest extends Common
      * @magentoConfigFixture current_store sales_email/invoice/attachagreement 1
      * @magentoConfigFixture current_store sales_email/invoice/attachpdf 1
      */
-    public function testMultipleAttachments()
+    public function testMultipleAttachments(): void
     {
         $this->testWithAttachment();
         $this->checkReceivedHtmlTermsAttachment(1, 1);
@@ -99,12 +101,12 @@ class BeforeSendInvoiceObserverTest extends Common
      * @magentoConfigFixture current_store sales_email/invoice/copy_method copy
      * @magentoConfigFixture current_store sales_email/invoice/copy_to copyto@example.com
      */
-    public function testWithCopyToRecipient()
+    public function testWithCopyToRecipient(): void
     {
         $invoice = $this->testWithAttachment();
         $this->checkReceivedHtmlTermsAttachment(1, 1);
         $this->checkReceivedHtmlTermsAttachment(2, 1);
-        $this->comparePdfs($invoice, 2);
+        $this->comparePdfs($invoice, 1);
     }
 
     /**
@@ -116,14 +118,13 @@ class BeforeSendInvoiceObserverTest extends Common
      * @magentoConfigFixture current_store sales_email/invoice/copy_method copy
      * @magentoConfigFixture current_store sales_email/invoice/copy_to copyto@example.com,copyto2@example.com
      */
-    public function testWithMultipleCopyToRecipients()
+    public function testWithMultipleCopyToRecipients(): void
     {
         $invoice = $this->testWithAttachment();
         $this->checkReceivedHtmlTermsAttachment(1, 1);
         $this->checkReceivedHtmlTermsAttachment(2, 1);
         $this->checkReceivedHtmlTermsAttachment(3, 1);
-        $this->comparePdfs($invoice, 2);
-        $this->comparePdfs($invoice, 3);
+        $this->comparePdfs($invoice, 1);
         $mail = $this->getLastEmail();
 
         $allPdfAttachments = $this->getAllAttachmentsOfType($mail, 'application/pdf');
@@ -143,7 +144,7 @@ class BeforeSendInvoiceObserverTest extends Common
      * @magentoConfigFixture current_store sales_email/invoice/copy_method bcc
      * @magentoConfigFixture current_store sales_email/invoice/copy_to copyto@example.com
      */
-    public function testWithBccRecipient()
+    public function testWithBccRecipient(): void
     {
         $this->testWithAttachment();
         $this->checkReceivedHtmlTermsAttachment(1, 1);
@@ -158,10 +159,10 @@ class BeforeSendInvoiceObserverTest extends Common
         }
     }
 
-    protected function getInvoice()
+    protected function getInvoice(): \Magento\Sales\Api\Data\InvoiceInterface
     {
         $collection = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->create(
-            'Magento\Sales\Model\ResourceModel\Order\Invoice\Collection'
+            \Magento\Sales\Model\ResourceModel\Order\Invoice\Collection::class
         )->setPageSize(1);
         return $collection->getFirstItem();
     }
@@ -169,11 +170,11 @@ class BeforeSendInvoiceObserverTest extends Common
     /**
      * @return \Magento\Sales\Api\Data\InvoiceInterface
      */
-    protected function sendEmail()
+    protected function sendEmail(): \Magento\Sales\Api\Data\InvoiceInterface
     {
         $invoice = $this->getInvoice();
         $invoiceSender = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()
-            ->create('Magento\Sales\Model\Order\Email\Sender\InvoiceSender');
+            ->create(\Magento\Sales\Model\Order\Email\Sender\InvoiceSender::class);
 
         $invoiceSender->send($invoice);
         return $invoice;

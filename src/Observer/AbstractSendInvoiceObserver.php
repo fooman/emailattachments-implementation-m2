@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * @author     Kristof Ringleff
  * @package    Fooman_EmailAttachments
@@ -14,9 +16,8 @@ class AbstractSendInvoiceObserver extends AbstractObserver
     const XML_PATH_ATTACH_PDF = 'sales_email/invoice/attachpdf';
     const XML_PATH_ATTACH_AGREEMENT = 'sales_email/invoice/attachagreement';
 
-    public function execute(\Magento\Framework\Event\Observer $observer)
+    public function execute(\Magento\Framework\Event\Observer $observer): void
     {
-
         /**
          * @var $invoice \Magento\Sales\Api\Data\InvoiceInterface
          */
@@ -28,7 +29,7 @@ class AbstractSendInvoiceObserver extends AbstractObserver
                 $invoice->getStoreId()
             )
         ) {
-            $this->attachPdf(
+            $this->contentAttacher->addPdf(
                 $this->pdfRenderer->getPdfAsString([$invoice]),
                 $this->pdfRenderer->getFileName(__('Invoice') . $invoice->getIncrementId()),
                 $observer->getAttachmentContainer()

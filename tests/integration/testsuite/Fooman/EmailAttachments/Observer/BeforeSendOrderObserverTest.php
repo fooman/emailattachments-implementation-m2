@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * @author     Kristof Ringleff
  * @package    Fooman_EmailAttachments
@@ -20,13 +22,13 @@ class BeforeSendOrderObserverTest extends Common
      * @magentoConfigFixture current_store sales_email/order/attachpdf 1
      * @magentoAppIsolation  enabled
      */
-    public function testWithAttachment()
+    public function testWithAttachment(): void
     {
         $order = $this->sendEmail();
 
         if ($this->moduleManager->isEnabled('Fooman_PdfCustomiser')) {
             $pdf = $this->objectManager
-                ->create('\Fooman\PdfCustomiser\Model\PdfRenderer\OrderAdapter')
+                ->create(\Fooman\PdfCustomiser\Model\PdfRenderer\OrderAdapter::class)
                 ->getPdfAsString([$order]);
             $this->comparePdfAsStringWithReceivedPdf(
                 $pdf,
@@ -35,7 +37,7 @@ class BeforeSendOrderObserverTest extends Common
         } else {
             $this->assertTrue(true, 'Make at least 1 assertion');
             if ($this->moduleManager->isEnabled('Fooman_PrintOrderPdf')) {
-                $pdf = $this->objectManager->create('\Fooman\PrintOrderPdf\Model\Pdf\Order')->getPdf([$order]);
+                $pdf = $this->objectManager->create(\Fooman\PrintOrderPdf\Model\Pdf\Order::class)->getPdf([$order]);
                 $this->compareWithReceivedPdf($pdf);
             }
         }
@@ -46,7 +48,7 @@ class BeforeSendOrderObserverTest extends Common
      * @magentoDataFixture   Magento/CheckoutAgreements/_files/agreement_active_with_html_content.php
      * @magentoConfigFixture current_store sales_email/order/attachagreement 1
      */
-    public function testWithHtmlTermsAttachment()
+    public function testWithHtmlTermsAttachment(): void
     {
         $this->sendEmail();
         $this->checkReceivedHtmlTermsAttachment();
@@ -57,7 +59,7 @@ class BeforeSendOrderObserverTest extends Common
      * @magentoDataFixture   Fooman/EmailAttachments/_files/agreement_active_with_text_content.php
      * @magentoConfigFixture current_store sales_email/order/attachagreement 1
      */
-    public function testWithTextTermsAttachment()
+    public function testWithTextTermsAttachment(): void
     {
         $this->sendEmail();
         $this->checkReceivedTxtTermsAttachment();
@@ -67,7 +69,7 @@ class BeforeSendOrderObserverTest extends Common
      * @magentoDataFixture   Magento/Sales/_files/order.php
      * @magentoConfigFixture current_store sales_email/order/attachpdf 0
      */
-    public function testWithoutAttachment()
+    public function testWithoutAttachment(): void
     {
         $this->sendEmail();
 
@@ -82,16 +84,16 @@ class BeforeSendOrderObserverTest extends Common
      * @magentoConfigFixture current_store sales_email/order/attachagreement 1
      * @magentoConfigFixture current_store sales_email/order/attachpdf 1
      */
-    public function testMultipleAttachments()
+    public function testMultipleAttachments(): void
     {
         $this->testWithAttachment();
         $this->checkReceivedHtmlTermsAttachment(1, 1);
     }
 
-    protected function getOrder()
+    protected function getOrder(): \Magento\Sales\Api\Data\OrderInterface
     {
         $collection = $this->objectManager->create(
-            'Magento\Sales\Model\ResourceModel\Order\Collection'
+            \Magento\Sales\Model\ResourceModel\Order\Collection::class
         )->setPageSize(1);
         return $collection->getFirstItem();
     }
@@ -99,11 +101,11 @@ class BeforeSendOrderObserverTest extends Common
     /**
      * @return \Magento\Sales\Api\Data\OrderInterface
      */
-    protected function sendEmail()
+    protected function sendEmail(): \Magento\Sales\Api\Data\OrderInterface
     {
         $order = $this->getOrder();
         $orderSender = $this->objectManager
-            ->create('Magento\Sales\Model\Order\Email\Sender\OrderSender');
+            ->create(\Magento\Sales\Model\Order\Email\Sender\OrderSender::class);
 
         $orderSender->send($order);
         return $order;

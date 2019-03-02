@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<phpunit bootstrap="./vendor/autoload.php">
+<phpunit bootstrap="./tests/unit/bootstrap.php">
 
     <testsuites>
         <testsuite name="Unit Tests">
-            <directory>./tests/unit/Test/</directory>
+            <directory>./tests/unit/testsuite/Fooman</directory>
         </testsuite>
     </testsuites>
-
+    <php>
+        <const name="TESTS_TEMP_DIR" value="var"/>
+    </php>
 </phpunit>

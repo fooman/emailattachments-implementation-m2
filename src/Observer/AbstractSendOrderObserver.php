@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * @author     Kristof Ringleff
  * @package    Fooman_EmailAttachments
@@ -14,9 +16,8 @@ class AbstractSendOrderObserver extends AbstractObserver
     const XML_PATH_ATTACH_PDF = 'sales_email/order/attachpdf';
     const XML_PATH_ATTACH_AGREEMENT = 'sales_email/order/attachagreement';
 
-    public function execute(\Magento\Framework\Event\Observer $observer)
+    public function execute(\Magento\Framework\Event\Observer $observer): void
     {
-
         /**
          * @var $order \Magento\Sales\Api\Data\OrderInterface
          */
@@ -28,7 +29,7 @@ class AbstractSendOrderObserver extends AbstractObserver
                 $order->getStoreId()
             )
         ) {
-            $this->attachPdf(
+            $this->contentAttacher->addPdf(
                 $this->pdfRenderer->getPdfAsString([$order]),
                 $this->pdfRenderer->getFileName(__('Order') . $order->getIncrementId()),
                 $observer->getAttachmentContainer()

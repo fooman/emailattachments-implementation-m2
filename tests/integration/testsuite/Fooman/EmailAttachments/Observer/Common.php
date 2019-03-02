@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * @author     Kristof Ringleff
  * @package    Fooman_EmailAttachments
@@ -9,7 +11,10 @@
  */
 namespace Fooman\EmailAttachments\Observer;
 
-class Common extends \PHPUnit\Framework\TestCase
+use Fooman\EmailAttachments\TransportBuilder;
+use \Fooman\PhpunitBridge\BaseUnitTestCase;
+
+class Common extends BaseUnitTestCase
 {
     protected $mailhogClient;
     protected $objectManager;
@@ -22,15 +27,14 @@ class Common extends \PHPUnit\Framework\TestCase
         parent::setUp();
         $this->mailhogClient = new \Zend_Http_Client();
         $this->objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
-
         $this->objectManager->configure(
-            [
-                'preferences' =>
-                    ['Magento\Framework\Mail\Template\TransportBuilder'
-                    => 'Fooman\EmailAttachments\Model\MailTransportBuilder']
+            ['preferences' =>
+                [\Magento\Framework\Mail\TransportInterface::class => \Magento\Framework\Mail\Transport::class],
+                [\Magento\Framework\Mail\Template\TransportBuilder::class => TransportBuilder::class]
             ]
         );
-        $this->moduleManager = $this->objectManager->create('Magento\Framework\Module\Manager');
+
+        $this->moduleManager = $this->objectManager->create(\Magento\Framework\Module\Manager::class);
     }
 
     public function getLastEmail($number = 1)
@@ -80,7 +84,7 @@ class Common extends \PHPUnit\Framework\TestCase
      * @param $pdf
      * @param $number
      */
-    protected function compareWithReceivedPdf($pdf, $number = 1)
+    protected function compareWithReceivedPdf($pdf, $number = 1): void
     {
         $pdfAttachment = $this->getAttachmentOfType($this->getLastEmail($number), 'application/pdf');
         $this->assertEquals(strlen($pdf->render()), strlen(base64_decode($pdfAttachment['Body'])));
@@ -91,7 +95,7 @@ class Common extends \PHPUnit\Framework\TestCase
      * @param bool $title
      * @param $number
      */
-    protected function comparePdfAsStringWithReceivedPdf($pdf, $title = false, $number = 1)
+    protected function comparePdfAsStringWithReceivedPdf($pdf, $title = false, $number = 1): void
     {
         $pdfAttachment = $this->getAttachmentOfType($this->getLastEmail($number), 'application/pdf');
         $this->assertEquals(strlen($pdf), strlen(base64_decode($pdfAttachment['Body'])));
@@ -100,7 +104,7 @@ class Common extends \PHPUnit\Framework\TestCase
         }
     }
 
-    protected function checkReceivedHtmlTermsAttachment($number = 1, $attachmentIndex = 0)
+    protected function checkReceivedHtmlTermsAttachment($number = 1, $attachmentIndex = 0): void
     {
         if ($this->moduleManager->isEnabled('Fooman_PdfCustomiser')) {
             $pdfs = $this->getAllAttachmentsOfType($this->getLastEmail($number), 'application/pdf');
@@ -120,7 +124,7 @@ class Common extends \PHPUnit\Framework\TestCase
         }
     }
 
-    protected function checkReceivedTxtTermsAttachment($number = 1, $attachmentIndex = 0)
+    protected function checkReceivedTxtTermsAttachment($number = 1, $attachmentIndex = 0): void
     {
         if ($this->moduleManager->isEnabled('Fooman_PdfCustomiser')) {
             $pdfs = $this->getAllAttachmentsOfType($this->getLastEmail($number), 'application/pdf');
@@ -146,7 +150,7 @@ class Common extends \PHPUnit\Framework\TestCase
     protected function getExpectedPdfAgreementsString()
     {
         $termsCollection = $this->objectManager->create(
-            'Magento\CheckoutAgreements\Model\ResourceModel\Agreement\Collection'
+            \Magento\CheckoutAgreements\Model\ResourceModel\Agreement\Collection::class
         );
         $termsCollection->addStoreFilter(1)->addFieldToFilter('is_active', 1);
         $agreements = [];
@@ -155,7 +159,14 @@ class Common extends \PHPUnit\Framework\TestCase
         }
 
         return $this->objectManager
-            ->create('\Fooman\PdfCustomiser\Model\PdfRenderer\TermsAndConditionsAdapter')
+            ->create(\Fooman\PdfCustomiser\Model\PdfRenderer\TermsAndConditionsAdapter::class)
             ->getPdfAsString($agreements);
+    }
+
+    protected function tearDown()
+    {
+        $this->mailhogClient->resetParameters(true);
+        $this->mailhogClient->setUri(self::BASE_URL . 'v1/messages');
+        $this->mailhogClient->request('DELETE');
     }
 }

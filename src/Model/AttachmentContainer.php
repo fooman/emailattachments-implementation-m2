@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * @author     Kristof Ringleff
  * @package    Fooman_EmailAttachments
@@ -11,7 +13,7 @@ namespace Fooman\EmailAttachments\Model;
 
 class AttachmentContainer implements Api\AttachmentContainerInterface
 {
-    protected $attachments = [];
+    private $attachments = [];
 
     /**
      * @return bool

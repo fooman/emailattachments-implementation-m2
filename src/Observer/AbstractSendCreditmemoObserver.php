@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * @author     Kristof Ringleff
  * @package    Fooman_EmailAttachments
@@ -14,9 +16,8 @@ class AbstractSendCreditmemoObserver extends AbstractObserver
     const XML_PATH_ATTACH_PDF = 'sales_email/creditmemo/attachpdf';
     const XML_PATH_ATTACH_AGREEMENT = 'sales_email/creditmemo/attachagreement';
 
-    public function execute(\Magento\Framework\Event\Observer $observer)
+    public function execute(\Magento\Framework\Event\Observer $observer): void
     {
-
         /**
          * @var $creditmemo \Magento\Sales\Api\Data\CreditmemoInterface
          */
@@ -28,7 +29,7 @@ class AbstractSendCreditmemoObserver extends AbstractObserver
                 $creditmemo->getStoreId()
             )
         ) {
-            $this->attachPdf(
+            $this->contentAttacher->addPdf(
                 $this->pdfRenderer->getPdfAsString([$creditmemo]),
                 $this->pdfRenderer->getFileName(__('Credit Memo') . $creditmemo->getIncrementId()),
                 $observer->getAttachmentContainer()
