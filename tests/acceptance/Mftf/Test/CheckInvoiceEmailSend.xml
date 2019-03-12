@@ -19,7 +19,7 @@
             </createData>
             <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
             <!-- <actionGroup ref="foomanEmailAttachmentsSettingsActionGroup" stepKey="resetSettings" /> -->
-            <amOnPage url="{{EmailAttachmentsConfigurationPage.url}}" stepKey="navigateToAdminEmailAttachmentsSettings"/>
+            <amOnPage url="/admin/system_config/edit/section/sales_email/" stepKey="navigateToAdminEmailAttachmentsSettings"/>
             <waitForPageLoad stepKey="waitForPageLoadStep"/>
             <seeInCurrentUrl url="/admin/system_config/edit/section/sales_email/" stepKey="seeConfigPage"/>
             <conditionalClick selector="{{EmailAttachmentsSettingsSection.GeneralSettingsTab}}" dependentSelector="{{EmailAttachmentsSettingsSection.CheckIfTabExpand}}" stepKey="checkIfTabOpen" visible="true"/>
