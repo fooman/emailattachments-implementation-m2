@@ -21,7 +21,7 @@
             <!-- <actionGroup ref="foomanEmailAttachmentsSettingsActionGroup" stepKey="resetSettings" /> -->
             <amOnPage url="{{EmailAttachmentsConfigurationPage.url}}" stepKey="navigateToAdminEmailAttachmentsSettings"/>
             <waitForPageLoad stepKey="waitForPageLoadStep"/>
-            <seeInCurrentUrl url="{{EmailAttachmentsConfigurationPage.url}}" stepKey="seeConfigPage"/>
+            <seeInCurrentUrl url="/admin/system_config/edit/section/sales_email/" stepKey="seeConfigPage"/>
             <conditionalClick selector="{{EmailAttachmentsSettingsSection.GeneralSettingsTab}}" dependentSelector="{{EmailAttachmentsSettingsSection.CheckIfTabExpand}}" stepKey="checkIfTabOpen" visible="true"/>
             <selectOption selector="{{EmailAttachmentsSettingsSection.attachpdf}}" userInput="Yes" stepKey="enableInvoiceAttachPdf" />
             <scrollToTopOfPage stepKey="scrollToTop"/>
