@@ -12,14 +12,14 @@
             <group value="Fooman_All"/>
             <group value="Fooman_EmailAttachments"/>
         </annotations>
-        <before>
+<!--         <before>
             <createData entity="_defaultCategory" stepKey="createCategory"/>
             <createData entity="_defaultProduct" stepKey="createSimpleProduct">
                 <requiredEntity createDataKey="createCategory"/>
             </createData>
             <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
             <actionGroup ref="foomanEmailAttachmentsSettingsActionGroup" stepKey="resetSettings" />
-        </before>
+        </before> -->
         <!--Go to product page-->
         <amOnPage url="$$createSimpleProduct.custom_attributes[url_key]$$.html" stepKey="navigateToSimpleProductPage2"/>
         <waitForPageLoad stepKey="waitForCatalogPageLoad2"/>
