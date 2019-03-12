@@ -65,7 +65,6 @@
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber}}" stepKey="grabOrderNumber2"/>
 
         <!--Create invoice in admin-->
-        <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
         <amOnPage url="{{AdminOrdersPage.url}}" stepKey="onOrdersPage"/>
         <waitForPageLoad stepKey="waitForIndexPageLoad"/>
         <fillField selector="{{AdminOrdersGridSection.search}}" userInput="{$grabOrderNumber2}" stepKey="searchOrderNum"/>
