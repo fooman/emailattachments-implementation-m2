@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased]
+### Added
+- Initial MFTF acceptance test
 
 ## [105.0.2] 2018-12-11
 ### Changed
