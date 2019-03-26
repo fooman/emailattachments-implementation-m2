@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
+    <section name="EmailAttachmentsSettingsSection">
+        <element name="CheckIfTabExpand" type="button" selector="#sales_email_invoice-head:not(.open)"/>
+        <element name="GeneralSettingsTab" type="button" selector="#sales_email_invoice-head"/>
+        <element name="attachpdf" type="input" selector="#sales_email_invoice_attachpdf"/>
+    </section>
+</sections>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <test name="CheckInvoiceEmailSend">
+        <annotations>
+            <features value="Check The Invoice Email Send"/>
+            <stories value="Check that invoice email attachment works correctly"/>
+            <title value="Check that invoice email attachment works correctly"/>
+            <description value="Check that invoice email attachment works correctly"/>
+
+            <severity value="CRITICAL"/>
+            <group value="Fooman_All"/>
+            <group value="Fooman_EmailAttachments"/>
+        </annotations>
+        <before>
+            <createData entity="_defaultCategory" stepKey="createCategory"/>
+            <createData entity="_defaultProduct" stepKey="createSimpleProduct">
+                <requiredEntity createDataKey="createCategory"/>
+            </createData>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="foomanEmailAttachmentsSettingsActionGroup" stepKey="resetSettings" />
+        </before>
+        <!--Go to product page-->
+        <amOnPage url="$$createSimpleProduct.custom_attributes[url_key]$$.html" stepKey="navigateToSimpleProductPage2"/>
+        <waitForPageLoad stepKey="waitForCatalogPageLoad2"/>
+
+        <!--Add Product to Shopping Cart-->
+        <actionGroup ref="addToCartFromStorefrontProductPage" stepKey="addToCartFromStorefrontProductPage2">
+            <argument name="productName" value="$$createSimpleProduct.name$$"/>
+        </actionGroup>
+
+        <!--Go to Checkout-->
+        <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="goToCheckoutFromMinicart2"/>
+        <actionGroup ref="GuestCheckoutFillingShippingSectionActionGroup" stepKey="guestCheckoutFillingShippingSection2">
+            <argument name="customerVar" value="CustomerEntityOne" />
+            <argument name="customerAddressVar" value="CustomerAddressSimple" />
+        </actionGroup>
+        <!-- Checkout select Check/Money Order payment -->
+        <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" stepKey="selectCheckMoneyPayment2"/>
+
+        <!--Click Place Order button-->
+        <click selector="{{CheckoutPaymentSection.placeOrder}}" stepKey="clickPlaceOrder2"/>
+
+        <!--Go to product page-->
+        <amOnPage url="$$createSimpleProduct.custom_attributes[url_key]$$.html" stepKey="navigateToSimpleProductPage3"/>
+        <waitForPageLoad stepKey="waitForCatalogPageLoad3"/>
+
+        <!--Add Product to Shopping Cart-->
+        <actionGroup ref="addToCartFromStorefrontProductPage" stepKey="addToCartFromStorefrontProductPage3">
+            <argument name="productName" value="$$createSimpleProduct.name$$"/>
+        </actionGroup>
+
+        <!--Go to Checkout-->
+        <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="goToCheckoutFromMinicart3"/>
+        <actionGroup ref="GuestCheckoutFillingShippingSectionActionGroup" stepKey="guestCheckoutFillingShippingSection3">
+            <argument name="customerVar" value="CustomerEntityOne" />
+            <argument name="customerAddressVar" value="CustomerAddressSimple" />
+        </actionGroup>
+        <!-- Checkout select Check/Money Order payment -->
+        <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" stepKey="selectCheckMoneyPayment3"/>
+
+        <!--Click Place Order button-->
+        <click selector="{{CheckoutPaymentSection.placeOrder}}" stepKey="clickPlaceOrder3"/>
+
+        <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber}}" stepKey="grabOrderNumber2"/>
+
+        <!--Create invoice in admin-->
+        <amOnPage url="{{AdminOrdersPage.url}}" stepKey="onOrdersPage"/>
+        <waitForPageLoad stepKey="waitForIndexPageLoad"/>
+        <fillField selector="{{AdminOrdersGridSection.search}}" userInput="{$grabOrderNumber2}" stepKey="searchOrderNum"/>
+        <click selector="{{AdminOrdersGridSection.submitSearch}}" stepKey="submitSearch"/>
+        <waitForLoadingMaskToDisappear stepKey="waitForLoadingMask4"/>
+
+        <click selector="{{AdminOrdersGridSection.firstRow}}" stepKey="clickOrderRow"/>
+        <click selector="{{AdminOrderDetailsMainActionsSection.invoice}}" stepKey="clickInvoice"/>
+        <click selector="{{AdminInvoiceMainActionsSection.submitInvoice}}" stepKey="clickSubmitInvoice"/>
+        <waitForPageLoad stepKey="waitForInvoicePageLoad"/>
+        <see selector="{{AdminOrderDetailsMessagesSection.successMessage}}" userInput="The invoice has been created." stepKey="seeSuccessMessage"/>
+    </test>
+</tests>
