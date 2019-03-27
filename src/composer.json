@@ -13,12 +13,12 @@
         ]
     },
     "require": {
-        "php": "~7.1.3||~7.2.0",
-        "magento/framework": "^102.0.0",
-        "magento/module-backend": "^101.0.0",
-        "magento/module-sales": "^102.0.0",
+        "php": "~7.0.13|~7.1.0|~7.2.0",
+        "magento/framework": "^101.0.8 | ^102.0.0",
+        "magento/module-backend": "^100.2.8 | ^101.0.0",
+        "magento/module-sales": "^101.0.7 | ^102.0.0",
         "magento/module-checkout-agreements": "^100.0.2",
-        "magento/module-email": "^101.0.0",
+        "magento/module-email": "^100.2.6 | ^101.0.0",
         "zendframework/zend-mime": "^2.5"
     },
     "minimum-stability": "dev",
