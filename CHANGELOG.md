@@ -1,6 +1,6 @@
 # Change Log
 
-## [Unreleased]
+## [105.0.4] - 2019-03-27
 ### Added
 - Compatibility with Magento 2.2.8
 
