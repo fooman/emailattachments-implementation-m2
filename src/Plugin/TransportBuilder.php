@@ -26,14 +26,14 @@ class TransportBuilder
     public function beforeSetTemplateIdentifier(
         \Magento\Framework\Mail\Template\TransportBuilder $subject,
         $templateIdentifier
-    ): void {
+    ) {
         $this->nextEmail->setTemplateIdentifier($templateIdentifier);
     }
 
     public function beforeSetTemplateVars(
         \Magento\Framework\Mail\Template\TransportBuilder $subject,
         $templateVars
-    ): void {
+    ) {
         $this->nextEmail->setTemplateVars($templateVars);
     }
 
@@ -46,7 +46,7 @@ class TransportBuilder
         return $mailTransport;
     }
 
-    private function reset(): void
+    private function reset()
     {
         $this->nextEmail->setTemplateIdentifier(null);
         $this->nextEmail->setTemplateVars(null);
