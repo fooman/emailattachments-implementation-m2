@@ -16,7 +16,7 @@ class AbstractSendShipmentObserver extends AbstractObserver
     const XML_PATH_ATTACH_PDF = 'sales_email/shipment/attachpdf';
     const XML_PATH_ATTACH_AGREEMENT = 'sales_email/shipment/attachagreement';
 
-    public function execute(\Magento\Framework\Event\Observer $observer): void
+    public function execute(\Magento\Framework\Event\Observer $observer)
     {
 
         /**
