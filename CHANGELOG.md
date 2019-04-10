@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased]
+### Fixed
+- Reverse additional return types
 
 ## [105.0.5] - 2019-04-09
 ### Fixed
