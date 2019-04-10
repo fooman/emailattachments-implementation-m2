@@ -16,7 +16,7 @@ class AbstractSendCreditmemoObserver extends AbstractObserver
     const XML_PATH_ATTACH_PDF = 'sales_email/creditmemo/attachpdf';
     const XML_PATH_ATTACH_AGREEMENT = 'sales_email/creditmemo/attachagreement';
 
-    public function execute(\Magento\Framework\Event\Observer $observer): void
+    public function execute(\Magento\Framework\Event\Observer $observer)
     {
         /**
          * @var $creditmemo \Magento\Sales\Api\Data\CreditmemoInterface
