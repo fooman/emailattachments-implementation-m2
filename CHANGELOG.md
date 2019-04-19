@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased]
+### Fixed
+- MFTF tweak if not run in isolation
 
 ## [105.0.6] - 2019-04-11
 ### Fixed
