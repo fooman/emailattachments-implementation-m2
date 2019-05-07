@@ -1,6 +1,12 @@
 <?php
 declare(strict_types=1);
 
+namespace Fooman\EmailAttachments\Observer;
+
+use Fooman\EmailAttachments\Model\Api\AttachmentContainerInterface as ContainerInterface;
+use Fooman\EmailAttachments\Model\ContentAttacher;
+use Fooman\EmailAttachments\Model\TermsAndConditionsAttacher;
+
 /**
  * @author     Kristof Ringleff
  * @package    Fooman_EmailAttachments
@@ -9,13 +15,6 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-namespace Fooman\EmailAttachments\Observer;
-
-use \Fooman\EmailAttachments\Model\Api\AttachmentContainerInterface as ContainerInterface;
-use Fooman\EmailAttachments\Model\ContentAttacher;
-use Fooman\EmailAttachments\Model\TermsAndConditionsAttacher;
-
 abstract class AbstractObserver implements \Magento\Framework\Event\ObserverInterface
 {
     protected $scopeConfig;

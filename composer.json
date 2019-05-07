@@ -23,7 +23,9 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^4.1 | ^6.2",
-        "fooman/magento2-phpunit-bridge": "0.7.*"
+        "fooman/magento2-phpunit-bridge": "0.7.*",
+        "captainhook/captainhook": "^4.2",
+        "magento/magento-coding-standard": "^2.0"
     },
     "repositories": [
         {

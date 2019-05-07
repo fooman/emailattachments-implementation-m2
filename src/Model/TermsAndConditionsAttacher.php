@@ -1,6 +1,11 @@
 <?php
 declare(strict_types=1);
 
+namespace Fooman\EmailAttachments\Model;
+
+use Fooman\EmailAttachments\Model\Api\AttachmentContainerInterface as ContainerInterface;
+use Magento\CheckoutAgreements\Api\Data\AgreementInterface;
+
 /**
  * @author     Kristof Ringleff
  * @package    Fooman_EmailAttachments
@@ -9,12 +14,6 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-namespace Fooman\EmailAttachments\Model;
-
-use \Fooman\EmailAttachments\Model\Api\AttachmentContainerInterface as ContainerInterface;
-use \Magento\CheckoutAgreements\Api\Data\AgreementInterface;
-
 class TermsAndConditionsAttacher
 {
     private $termsCollection;

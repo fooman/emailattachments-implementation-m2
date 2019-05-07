@@ -1,6 +1,12 @@
 <?php
 declare(strict_types=1);
 
+namespace Fooman\EmailAttachments\Model;
+
+use Zend\Mime\Message as MimeMessage;
+use Zend\Mime\Mime;
+use Zend\Mime\Part as MimePart;
+
 /**
  * @author     Kristof Ringleff
  * @package    Fooman_EmailAttachments
@@ -9,13 +15,6 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-namespace Fooman\EmailAttachments\Model;
-
-use Zend\Mime\Message as MimeMessage;
-use Zend\Mime\Mime;
-use Zend\Mime\Part as MimePart;
-
 class MailProcessor implements Api\MailProcessorInterface
 {
     public function createMultipartMessage(

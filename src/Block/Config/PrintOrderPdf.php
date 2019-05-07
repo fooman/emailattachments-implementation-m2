@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+namespace Fooman\EmailAttachments\Block\Config;
+
 /**
  * @author     Kristof Ringleff
  * @package    Fooman_EmailAttachments
@@ -9,8 +11,6 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Fooman\EmailAttachments\Block\Config;
-
 class PrintOrderPdf extends \Magento\Config\Block\System\Config\Form\Field
 {
     const EXT_URL = 'http://store.fooman.co.nz/extensions/magento2/magento-extension-print-order-pdf-m2.html';
@@ -33,6 +33,7 @@ class PrintOrderPdf extends \Magento\Config\Block\System\Config\Form\Field
         parent::__construct($context, $data);
     }
 
+    // phpcs:ignore PSR2.Methods.MethodDeclaration -- Magento 2 core use
     protected function _getElementHtml(\Magento\Framework\Data\Form\Element\AbstractElement $element)
     {
         if ($this->moduleList->has('Fooman_PrintOrderPdf')) {
