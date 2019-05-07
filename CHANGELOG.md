@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased]
+### Changed
+- Adopt latest Magento Coding Standards
 
 ## [105.0.7] - 2019-04-19
 ### Fixed
