@@ -1,6 +1,11 @@
 # Change Log
 
 ## [Unreleased]
+### Added
+- AttachmentInterface::getFilename(true) now provides the base64 encoded name of the attachment
+- PHPStan to development tools
+### Fixed
+- Some parameter type issues
 
 ## [105.0.8] - 2019-05-10
 ### Changed
