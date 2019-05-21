@@ -19,7 +19,7 @@ class AbstractSendInvoiceObserver extends AbstractObserver
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
         /**
-         * @var $invoice \Magento\Sales\Api\Data\InvoiceInterface
+         * @var \Magento\Sales\Api\Data\InvoiceInterface $invoice
          */
         $invoice = $observer->getInvoice();
         if ($this->pdfRenderer->canRender()

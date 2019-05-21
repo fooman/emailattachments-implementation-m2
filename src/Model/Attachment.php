@@ -20,9 +20,9 @@ class Attachment implements Api\AttachmentInterface
     private $encoding;
 
     /**
-     * @param        $content
-     * @param        $mimeType
-     * @param        $fileName
+     * @param string $content
+     * @param string $mimeType
+     * @param string $fileName
      * @param string $disposition
      * @param string $encoding
      */
@@ -49,10 +49,15 @@ class Attachment implements Api\AttachmentInterface
     }
 
     /**
+     * @param bool $encoded
+     *
      * @return mixed
      */
-    public function getFilename()
+    public function getFilename($encoded = false)
     {
+        if ($encoded) {
+            return sprintf('=?utf-8?B?%s?=', base64_encode($this->filename));
+        }
         return $this->filename;
     }
 

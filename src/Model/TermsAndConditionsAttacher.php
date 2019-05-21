@@ -31,7 +31,7 @@ class TermsAndConditionsAttacher
     public function attachForStore($storeId, ContainerInterface $attachmentContainer)
     {
         /**
-         * @var $agreements \Magento\CheckoutAgreements\Model\ResourceModel\Agreement\Collection
+         * @var \Magento\CheckoutAgreements\Model\ResourceModel\Agreement\Collection $agreements
          */
         $agreements = $this->termsCollection->create();
         $agreements->addStoreFilter($storeId)->addFieldToFilter('is_active', 1);

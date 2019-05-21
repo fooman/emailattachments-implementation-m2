@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Fooman\EmailAttachments\Model;
 
+use Fooman\EmailAttachments\Model\Api\MailProcessorInterface;
+
 /**
  * @author     Kristof Ringleff
  * @package    Fooman_EmailAttachments
@@ -34,7 +36,7 @@ class EmailEventDispatcher
     private $emailIdentifier;
 
     /**
-     * @var MailProcessor
+     * @var MailProcessorInterface
      */
     private $mailProcessor;
 
@@ -82,14 +84,14 @@ class EmailEventDispatcher
     }
 
     /**
-     * @param $attachment
+     * @param Api\AttachmentInterface $attachment
      *
      * @deprecated in 105.0.0
-     * @see MailProcessor::getEncodedFileName()
+     * @see AttachmentInterface::getFilename()
      * @return string
      */
-    public function getEncodedFileName($attachment)
+    public function getEncodedFileName(Api\AttachmentInterface $attachment)
     {
-        return $this->mailProcessor->getEncodedFileName($attachment);
+        return $attachment->getFilename(true);
     }
 }

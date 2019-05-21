@@ -6,6 +6,7 @@ namespace Fooman\EmailAttachments\Model;
 use Zend\Mime\Message as MimeMessage;
 use Zend\Mime\Mime;
 use Zend\Mime\Part as MimePart;
+use Fooman\EmailAttachments\Model\Api\AttachmentInterface;
 
 /**
  * @author     Kristof Ringleff
@@ -53,8 +54,16 @@ class MailProcessor implements Api\MailProcessorInterface
         }
     }
 
-    public function getEncodedFileName($attachment)
+    /**
+     * @deprecated in 105.1.0
+     * @see        AttachmentInterface::getFilename()
+     *
+     * @return string
+     * @param AttachmentInterface $attachment
+     *
+     */
+    public function getEncodedFileName(AttachmentInterface $attachment)
     {
-        return sprintf('=?utf-8?B?%s?=', base64_encode($attachment->getFilename()));
+        return $attachment->getFilename(true);
     }
 }

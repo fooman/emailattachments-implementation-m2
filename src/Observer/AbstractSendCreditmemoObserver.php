@@ -19,7 +19,7 @@ class AbstractSendCreditmemoObserver extends AbstractObserver
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
         /**
-         * @var $creditmemo \Magento\Sales\Api\Data\CreditmemoInterface
+         * @var \Magento\Sales\Api\Data\CreditmemoInterface $creditmemo
          */
         $creditmemo = $observer->getCreditmemo();
         if ($this->pdfRenderer->canRender()

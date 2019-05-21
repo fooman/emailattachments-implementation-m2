@@ -18,7 +18,7 @@ interface AttachmentInterface
 
     public function getMimeType();
 
-    public function getFilename();
+    public function getFilename($encoded = false);
 
     public function getDisposition();
 

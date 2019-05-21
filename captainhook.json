@@ -16,7 +16,7 @@
                 "conditions": []
             },
             {
-                "action": "phpunit",
+                "action": "vendor/bin/phpunit",
                 "options": [],
                 "conditions": []
             },
@@ -27,6 +27,11 @@
             },
             {
                 "action": "vendor/bin/phpcs --config-set installed_paths ../../magento/magento-coding-standard/ && vendor/bin/phpcs --standard=Magento2 src",
+                "options": [],
+                "conditions": []
+            },
+            {
+                "action": "vendor/bin/phpstan analyse src/ -l 5",
                 "options": [],
                 "conditions": []
             }

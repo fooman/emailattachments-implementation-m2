@@ -23,7 +23,13 @@ interface AttachmentContainerInterface
      */
     public function addAttachment(AttachmentInterface $attachment);
 
+    /**
+     * @return AttachmentInterface[]
+     */
     public function getAttachments();
 
+    /**
+     * @return void
+     */
     public function resetAttachments();
 }

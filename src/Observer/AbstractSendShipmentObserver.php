@@ -20,7 +20,7 @@ class AbstractSendShipmentObserver extends AbstractObserver
     {
 
         /**
-         * @var $shipment \Magento\Sales\Api\Data\ShipmentInterface
+         * @var \Magento\Sales\Api\Data\ShipmentInterface $shipment
          */
         $shipment = $observer->getShipment();
         if ($this->pdfRenderer->canRender()

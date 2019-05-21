@@ -19,7 +19,7 @@ class AbstractSendOrderObserver extends AbstractObserver
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
         /**
-         * @var $order \Magento\Sales\Api\Data\OrderInterface
+         * @var \Magento\Sales\Api\Data\OrderInterface $order
          */
         $order = $observer->getOrder();
         if ($this->pdfRenderer->canRender()

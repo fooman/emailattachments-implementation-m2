@@ -43,8 +43,8 @@ abstract class AbstractObserver implements \Magento\Framework\Event\ObserverInte
     }
 
     /**
-     * @param                    $pdfString
-     * @param                    $pdfFilename
+     * @param string             $pdfString
+     * @param string             $pdfFilename
      * @param ContainerInterface $attachmentContainer
      *
      * @deprecated see \Fooman\EmailAttachments\Model\ContentAttacher::addPdf()
@@ -55,8 +55,8 @@ abstract class AbstractObserver implements \Magento\Framework\Event\ObserverInte
     }
 
     /**
-     * @param                    $text
-     * @param                    $filename
+     * @param string             $text
+     * @param string             $filename
      * @param ContainerInterface $attachmentContainer
      *
      * @deprecated see \Fooman\EmailAttachments\Model\ContentAttacher::addText()
@@ -67,8 +67,8 @@ abstract class AbstractObserver implements \Magento\Framework\Event\ObserverInte
     }
 
     /**
-     * @param                    $html
-     * @param                    $filename
+     * @param string             $html
+     * @param string             $filename
      * @param ContainerInterface $attachmentContainer
      *
      * @deprecated see \Fooman\EmailAttachments\Model\ContentAttacher::addHtml()
