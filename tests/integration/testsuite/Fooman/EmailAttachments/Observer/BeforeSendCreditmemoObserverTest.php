@@ -170,6 +170,9 @@ class BeforeSendCreditmemoObserverTest extends Common
             if (!$item->getSku()) {
                 $item->setSku('Test_sku');
             }
+            if (!$item->getName()) {
+                $item->setName('Test Name');
+            }
         }
         return $creditmemo;
     }
