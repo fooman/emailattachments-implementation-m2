@@ -95,7 +95,13 @@ class BeforeSendOrderCommentObserverTest extends Common
         $collection = $this->objectManager->create(
             \Magento\Sales\Model\ResourceModel\Order\Collection::class
         )->setPageSize(1);
-        return $collection->getFirstItem();
+        $order = $collection->getFirstItem();
+        foreach ($order->getAllItems() as $orderItem) {
+            if (!$orderItem->getSku()) {
+                $orderItem->setSku('Test_sku');
+            }
+        }
+        return $order;
     }
 
     /**

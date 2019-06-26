@@ -91,7 +91,13 @@ class BeforeSendShipmentCommentObserverTest extends Common
         $collection = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->create(
             \Magento\Sales\Model\ResourceModel\Order\Shipment\Collection::class
         )->setPageSize(1);
-        return $collection->getFirstItem();
+        $shipment = $collection->getFirstItem();
+        foreach ($shipment->getAllItems() as $item) {
+            if (!$item->getSku()) {
+                $item->setSku('Test_sku');
+            }
+        }
+        return $shipment;
     }
 
     /**

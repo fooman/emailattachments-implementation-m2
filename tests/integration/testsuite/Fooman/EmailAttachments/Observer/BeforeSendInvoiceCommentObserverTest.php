@@ -89,7 +89,13 @@ class BeforeSendInvoiceCommentObserverTest extends Common
         $collection = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->create(
             \Magento\Sales\Model\ResourceModel\Order\Invoice\Collection::class
         )->setPageSize(1);
-        return $collection->getFirstItem();
+        $invoice = $collection->getFirstItem();
+        foreach ($invoice->getAllItems() as $item) {
+            if (!$item->getSku()) {
+                $item->setSku('Test_sku');
+            }
+        }
+        return $invoice;
     }
 
     /**

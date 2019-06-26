@@ -91,7 +91,13 @@ class BeforeSendCreditmemoCommentObserverTest extends Common
         $collection = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->create(
             \Magento\Sales\Model\ResourceModel\Order\Creditmemo\Collection::class
         )->setPageSize(1);
-        return $collection->getFirstItem();
+        $creditmemo = $collection->getFirstItem();
+        foreach ($creditmemo->getAllItems() as $item) {
+            if (!$item->getSku()) {
+                $item->setSku('Test_sku');
+            }
+        }
+        return $creditmemo;
     }
 
     /**
