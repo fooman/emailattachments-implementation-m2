@@ -1,5 +1,7 @@
 # Change Log
 
+## [Unreleased]
+
 ## [105.1.0] - 2019-06-26
 ### Added
 - AttachmentInterface::getFilename(true) now provides the base64 encoded name of the attachment
