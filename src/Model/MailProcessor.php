@@ -23,21 +23,25 @@ class MailProcessor implements Api\MailProcessorInterface
         Api\AttachmentContainerInterface $attachmentContainer
     ) {
         if ($attachmentContainer->hasAttachments()) {
-            $body = new MimeMessage();
+            $newBody = new MimeMessage();
             /** @var string|\Zend\Mime\Message $existingEmailBody */
             $existingEmailBody = $message->getBody();
 
             //For html emails Magento already creates a MimePart
             //@see \Magento\Framework\Mail\Message::createHtmlMimeFromString()
+            //as well as for txt emails from 2.3.3 and 2.2.10
             if (\is_object($existingEmailBody) && $existingEmailBody instanceof \Zend\Mime\Message) {
-                $htmlPart = $existingEmailBody->getParts()[0];
-                $body->addPart($htmlPart);
+                $isHtml = $this->isHtml($existingEmailBody);
+                foreach ($existingEmailBody->getParts() as $existingPart) {
+                    $newBody->addPart($existingPart);
+                }
             } else {
+                $isHtml = false;
                 $textPart = new MimePart($existingEmailBody);
                 $textPart->type = Mime::TYPE_TEXT;
                 $textPart->charset = 'utf-8';
                 $textPart->encoding = Mime::ENCODING_QUOTEDPRINTABLE;
-                $body->addPart($textPart);
+                $newBody->addPart($textPart);
             }
 
             foreach ($attachmentContainer->getAttachments() as $attachment) {
@@ -47,10 +51,13 @@ class MailProcessor implements Api\MailProcessorInterface
                 $mimeAttachment->encoding = $attachment->getEncoding();
                 $mimeAttachment->disposition = $attachment->getDisposition();
 
-                $body->addPart($mimeAttachment);
+                $newBody->addPart($mimeAttachment);
             }
-
-            $message->setBodyText($body);
+            if ($isHtml) {
+                $message->setBodyHtml($newBody);
+            } else {
+                $message->setBodyText($newBody);
+            }
         }
     }
 
@@ -65,5 +72,11 @@ class MailProcessor implements Api\MailProcessorInterface
     public function getEncodedFileName(AttachmentInterface $attachment)
     {
         return $attachment->getFilename(true);
+    }
+
+    private function isHtml($body)
+    {
+        $firstPart = $body->getParts()[0];
+        return $firstPart->getType() === Mime::TYPE_HTML;
     }
 }

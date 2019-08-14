@@ -11,7 +11,7 @@ declare(strict_types=1);
  */
 namespace Fooman\EmailAttachments\Test\Unit\Model;
 
-use \Fooman\PhpunitBridge\BaseUnitTestCase;
+use Fooman\PhpunitBridge\BaseUnitTestCase;
 
 class AttachmentTest extends BaseUnitTestCase
 {
