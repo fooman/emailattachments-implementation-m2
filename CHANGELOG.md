@@ -1,6 +1,8 @@
 # Change Log
 
 ## [105.1.1] - 2019-08-14
+### Changed
+- Adjust for changed core behaviour around plain text emails
 
 ## [105.1.0] - 2019-06-26
 ### Added
