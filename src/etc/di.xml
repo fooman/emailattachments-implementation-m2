@@ -16,8 +16,8 @@
     <type name="Magento\Framework\Mail\Template\TransportBuilder">
         <plugin name="fooman_emailattachments_transportbuilder" type="Fooman\EmailAttachments\Plugin\TransportBuilder"/>
     </type>
-    <type name="Magento\Framework\Mail\TransportInterfaceFactory">
-        <plugin name="fooman_emailattachments_transportfactory" type="Fooman\EmailAttachments\Plugin\TransportFactory"/>
+    <type name="\Magento\Framework\Mail\MimeMessageInterfaceFactory">
+        <plugin name="fooman_emailattachments_mimemessagefactory" type="Fooman\EmailAttachments\Plugin\MimeMessageFactory"/>
     </type>
 
     <!-- module introduced preferences -->

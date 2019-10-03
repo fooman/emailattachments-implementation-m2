@@ -26,44 +26,28 @@ class EmailEventDispatcher
     private $nextEmailInfo;
 
     /**
-     * @var Api\AttachmentContainerInterface
-     */
-    private $attachmentContainer;
-
-    /**
      * @var EmailIdentifier
      */
     private $emailIdentifier;
 
-    /**
-     * @var MailProcessorInterface
-     */
-    private $mailProcessor;
-
     public function __construct(
         \Magento\Framework\Event\ManagerInterface $eventManager,
         NextEmailInfo $nextEmailInfo,
-        Api\AttachmentContainerInterface $attachmentContainer,
-        EmailIdentifier $emailIdentifier,
-        Api\MailProcessorInterface $mailProcessor
+        EmailIdentifier $emailIdentifier
     ) {
         $this->eventManager = $eventManager;
         $this->nextEmailInfo = $nextEmailInfo;
-        $this->attachmentContainer = $attachmentContainer;
         $this->emailIdentifier = $emailIdentifier;
-        $this->mailProcessor = $mailProcessor;
     }
 
-    public function dispatch(\Magento\Framework\Mail\MessageInterface $message)
+    public function dispatch(Api\AttachmentContainerInterface $attachmentContainer)
     {
         if ($this->nextEmailInfo->getTemplateIdentifier()) {
-            $this->determineEmailAndDispatch();
-            $this->attachIfNeeded($message);
-            $this->attachmentContainer->resetAttachments();
+            $this->determineEmailAndDispatch($attachmentContainer);
         }
     }
 
-    public function determineEmailAndDispatch()
+    public function determineEmailAndDispatch(Api\AttachmentContainerInterface $attachmentContainer)
     {
         $emailType = $this->emailIdentifier->getType($this->nextEmailInfo);
         if ($emailType->getType()) {
@@ -71,27 +55,10 @@ class EmailEventDispatcher
                 'fooman_emailattachments_before_send_' . $emailType->getType(),
                 [
 
-                    'attachment_container' => $this->attachmentContainer,
+                    'attachment_container' => $attachmentContainer,
                     $emailType->getVarCode() => $this->nextEmailInfo->getTemplateVars()[$emailType->getVarCode()]
                 ]
             );
         }
-    }
-
-    public function attachIfNeeded(\Magento\Framework\Mail\MessageInterface $message)
-    {
-        $this->mailProcessor->createMultipartMessage($message, $this->attachmentContainer);
-    }
-
-    /**
-     * @param Api\AttachmentInterface $attachment
-     *
-     * @deprecated in 105.0.0
-     * @see AttachmentInterface::getFilename()
-     * @return string
-     */
-    public function getEncodedFileName(Api\AttachmentInterface $attachment)
-    {
-        return $attachment->getFilename(true);
     }
 }

@@ -3,10 +3,7 @@ declare(strict_types=1);
 
 namespace Fooman\EmailAttachments\Model;
 
-use Zend\Mime\Message as MimeMessage;
-use Zend\Mime\Mime;
-use Zend\Mime\Part as MimePart;
-use Fooman\EmailAttachments\Model\Api\AttachmentInterface;
+use Magento\Framework\Mail\MimePartInterfaceFactory;
 
 /**
  * @author     Kristof Ringleff
@@ -18,65 +15,36 @@ use Fooman\EmailAttachments\Model\Api\AttachmentInterface;
  */
 class MailProcessor implements Api\MailProcessorInterface
 {
+    /**
+     * @var MimePartInterfaceFactory
+     */
+    private $mimePartInterfaceFactory;
+
+    public function __construct(
+        MimePartInterfaceFactory $mimePartInterfaceFactory
+    ) {
+        $this->mimePartInterfaceFactory = $mimePartInterfaceFactory;
+    }
+
     public function createMultipartMessage(
-        \Magento\Framework\Mail\MailMessageInterface $message,
+        array $existingParts,
         Api\AttachmentContainerInterface $attachmentContainer
     ) {
-        if ($attachmentContainer->hasAttachments()) {
-            $newBody = new MimeMessage();
-            /** @var string|\Zend\Mime\Message $existingEmailBody */
-            $existingEmailBody = $message->getBody();
 
-            //For html emails Magento already creates a MimePart
-            //@see \Magento\Framework\Mail\Message::createHtmlMimeFromString()
-            //as well as for txt emails from 2.3.3 and 2.2.10
-            if (\is_object($existingEmailBody) && $existingEmailBody instanceof \Zend\Mime\Message) {
-                $isHtml = $this->isHtml($existingEmailBody);
-                foreach ($existingEmailBody->getParts() as $existingPart) {
-                    $newBody->addPart($existingPart);
-                }
-            } else {
-                $isHtml = false;
-                $textPart = new MimePart($existingEmailBody);
-                $textPart->type = Mime::TYPE_TEXT;
-                $textPart->charset = 'utf-8';
-                $textPart->encoding = Mime::ENCODING_QUOTEDPRINTABLE;
-                $newBody->addPart($textPart);
-            }
+        foreach ($attachmentContainer->getAttachments() as $attachment) {
+            $mimePart = $this->mimePartInterfaceFactory->create(
+                [
+                    'content' => $attachment->getContent(),
+                    'fileName' => $attachment->getFilename(true),
+                    'type' => $attachment->getMimeType(),
+                    'encoding' => $attachment->getEncoding(),
+                    'disposition' => $attachment->getDisposition()
+                ]
+            );
 
-            foreach ($attachmentContainer->getAttachments() as $attachment) {
-                $mimeAttachment = new MimePart($attachment->getContent());
-                $mimeAttachment->filename = $this->getEncodedFileName($attachment);
-                $mimeAttachment->type = $attachment->getMimeType();
-                $mimeAttachment->encoding = $attachment->getEncoding();
-                $mimeAttachment->disposition = $attachment->getDisposition();
-
-                $newBody->addPart($mimeAttachment);
-            }
-            if ($isHtml) {
-                $message->setBodyHtml($newBody);
-            } else {
-                $message->setBodyText($newBody);
-            }
+            $existingParts['parts'][] = $mimePart;
         }
-    }
 
-    /**
-     * @deprecated in 105.1.0
-     * @see        AttachmentInterface::getFilename()
-     *
-     * @return string
-     * @param AttachmentInterface $attachment
-     *
-     */
-    public function getEncodedFileName(AttachmentInterface $attachment)
-    {
-        return $attachment->getFilename(true);
-    }
-
-    private function isHtml($body)
-    {
-        $firstPart = $body->getParts()[0];
-        return $firstPart->getType() === Mime::TYPE_HTML;
+        return $existingParts;
     }
 }
