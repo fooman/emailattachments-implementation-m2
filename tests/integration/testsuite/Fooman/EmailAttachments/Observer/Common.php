@@ -29,7 +29,7 @@ class Common extends BaseUnitTestCase
         $this->objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
         $this->objectManager->configure(
             ['preferences' =>
-                [\Magento\Framework\Mail\TransportInterface::class => \Magento\Framework\Mail\Transport::class],
+                [\Magento\Framework\Mail\TransportInterface::class => \Magento\Email\Model\Transport::class],
                 [\Magento\Framework\Mail\Template\TransportBuilder::class => TransportBuilder::class]
             ]
         );
@@ -86,7 +86,7 @@ class Common extends BaseUnitTestCase
      */
     protected function compareWithReceivedPdf($pdf, $number = 1): void
     {
-        $pdfAttachment = $this->getAttachmentOfType($this->getLastEmail($number), 'application/pdf');
+        $pdfAttachment = $this->getAttachmentOfType($this->getLastEmail($number), 'application/pdf; charset=utf-8');
         $this->assertEquals(strlen($pdf->render()), strlen(base64_decode($pdfAttachment['Body'])));
     }
 
@@ -97,7 +97,7 @@ class Common extends BaseUnitTestCase
      */
     protected function comparePdfAsStringWithReceivedPdf($pdf, $title = false, $number = 1): void
     {
-        $pdfAttachment = $this->getAttachmentOfType($this->getLastEmail($number), 'application/pdf');
+        $pdfAttachment = $this->getAttachmentOfType($this->getLastEmail($number), 'application/pdf; charset=utf-8');
         $this->assertEquals(strlen($pdf), strlen(base64_decode($pdfAttachment['Body'])));
         if ($title !== false) {
             $this->assertEquals($title, $this->extractFilename($pdfAttachment));
@@ -107,33 +107,39 @@ class Common extends BaseUnitTestCase
     protected function checkReceivedHtmlTermsAttachment($number = 1, $attachmentIndex = 0): void
     {
         if ($this->moduleManager->isEnabled('Fooman_PdfCustomiser')) {
-            $pdfs = $this->getAllAttachmentsOfType($this->getLastEmail($number), 'application/pdf');
+            $pdfs = $this->getAllAttachmentsOfType($this->getLastEmail($number), 'application/pdf; charset=utf-8');
             $this->assertEquals(
                 strlen($this->getExpectedPdfAgreementsString()),
                 strlen(base64_decode($pdfs[$attachmentIndex]['Body']))
             );
         } else {
-            $termsAttachment = $this->getAttachmentOfType(
+            $found = false;
+            $termsAttachments = $this->getAllAttachmentsOfType(
                 $this->getLastEmail($number),
-                'text/html; charset=UTF-8'
+                'text/html; charset=utf-8'
             );
-            $this->assertContains(
-                'Checkout agreement content: <b>HTML</b>',
-                base64_decode($termsAttachment['Body'])
-            );
+            foreach ($termsAttachments as $termsAttachment) {
+                if (strpos(
+                    base64_decode($termsAttachment['Body']),
+                    'Checkout agreement content: <b>HTML</b>'
+                ) !== false) {
+                    $found = true;
+                }
+            }
+            $this->assertTrue($found);
         }
     }
 
     protected function checkReceivedTxtTermsAttachment($number = 1, $attachmentIndex = 0): void
     {
         if ($this->moduleManager->isEnabled('Fooman_PdfCustomiser')) {
-            $pdfs = $this->getAllAttachmentsOfType($this->getLastEmail($number), 'application/pdf');
+            $pdfs = $this->getAllAttachmentsOfType($this->getLastEmail($number), 'application/pdf; charset=utf-8');
             $this->assertEquals(
                 strlen($this->getExpectedPdfAgreementsString()),
                 strlen(base64_decode($pdfs[$attachmentIndex]['Body']))
             );
         } else {
-            $termsAttachment = $this->getAttachmentOfType($this->getLastEmail($number), 'text/plain');
+            $termsAttachment = $this->getAttachmentOfType($this->getLastEmail($number), 'text/plain; charset=utf-8');
             $this->assertContains(
                 'Checkout agreement content: TEXT',
                 base64_decode($termsAttachment['Body'])
