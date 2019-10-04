@@ -1,6 +1,6 @@
 # Change Log
 
-## [Unreleased]
+## [106.0.0] - 2019-10-04
 ### Changed
 - Adjustments for new email handling in Magento 2.3.3
   Removed Plugin/TransportFactory with most functionality now handled by Plugin/MimeMessageFactory,
