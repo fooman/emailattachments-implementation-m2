@@ -18,7 +18,7 @@ class ContentAttacher
     const MIME_PDF = 'application/pdf';
     const TYPE_OCTETSTREAM = 'application/octet-stream';
     const MIME_TXT = 'text/plain';
-    const MIME_HTML = 'text/html; charset=UTF-8';
+    const MIME_HTML = 'text/html';
 
     private $attachmentFactory;
 
