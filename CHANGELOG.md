@@ -6,6 +6,7 @@
   Removed Plugin/TransportFactory with most functionality now handled by Plugin/MimeMessageFactory,
   Method signature changes for Model\EmailEventDispatcher
 - Use previous releases for earlier versions of Magento
+- Removed support for Php 7.0
 
 ## [105.1.1] - 2019-08-14
 ### Changed
