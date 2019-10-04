@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Fooman\EmailAttachments\Plugin;
 
 use Fooman\EmailAttachments\Model\Api\MailProcessorInterface;
-use Fooman\EmailAttachments\Model\Api\AttachmentContainerInterface;
+use Fooman\EmailAttachments\Model\Api\AttachmentContainerFactory;
 
 /**
  * @author     Kristof Ringleff
@@ -23,7 +23,7 @@ class MimeMessageFactory
     private $emailEventDispatcher;
 
     /**
-     * @var AttachmentContainerInterfaceFactory
+     * @var AttachmentContainerFactory
      */
     private $attachmentContainerFactory;
 
@@ -34,7 +34,7 @@ class MimeMessageFactory
 
     public function __construct(
         \Fooman\EmailAttachments\Model\EmailEventDispatcher $emailEventDispatcher,
-        AttachmentContainerInterfaceFactory $attachmentContainer,
+        AttachmentContainerFactory $attachmentContainer,
         MailProcessorInterface $mailProcessor
     ) {
         $this->emailEventDispatcher = $emailEventDispatcher;
