@@ -4,7 +4,8 @@ declare(strict_types=1);
 namespace Fooman\EmailAttachments\Plugin;
 
 use Fooman\EmailAttachments\Model\Api\MailProcessorInterface;
-use Fooman\EmailAttachments\Model\Api\AttachmentContainerFactory;
+use Fooman\EmailAttachments\Model\Api\AttachmentContainerInterface;
+use Fooman\EmailAttachments\Model\AttachmentContainerFactory;
 
 /**
  * @author     Kristof Ringleff
