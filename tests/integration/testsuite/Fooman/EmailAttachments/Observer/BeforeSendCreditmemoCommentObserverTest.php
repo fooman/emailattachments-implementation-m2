@@ -70,7 +70,7 @@ class BeforeSendCreditmemoCommentObserverTest extends Common
     {
         $this->sendEmail();
 
-        $pdfAttachment = $this->getAttachmentOfType($this->getLastEmail(), 'application/pdf');
+        $pdfAttachment = $this->getAttachmentOfType($this->getLastEmail(), 'application/pdf; charset=utf-8');
         $this->assertFalse($pdfAttachment);
     }
 

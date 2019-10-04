@@ -76,7 +76,7 @@ class BeforeSendInvoiceObserverTest extends Common
     {
         $this->sendEmail();
 
-        $pdfAttachment = $this->getAttachmentOfType($this->getLastEmail(), 'application/pdf');
+        $pdfAttachment = $this->getAttachmentOfType($this->getLastEmail(), 'application/pdf; charset=utf-8');
         $this->assertFalse($pdfAttachment);
     }
 
@@ -127,7 +127,7 @@ class BeforeSendInvoiceObserverTest extends Common
         $this->comparePdfs($invoice, 1);
         $mail = $this->getLastEmail();
 
-        $allPdfAttachments = $this->getAllAttachmentsOfType($mail, 'application/pdf');
+        $allPdfAttachments = $this->getAllAttachmentsOfType($mail, 'application/pdf; charset=utf-8');
         if ($this->moduleManager->isEnabled('Fooman_PdfCustomiser')) {
             $this->assertCount(2, $allPdfAttachments);
         } else {
@@ -151,7 +151,7 @@ class BeforeSendInvoiceObserverTest extends Common
         $mail = $this->getLastEmail();
         $this->assertEquals('copyto@example.com', $mail['Content']['Headers']['Bcc'][0]);
 
-        $allPdfAttachments = $this->getAllAttachmentsOfType($mail, 'application/pdf');
+        $allPdfAttachments = $this->getAllAttachmentsOfType($mail, 'application/pdf; charset=utf-8');
         if ($this->moduleManager->isEnabled('Fooman_PdfCustomiser')) {
             $this->assertCount(2, $allPdfAttachments);
         } else {
