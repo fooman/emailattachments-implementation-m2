@@ -42,7 +42,7 @@ class MailProcessor implements Api\MailProcessorInterface
                 ]
             );
 
-            $existingParts['parts'][] = $mimePart;
+            $existingParts[] = $mimePart;
         }
 
         return $existingParts;
