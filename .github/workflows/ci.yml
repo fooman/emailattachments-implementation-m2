@@ -25,3 +25,4 @@ jobs:
       - uses: extdn/github-actions-m2/install-m2-from-mirror@master
         with:
           ce-version: 2.3.3
+          db-port: 33306
