@@ -25,5 +25,4 @@ jobs:
       - uses: extdn/github-actions-m2/install-m2-from-mirror@master
         with:
           ce-version: 2.3.3
-          db-host: 127.0.0.1
-          db-port: ${{ job.services.mysql.ports[3306] }}
+          db-host: mysql
