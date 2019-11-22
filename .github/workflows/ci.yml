@@ -6,7 +6,7 @@ jobs:
     name: Static Code Analysis
     runs-on: ubuntu-latest
     container:
-      image: davidalger/warden:mage2-fpm-7.3
+      image: duhon/php:7.3-alpine
 
     services:
       mysql:
