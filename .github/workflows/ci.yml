@@ -2,7 +2,20 @@ name: Continous Integration
 on: [push, pull_request]
 
 jobs:
-  build:
+  static:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: extdn/github-actions-m2/magento-coding-standard@master
+
+  phpmd:
+    name: Magento 2 - Phpmd
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: extdn/github-actions-m2/magento-mess-detector@master
+
+  integration:
     name: Static Code Analysis
     runs-on: ubuntu-latest
     container:
@@ -25,4 +38,3 @@ jobs:
       - uses: extdn/github-actions-m2/install-m2-from-mirror@master
         with:
           ce-version: 2.3.3
-          db-host: mysql
