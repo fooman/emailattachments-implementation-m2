@@ -93,8 +93,7 @@ class BeforeSendShipmentObserverTest extends Common
     }
 
     /**
-     * @magentoDataFixture   Magento/Sales/_files/shipment.php
-     * @magentoDataFixture   Magento/Sales/_files/invoice.php
+     * @magentoDataFixture   Magento/Sales/_files/order_with_shipping_and_invoice.php
      * @magentoConfigFixture current_store sales_email/shipment/attachinvoicepdf 1
      * @magentoConfigFixture current_store sales_email/shipment/attachpdf 1
      */
