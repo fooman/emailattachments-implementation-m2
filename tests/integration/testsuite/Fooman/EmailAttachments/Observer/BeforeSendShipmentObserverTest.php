@@ -94,6 +94,22 @@ class BeforeSendShipmentObserverTest extends Common
 
     /**
      * @magentoDataFixture   Magento/Sales/_files/shipment.php
+     * @magentoDataFixture   Magento/Sales/_files/invoice.php
+     * @magentoConfigFixture current_store sales_email/shipment/attachinvoicepdf 1
+     * @magentoConfigFixture current_store sales_email/shipment/attachpdf 1
+     */
+    public function testInvoicePdfAttachment(): void
+    {
+        $this->testWithAttachment();
+        $allPdfAttachments = $this->getAllAttachmentsOfType(
+            $this->getLastEmail(),
+            'application/pdf; charset=utf-8'
+        );
+        $this->assertCount(2, $allPdfAttachments);
+    }
+
+    /**
+     * @magentoDataFixture   Magento/Sales/_files/shipment.php
      * @magentoDataFixture   Magento/CheckoutAgreements/_files/agreement_active_with_html_content.php
      * @magentoAppIsolation  enabled
      * @magentoConfigFixture current_store sales_email/shipment/attachagreement 1

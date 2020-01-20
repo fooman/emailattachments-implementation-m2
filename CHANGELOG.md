@@ -1,13 +1,16 @@
 # Change Log
 
 ## [Unreleased]
+### Added
+- Ability to attach invoices to the shipping confirmation email
 ### Changed
+- Model\Api\PdfRendererInterface getFileName method signature changed
 - Updated comments for latest Magento Coding Standards
 
 ## [106.0.0] - 2019-10-04
 ### Changed
 - Adjustments for new email handling in Magento 2.3.3
-  Removed Plugin/TransportFactory with most functionality now handled by Plugin/MimeMessageFactory,
+  Removed Plugin\TransportFactory with most functionality now handled by Plugin\MimeMessageFactory,
   Method signature changes for Model\EmailEventDispatcher
 - Use previous releases for earlier versions of Magento
 - Removed support for Php 7.0

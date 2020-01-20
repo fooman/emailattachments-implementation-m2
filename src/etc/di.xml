@@ -53,6 +53,12 @@
         </arguments>
     </type>
 
+    <type name="\Fooman\EmailAttachments\Observer\AbstractSendInvoiceShipmentObserver">
+        <arguments>
+            <argument name="pdfRenderer" xsi:type="object">fooman_emailattachments_invoice_pdf_renderer</argument>
+        </arguments>
+    </type>
+
     <virtualType name="fooman_emailattachments_creditmemo_pdf_renderer" type="\Fooman\EmailAttachments\Model\PdfRenderer">
         <arguments>
             <argument name="pdfRenderer" xsi:type="object">\Magento\Sales\Model\Order\Pdf\Creditmemo</argument>

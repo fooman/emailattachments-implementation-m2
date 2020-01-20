@@ -85,6 +85,22 @@ class BeforeSendShipmentCommentObserverTest extends Common
         $this->checkReceivedHtmlTermsAttachment(1, 1);
     }
 
+    /**
+     * @magentoDataFixture   Magento/Sales/_files/shipment.php
+     * @magentoDataFixture   Magento/Sales/_files/invoice.php
+     * @magentoConfigFixture current_store sales_email/shipment_comment/attachinvoicepdf 1
+     * @magentoConfigFixture current_store sales_email/shipment_comment/attachpdf 1
+     */
+    public function testInvoicePdfAttachment(): void
+    {
+        $this->testWithAttachment();
+        $allPdfAttachments = $this->getAllAttachmentsOfType(
+            $this->getLastEmail(),
+            'application/pdf; charset=utf-8'
+        );
+        $this->assertCount(2, $allPdfAttachments);
+    }
+
     protected function getShipment(): \Magento\Sales\Api\Data\ShipmentInterface
     {
         $collection = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->create(

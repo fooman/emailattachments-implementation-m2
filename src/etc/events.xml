@@ -35,10 +35,14 @@
     <event name="fooman_emailattachments_before_send_shipment">
         <observer name="fooman_emailattachments_before_send_shipment_observer"
                   instance="Fooman\EmailAttachments\Observer\BeforeSendShipmentObserver"/>
+        <observer name="fooman_emailattachments_before_send_invoice_shipment_observer"
+                  instance="Fooman\EmailAttachments\Observer\BeforeSendInvoiceShipmentObserver"/>
     </event>
     <event name="fooman_emailattachments_before_send_shipment_comment">
         <observer name="fooman_emailattachments_before_send_shipment_comment_observer"
                   instance="Fooman\EmailAttachments\Observer\BeforeSendShipmentCommentObserver"/>
+        <observer name="fooman_emailattachments_before_send_invoice_shipment_comment_observer"
+                  instance="Fooman\EmailAttachments\Observer\BeforeSendInvoiceShipmentCommentObserver"/>
     </event>
 
     <!--Credit Memo Emails-->
