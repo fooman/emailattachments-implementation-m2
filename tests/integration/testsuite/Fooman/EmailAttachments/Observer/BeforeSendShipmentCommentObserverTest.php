@@ -139,5 +139,6 @@ class BeforeSendShipmentCommentObserverTest extends Common
                 $item->setSku('Test_sku');
             }
         }
+        $invoice->save();
     }
 }
