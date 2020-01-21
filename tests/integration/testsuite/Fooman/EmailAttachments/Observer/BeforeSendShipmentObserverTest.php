@@ -99,6 +99,7 @@ class BeforeSendShipmentObserverTest extends Common
      */
     public function testInvoicePdfAttachment(): void
     {
+        $this->fixMissingSkuOnInvoiceItem();
         $this->testWithAttachment();
         $allPdfAttachments = $this->getAllAttachmentsOfType(
             $this->getLastEmail(),
@@ -199,5 +200,18 @@ class BeforeSendShipmentObserverTest extends Common
 
         $shipmentSender->send($shipment);
         return $shipment;
+    }
+
+    private function fixMissingSkuOnInvoiceItem(): void
+    {
+        $collection = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->create(
+            \Magento\Sales\Model\ResourceModel\Order\Invoice\Collection::class
+        )->setPageSize(1);
+        $invoice = $collection->getFirstItem();
+        foreach ($invoice->getAllItems() as $item) {
+            if (!$item->getSku()) {
+                $item->setSku('Test_sku');
+            }
+        }
     }
 }
