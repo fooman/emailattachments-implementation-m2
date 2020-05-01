@@ -3,6 +3,17 @@ declare(strict_types=1);
 
 namespace Fooman\EmailAttachments\Model;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Sales\Model\Order\Email\Container\OrderIdentity;
+use Magento\Sales\Model\Order\Email\Container\OrderCommentIdentity;
+use Magento\Sales\Model\Order\Email\Container\InvoiceIdentity;
+use Magento\Sales\Model\Order\Email\Container\InvoiceCommentIdentity;
+use Magento\Sales\Model\Order\Email\Container\ShipmentIdentity;
+use Magento\Sales\Model\Order\Email\Container\ShipmentCommentIdentity;
+use Magento\Sales\Model\Order\Email\Container\CreditmemoIdentity;
+use Magento\Sales\Model\Order\Email\Container\CreditmemoCommentIdentity;
+use Magento\Store\Model\ScopeInterface;
+
 /**
  * @copyright  Copyright (c) 2015 Fooman Limited (http://www.fooman.co.nz)
  *
@@ -11,11 +22,18 @@ namespace Fooman\EmailAttachments\Model;
  */
 class EmailIdentifier
 {
+    /**
+     * @var ScopeConfigInterface
+     */
     private $scopeConfig;
+
+    /**
+     * @var EmailTypeFactory
+     */
     private $emailTypeFactory;
 
     public function __construct(
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
+        ScopeConfigInterface $scopeConfig,
         EmailTypeFactory $emailTypeFactory
     ) {
         $this->scopeConfig = $scopeConfig;
@@ -23,6 +41,11 @@ class EmailIdentifier
     }
 
     /**
+     * If you want to identify additional email types add an afterGetType plugin to this method.
+     *
+     * The below class will then emit your custom event fooman_emailattachments_before_send_YOURTYPE
+     * @see EmailEventDispatcher::determineEmailAndDispatch()
+     *
      * @param NextEmailInfo $nextEmailInfo
      *
      * @return EmailType
@@ -66,79 +89,107 @@ class EmailIdentifier
         return false;
     }
 
+    private function doesTemplateIdMatchConfig(
+        $templateIdentifier,
+        $guestTemplateConfigPath,
+        $customerTemplateConfigPath,
+        $storeId
+    ) {
+        return $this->scopeConfig->getValue($guestTemplateConfigPath, ScopeInterface::SCOPE_STORE, $storeId)
+            === $templateIdentifier
+            || $this->scopeConfig->getValue($customerTemplateConfigPath, ScopeInterface::SCOPE_STORE, $storeId)
+            === $templateIdentifier;
+    }
+
     private function getShipmentEmail($templateIdentifier, $storeId)
     {
-        if ($this->scopeConfig->getValue(
-            \Magento\Sales\Model\Order\Email\Container\ShipmentCommentIdentity::XML_PATH_EMAIL_GUEST_TEMPLATE,
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+        if ($this->doesTemplateIdMatchConfig(
+            $templateIdentifier,
+            ShipmentIdentity::XML_PATH_EMAIL_GUEST_TEMPLATE,
+            ShipmentIdentity::XML_PATH_EMAIL_TEMPLATE,
             $storeId
-        ) === $templateIdentifier ||
-            $this->scopeConfig->getValue(
-                \Magento\Sales\Model\Order\Email\Container\ShipmentCommentIdentity::XML_PATH_EMAIL_TEMPLATE,
-                \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
-                $storeId
-            ) === $templateIdentifier
-        ) {
+        )) {
+            return 'shipment';
+        }
+
+        if ($this->doesTemplateIdMatchConfig(
+            $templateIdentifier,
+            ShipmentCommentIdentity::XML_PATH_EMAIL_GUEST_TEMPLATE,
+            ShipmentCommentIdentity::XML_PATH_EMAIL_TEMPLATE,
+            $storeId
+        )) {
             return 'shipment_comment';
         }
 
-        return 'shipment';
+        return false;
     }
 
     private function getInvoiceEmail($templateIdentifier, $storeId)
     {
-        if ($this->scopeConfig->getValue(
-            \Magento\Sales\Model\Order\Email\Container\InvoiceCommentIdentity::XML_PATH_EMAIL_GUEST_TEMPLATE,
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+        if ($this->doesTemplateIdMatchConfig(
+            $templateIdentifier,
+            InvoiceIdentity::XML_PATH_EMAIL_GUEST_TEMPLATE,
+            InvoiceIdentity::XML_PATH_EMAIL_TEMPLATE,
             $storeId
-        ) === $templateIdentifier ||
-            $this->scopeConfig->getValue(
-                \Magento\Sales\Model\Order\Email\Container\InvoiceCommentIdentity::XML_PATH_EMAIL_TEMPLATE,
-                \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
-                $storeId
-            ) === $templateIdentifier
-        ) {
+        )) {
+            return 'invoice';
+        }
+
+        if ($this->doesTemplateIdMatchConfig(
+            $templateIdentifier,
+            InvoiceCommentIdentity::XML_PATH_EMAIL_GUEST_TEMPLATE,
+            InvoiceCommentIdentity::XML_PATH_EMAIL_TEMPLATE,
+            $storeId
+        )) {
             return 'invoice_comment';
         }
 
-        return 'invoice';
+        return false;
     }
 
     private function getOrderEmail($templateIdentifier, $storeId)
     {
-        if ($this->scopeConfig->getValue(
-            \Magento\Sales\Model\Order\Email\Container\OrderCommentIdentity::XML_PATH_EMAIL_GUEST_TEMPLATE,
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+        if ($this->doesTemplateIdMatchConfig(
+            $templateIdentifier,
+            OrderIdentity::XML_PATH_EMAIL_GUEST_TEMPLATE,
+            OrderIdentity::XML_PATH_EMAIL_TEMPLATE,
             $storeId
-        ) === $templateIdentifier ||
-            $this->scopeConfig->getValue(
-                \Magento\Sales\Model\Order\Email\Container\OrderCommentIdentity::XML_PATH_EMAIL_TEMPLATE,
-                \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
-                $storeId
-            ) === $templateIdentifier
-        ) {
+        )) {
+            return 'order';
+        }
+
+        if ($this->doesTemplateIdMatchConfig(
+            $templateIdentifier,
+            OrderCommentIdentity::XML_PATH_EMAIL_GUEST_TEMPLATE,
+            OrderCommentIdentity::XML_PATH_EMAIL_TEMPLATE,
+            $storeId
+        )) {
             return 'order_comment';
         }
 
-        return 'order';
+        return false;
     }
 
     private function getCreditmemoEmail($templateIdentifier, $storeId)
     {
-        if ($this->scopeConfig->getValue(
-            \Magento\Sales\Model\Order\Email\Container\CreditmemoCommentIdentity::XML_PATH_EMAIL_GUEST_TEMPLATE,
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+        if ($this->doesTemplateIdMatchConfig(
+            $templateIdentifier,
+            CreditmemoIdentity::XML_PATH_EMAIL_GUEST_TEMPLATE,
+            CreditmemoIdentity::XML_PATH_EMAIL_TEMPLATE,
             $storeId
-        ) === $templateIdentifier ||
-            $this->scopeConfig->getValue(
-                \Magento\Sales\Model\Order\Email\Container\CreditmemoCommentIdentity::XML_PATH_EMAIL_TEMPLATE,
-                \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
-                $storeId
-            ) === $templateIdentifier
-        ) {
+        )) {
+            return 'creditmemo';
+        }
+
+        if ($this->doesTemplateIdMatchConfig(
+            $templateIdentifier,
+            CreditmemoCommentIdentity::XML_PATH_EMAIL_GUEST_TEMPLATE,
+            CreditmemoCommentIdentity::XML_PATH_EMAIL_TEMPLATE,
+            $storeId
+        )) {
             return 'creditmemo_comment';
         }
 
-        return 'creditmemo';
+        return false;
     }
 }
