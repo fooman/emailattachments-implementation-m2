@@ -35,7 +35,19 @@ jobs:
         && composer install --prefer-dist
 
       - name: Install Magento
-        run: docker-compose -f .github/workflows/docker-compose.yml exec bin/magento
+        run: >-
+            docker-compose -f .github/workflows/docker-compose.yml exec bin/magento setup:install
+            --backend-frontname=admin
+            --db-host=mysql
+            --db-name=magento_performance_tests
+            --db-user=root
+            --db-password=123123q
+            --admin-user=admin@example.com
+            --admin-password=password1
+            --admin-email=admin@example.com
+            --admin-firstname=firstname
+            --admin-lastname=lastname
+            --base-url=http://magento2.test/
 
       - name: Run Blackfire
         run: docker-compose -f .github/workflows/docker-compose.yml exec -e BLACKFIRE_CLIENT_ID=${{ secrets.BLACKFIRE_CLIENT_ID }} -e BLACKFIRE_CLIENT_TOKEN=${{ secrets.BLACKFIRE_CLIENT_TOKEN }} -e BLACKFIRE_SERVER_ID=${{ secrets.BLACKFIRE_SERVER_ID }} -e BLACKFIRE_SERVER_TOKEN=${{ secrets.BLACKFIRE_SERVER_TOKEN }} blackfire --json curl http://magento2.test/
