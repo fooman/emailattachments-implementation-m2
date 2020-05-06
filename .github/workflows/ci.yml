@@ -10,11 +10,11 @@ jobs:
       php-fpm:
         image: quay.io/warden/php-fpm:7.3-magento2
         volumes:
-          - $GITHUB_WORKSPACE:/app
+          - /home/runner/work/_temp/_github_workflow:/app
       php-blackfire:
         image: quay.io/warden/php-fpm:7.3-magento2-blackfire
         volumes:
-          - $GITHUB_WORKSPACE:/app
+          - /home/runner/work/_temp/_github_workflow:/app
       mysql:
         image: quay.io/warden/mysql:5.7
         env:
