@@ -27,13 +27,15 @@ jobs:
       - name: Start docker-compose
         run: docker-compose -f .github/workflows/docker-compose.yml up -d
 
-      - name: Check running containers
-        run: docker ps -a
-
       - name: Composer install
-        uses: extdn/github-actions-m2/install-m2-from-mirror@master
-        with:
-          ce-version: 2.3.5
+        run: |
+        composer create-project --repository=https://repo-magento-mirror.fooman.co.nz/ magento/project-community-edition:2.3.5 . --no-install --no-interaction
+        && composer config --unset repo.0
+        && composer config repo.foomanmirror composer https://repo-magento-mirror.fooman.co.nz/
+        && composer install --prefer-dist
+
+      - name: Install Magento
+        run: docker-compose -f .github/workflows/docker-compose.yml exec bin/magento
 
       - name: Run Blackfire
         run: docker-compose -f .github/workflows/docker-compose.yml exec -e BLACKFIRE_CLIENT_ID=${{ secrets.BLACKFIRE_CLIENT_ID }} -e BLACKFIRE_CLIENT_TOKEN=${{ secrets.BLACKFIRE_CLIENT_TOKEN }} -e BLACKFIRE_SERVER_ID=${{ secrets.BLACKFIRE_SERVER_ID }} -e BLACKFIRE_SERVER_TOKEN=${{ secrets.BLACKFIRE_SERVER_TOKEN }} blackfire --json curl http://magento2.test/
