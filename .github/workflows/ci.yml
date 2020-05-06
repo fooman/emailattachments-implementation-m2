@@ -2,6 +2,83 @@ name: Continous Integration
 on: [push, pull_request]
 
 jobs:
+  performance:
+    name: Performance Testing
+    runs-on: ubuntu-latest
+
+    services:
+      php-fpm:
+        image: quay.io/warden/php-fpm:7.3-magento2
+        volumes:
+          - $GITHUB_WORKSPACE:/app
+      php-blackfire:
+        image: quay.io/warden/php-fpm:7.3-magento2-blackfire
+        depends_on:
+          - php-fpm
+        volumes:
+          - $GITHUB_WORKSPACE:/app
+      mysql:
+        image: quay.io/warden/mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: 123123q
+          MYSQL_DATABASE: magento_performance_tests
+        ports:
+          - 3306
+        options: >-
+          --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+      rabbitmq:
+        image: quay.io/warden/rabbitmq:3.7
+        ports:
+          - 5672
+        options: --health-cmd "rabbitmqctl node_health_check" --health-interval 10s --health-timeout 5s --health-retries 5
+      magento2.test:
+        options: >-
+          --name nginx
+          --user root
+          --network-alias magento2.test
+          -v /home/runner/work/_temp/_github_workflow:/var/www/html
+        image: quay.io/warden/nginx:1.17
+        env:
+          NGINX_PUBLIC: ""
+          NGINX_TEMPLATE: magento2.conf
+        ports:
+          - 80:80
+
+    steps:
+      - uses: actions/checkout@v2
+        name: Checkout files
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: "echo \"::set-output name=dir::$(composer config cache-dir)\""
+
+      - name: Cache dependencies
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Setup Composer Access
+        run: composer config -a -g http-basic.repo.magento.com ${{ secrets.REPO_MAGENTO_USERNAME }} ${{ secrets.REPO_MAGENTO_PASSWORD }}
+
+      - name: List Files
+        run: ls -al && id && ls -al $GITHUB_WORKSPACE
+
+      - name: Composer install
+      - uses: extdn/github-actions-m2/install-m2-from-mirror@master
+          with:
+            ce-version: 2.3.5
+
+      - name: Run Blackfire
+        uses: extdn/github-actions-m2/blackfire@master
+        with:
+          url: http://magento2.test/
+          client-id: ${{ secrets.BLACKFIRE_CLIENT_ID }}
+          client-token: ${{ secrets.BLACKFIRE_CLIENT_TOKEN }}
+          server-id: ${{ secrets.BLACKFIRE_SERVER_ID }}
+          server-token: ${{ secrets.BLACKFIRE_SERVER_TOKEN }}
+
   static:
     runs-on: ubuntu-latest
     steps:
