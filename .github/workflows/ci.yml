@@ -28,11 +28,11 @@ jobs:
         run: docker-compose -f .github/workflows/docker-compose.yml up -d
 
       - name: Composer install
-        run: |
-        composer create-project --repository=https://repo-magento-mirror.fooman.co.nz/ magento/project-community-edition:2.3.5 . --no-install --no-interaction
-        && composer config --unset repo.0
-        && composer config repo.foomanmirror composer https://repo-magento-mirror.fooman.co.nz/
-        && composer install --prefer-dist
+        run: >-
+            composer create-project --repository=https://repo-magento-mirror.fooman.co.nz/ magento/project-community-edition:2.3.5 . --no-install --no-interaction
+            && composer config --unset repo.0
+            && composer config repo.foomanmirror composer https://repo-magento-mirror.fooman.co.nz/
+            && composer install --prefer-dist
 
       - name: Install Magento
         run: >-
