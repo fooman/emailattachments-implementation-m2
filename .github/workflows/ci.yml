@@ -13,8 +13,6 @@ jobs:
           - $GITHUB_WORKSPACE:/app
       php-blackfire:
         image: quay.io/warden/php-fpm:7.3-magento2-blackfire
-        depends_on:
-          - php-fpm
         volumes:
           - $GITHUB_WORKSPACE:/app
       mysql:
