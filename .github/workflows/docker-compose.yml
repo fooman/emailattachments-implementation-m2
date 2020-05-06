@@ -1,0 +1,38 @@
+version: "3.5"
+services:
+  php-fpm:
+    image: quay.io/warden/php-fpm:7.3-magento2
+    volumes:
+      - /home/runner/work/_temp/_github_workflow:/var/www/html
+  php-blackfire:
+    image: quay.io/warden/php-fpm:7.3-magento2-blackfire
+    volumes:
+      - /home/runner/work/_temp/_github_workflow:/var/www/html
+  blackfire:
+    image: blackfire/blackfire:latest
+  mysql:
+    image: quay.io/warden/mysql:5.7
+    env:
+      MYSQL_ROOT_PASSWORD: 123123q
+      MYSQL_DATABASE: magento_performance_tests
+    ports:
+      - 3306
+    options: >-
+      --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+  rabbitmq:
+    image: quay.io/warden/rabbitmq:3.7
+    ports:
+      - 5672
+    options: --health-cmd "rabbitmqctl node_health_check" --health-interval 10s --health-timeout 5s --health-retries 5
+  magento2.test:
+    options: >-
+      --name nginx
+      --user root
+      --network-alias magento2.test
+      -v /home/runner/work/_temp/_github_workflow:/var/www/html
+    image: quay.io/warden/nginx:1.17
+    env:
+      NGINX_PUBLIC: ""
+      NGINX_TEMPLATE: magento2.conf
+    ports:
+      - 80:80
