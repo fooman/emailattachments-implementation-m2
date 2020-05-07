@@ -10,7 +10,7 @@ services:
     volumes:
       - ${GITHUB_WORKSPACE}:/var/www/html
 
-  blackfire:
+  blackfire-agent:
     image: blackfire/blackfire:latest
 
   mysql:
