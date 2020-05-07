@@ -48,9 +48,9 @@ jobs:
 
       - name: Generate Performance Fixtures
         run: >-
-          docker-compose -f ./extension/.github/workflows/performance/docker-compose.yml exec php-fpm
-          cd /var/ww/html/m2
-          && php -f bin/magento setup:performance:generate-fixtures setup/performance-toolkit/profiles/ce/small.xml
+          docker-compose -f ./extension/.github/workflows/performance/docker-compose.yml exec -T php-fpm
+          bash -c 'cd /var/ww/html/m2
+          && php -f bin/magento setup:performance:generate-fixtures setup/performance-toolkit/profiles/ce/small.xml'
 
       - name: Run Blackfire
         run: docker-compose -f ./extension/.github/workflows/performance/docker-compose.yml run -e BLACKFIRE_CLIENT_ID=${{ secrets.BLACKFIRE_CLIENT_ID }} -e BLACKFIRE_CLIENT_TOKEN=${{ secrets.BLACKFIRE_CLIENT_TOKEN }} -e BLACKFIRE_SERVER_ID=${{ secrets.BLACKFIRE_SERVER_ID }} -e BLACKFIRE_SERVER_TOKEN=${{ secrets.BLACKFIRE_SERVER_TOKEN }} blackfire-agent blackfire --json curl http://magento2.test/ -v=4
@@ -60,21 +60,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: extdn/github-actions-m2/magento-coding-standard@v1
+      - uses: extdn/github-actions-m2/magento-coding-standard
 
   phpmd:
     name: M2 Mess Detector
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: extdn/github-actions-m2/magento-mess-detector@v1
+      - uses: extdn/github-actions-m2/magento-mess-detector
 
   phpstan:
     name: M2 PhpStan
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: extdn/github-actions-m2/magento-phpstan@v1
+      - uses: extdn/github-actions-m2/magento-phpstan
 
   integration:
     name: WIP Integration Tests
