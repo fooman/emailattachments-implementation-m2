@@ -49,7 +49,7 @@ jobs:
       - name: Generate Performance Fixtures
         run: >-
           docker-compose -f ./extension/.github/workflows/performance/docker-compose.yml exec -T php-fpm
-          bash -c 'cd /var/ww/html/m2
+          bash -c 'cd /var/www/html/m2
           && php -f bin/magento setup:performance:generate-fixtures setup/performance-toolkit/profiles/ce/small.xml'
 
       - name: Run Blackfire
