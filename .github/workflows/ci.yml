@@ -31,7 +31,7 @@ jobs:
         run: docker-compose -f ./extension/.github/workflows/performance/docker-compose.yml up -d
 
       - name: Docker output
-        run: docker-compose -f ./extension/.github/workflows/performance/docker-compose.yml inspect &&  docker inspect $(docker-compose -f ./extension/.github/workflows/performance/docker-compose.yml ps -q blackfire-agent)
+        run: docker-compose -f ./extension/.github/workflows/performance/docker-compose.yml ps &&  docker inspect $(docker-compose -f ./extension/.github/workflows/performance/docker-compose.yml ps -q blackfire-agent)
 
       - name: Composer install
         run: >-

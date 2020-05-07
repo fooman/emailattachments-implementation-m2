@@ -4,16 +4,20 @@ services:
     image: quay.io/warden/php-fpm:7.3-magento2
     volumes:
       - ${GITHUB_WORKSPACE}:/var/www/html
+    networks:
+      default:
 
   php-blackfire:
     image: quay.io/warden/php-fpm:7.3-magento2-blackfire
     volumes:
       - ${GITHUB_WORKSPACE}:/var/www/html
+    networks:
+      default:
 
   blackfire-agent:
     image: blackfire/blackfire:latest
-    links:
-      - "nginx:magento2.test"
+    networks:
+      default:
 
   mysql:
     image: quay.io/warden/mysql:5.7
@@ -26,6 +30,8 @@ services:
       test: mysqladmin ping
       interval: 10s
       retries: 3
+    networks:
+      default:
 
   rabbitmq:
     image: quay.io/warden/rabbitmq:3.7
@@ -35,6 +41,8 @@ services:
       test: rabbitmqctl node_health_check
       interval: 10s
       retries: 3
+    networks:
+      default:
 
   nginx:
     networks:
@@ -51,3 +59,6 @@ services:
       - NGINX_TEMPLATE=magento2.conf
     ports:
       - 80:80
+
+networks:
+  default:
