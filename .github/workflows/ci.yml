@@ -22,7 +22,6 @@ jobs:
 
       - name: Cache dependencies
         uses: actions/cache@v1
-        working-directory: ./extension
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
