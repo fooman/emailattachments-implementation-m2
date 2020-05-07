@@ -79,20 +79,14 @@ jobs:
       - name: Extract New Profile ID
         id: blackfire-profile
         run: |
-          echo "::set-output name=id::$json_result | jq '.id'"
-        env:
-          json_result: ${{ steps.set.outputs.blackfire-baseline}}
-
-      - name: Extract Profile URL
-        id: blackfire-profile-url
-        run: |
-          echo "::set-output name=url::$json_result | jq '._links.self.href'"
+          echo "##[set-output name=id;]$($json_result | jq '.id')"
+          echo "##[set-output name=url;]$($json_result | jq '._links.self.href')"
         env:
           json_result: ${{ steps.set.outputs.blackfire-baseline}}
 
       - name: Run Blackfire Again
         id: blackfire-after
-        run: docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} run blackfire-agent blackfire --json  --reference=${{ steps.blackfire-profile.id}} curl http://magento2.test/ -v=4
+        run: docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} run blackfire-agent blackfire --json  --reference=${{ steps.blackfire-profile.outputs.id}} curl http://magento2.test/ -v=4
         env:
           BLACKFIRE_CLIENT_ID: ${{ secrets.BLACKFIRE_CLIENT_ID }}
           BLACKFIRE_CLIENT_TOKEN: ${{ secrets.BLACKFIRE_CLIENT_TOKEN }}
@@ -100,7 +94,7 @@ jobs:
           BLACKFIRE_SERVER_TOKEN: ${{ secrets.BLACKFIRE_SERVER_TOKEN }}
 
       - name: Output result
-        run: echo "::debug ::Link"${{ steps.blackfire-profile-url.url}}
+        run: echo "::debug ::Link"${{ steps.blackfire-profile.outputs.url}}
 
   static:
     name: M2 Coding Standard
