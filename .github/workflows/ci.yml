@@ -5,6 +5,8 @@ jobs:
   performance:
     name: WIP Performance Testing
     runs-on: ubuntu-latest
+    env:
+      DOCKER_COMPOSE_FILE: "./extension/.github/workflows/performance/docker-compose.yml"
 
     steps:
       - uses: actions/checkout@v2
@@ -28,10 +30,14 @@ jobs:
           restore-keys: ${{ runner.os }}-composer-
 
       - name: Start docker-compose
-        run: docker-compose -f ./extension/.github/workflows/performance/docker-compose.yml up -d
+        run: docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} up -d
 
       - name: Docker output
-        run: docker-compose -f ./extension/.github/workflows/performance/docker-compose.yml ps && docker inspect $(docker-compose -f ./extension/.github/workflows/performance/docker-compose.yml ps -q blackfire-agent && docker inspect $(docker-compose -f ./extension/.github/workflows/performance/docker-compose.yml ps -q nginx && docker-compose -f ./extension/.github/workflows/performance/docker-compose.yml logs nginx)
+        run: >-
+          docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} ps
+          && docker inspect $(docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} ps -q blackfire-agent)
+          && docker inspect $(docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} ps -q nginx)
+          && docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} logs nginx
 
       - name: Composer install
         run: >-
@@ -45,18 +51,18 @@ jobs:
 
       - name: Install Magento
         run: >-
-          docker-compose -f ./extension/.github/workflows/performance/docker-compose.yml exec -T php-fpm
+          docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} exec -T php-fpm
           bash -c 'cd /var/www/html/m2 && sudo chown www-data: -R /var/www/html/m2 && ls -al && id
           && php -f bin/magento setup:install --base-url=http://magento2.test/ --backend-frontname=admin --db-host=mysql --db-name=magento_performance_tests --db-user=root --db-password=123123q --admin-user=admin@example.com --admin-password=password1 --admin-email=admin@example.com --admin-firstname=firstname --admin-lastname=lastname'
 
       - name: Generate Performance Fixtures
         run: >-
-          docker-compose -f ./extension/.github/workflows/performance/docker-compose.yml exec -T php-fpm
+          docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} exec -T php-fpm
           bash -c 'cd /var/www/html/m2
           && php -f bin/magento setup:performance:generate-fixtures setup/performance-toolkit/profiles/ce/small.xml'
 
       - name: Run Blackfire
-        run: docker-compose -f ./extension/.github/workflows/performance/docker-compose.yml run -e BLACKFIRE_CLIENT_ID=${{ secrets.BLACKFIRE_CLIENT_ID }} -e BLACKFIRE_CLIENT_TOKEN=${{ secrets.BLACKFIRE_CLIENT_TOKEN }} -e BLACKFIRE_SERVER_ID=${{ secrets.BLACKFIRE_SERVER_ID }} -e BLACKFIRE_SERVER_TOKEN=${{ secrets.BLACKFIRE_SERVER_TOKEN }} blackfire-agent blackfire --json curl http://magento2.test/ -v=4
+        run: docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} run -e BLACKFIRE_CLIENT_ID=${{ secrets.BLACKFIRE_CLIENT_ID }} -e BLACKFIRE_CLIENT_TOKEN=${{ secrets.BLACKFIRE_CLIENT_TOKEN }} -e BLACKFIRE_SERVER_ID=${{ secrets.BLACKFIRE_SERVER_ID }} -e BLACKFIRE_SERVER_TOKEN=${{ secrets.BLACKFIRE_SERVER_TOKEN }} blackfire-agent blackfire --json curl http://magento2.test/ -v=4
 
   static:
     name: M2 Coding Standard
