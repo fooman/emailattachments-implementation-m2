@@ -64,15 +64,43 @@ jobs:
         run: >-
           docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} exec -T php-fpm
           bash -c 'cd /var/www/html/m2
-          && php -f bin/magento setup:performance:generate-fixtures setup/performance-toolkit/profiles/ce/small.xml'
+          && php -f bin/magento setup:performance:generate-fixtures setup/performance-toolkit/profiles/ce/small.xml
+          && php -f bin/magento cache:disable block_html full_page'
 
       - name: Run Blackfire
-        run: docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} run blackfire-agent blackfire --json curl http://magento2.test/ -v=4
+        id: blackfire-baseline
+        run: docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} run blackfire-agent blackfire --json --new-reference curl http://magento2.test/ -v=4
         env:
           BLACKFIRE_CLIENT_ID: ${{ secrets.BLACKFIRE_CLIENT_ID }}
           BLACKFIRE_CLIENT_TOKEN: ${{ secrets.BLACKFIRE_CLIENT_TOKEN }}
           BLACKFIRE_SERVER_ID: ${{ secrets.BLACKFIRE_SERVER_ID }}
           BLACKFIRE_SERVER_TOKEN: ${{ secrets.BLACKFIRE_SERVER_TOKEN }}
+
+      - name: Extract New Profile ID
+        id: blackfire-profile
+        run: |
+          echo "::set-output name=id::$json_result | jq '.id'"
+        env:
+          json_result: ${{ steps.set.outputs.blackfire-baseline}}
+
+      - name: Extract Profile URL
+        id: blackfire-profile-url
+        run: |
+          echo "::set-output name=url::$json_result | jq '._links.self.href'"
+        env:
+          json_result: ${{ steps.set.outputs.blackfire-baseline}}
+
+      - name: Run Blackfire Again
+        id: blackfire-after
+        run: docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} run blackfire-agent blackfire --json  --reference=${{ steps.blackfire-profile.id}} curl http://magento2.test/ -v=4
+        env:
+          BLACKFIRE_CLIENT_ID: ${{ secrets.BLACKFIRE_CLIENT_ID }}
+          BLACKFIRE_CLIENT_TOKEN: ${{ secrets.BLACKFIRE_CLIENT_TOKEN }}
+          BLACKFIRE_SERVER_ID: ${{ secrets.BLACKFIRE_SERVER_ID }}
+          BLACKFIRE_SERVER_TOKEN: ${{ secrets.BLACKFIRE_SERVER_TOKEN }}
+
+      - name: Output result
+        run: echo "::debug ::Link"${{ steps.blackfire-profile-url.url}}
 
   static:
     name: M2 Coding Standard
