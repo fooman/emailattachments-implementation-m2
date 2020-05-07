@@ -10,7 +10,7 @@ jobs:
       - uses: actions/checkout@v2
         name: Checkout files
         with:
-          - path: extension
+          path: extension
 
       - name: Ensure Nginx Document Root exists
         run: mkdir -p ${{ github.workspace }}/m2
