@@ -60,21 +60,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: extdn/github-actions-m2/magento-coding-standard
+      - uses: extdn/github-actions-m2/magento-coding-standard@master
 
   phpmd:
     name: M2 Mess Detector
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: extdn/github-actions-m2/magento-mess-detector
+      - uses: extdn/github-actions-m2/magento-mess-detector@master
 
   phpstan:
     name: M2 PhpStan
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: extdn/github-actions-m2/magento-phpstan
+      - uses: extdn/github-actions-m2/magento-phpstan@master
 
   integration:
     name: WIP Integration Tests
