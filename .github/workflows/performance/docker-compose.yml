@@ -12,6 +12,8 @@ services:
 
   blackfire-agent:
     image: blackfire/blackfire:latest
+    links:
+      - "nginx:magento2.test"
 
   mysql:
     image: quay.io/warden/mysql:5.7
