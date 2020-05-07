@@ -27,9 +27,6 @@ jobs:
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-
 
-      - name: Setup Composer Access
-        run: composer config -a -g http-basic.repo.magento.com ${{ secrets.REPO_MAGENTO_USERNAME }} ${{ secrets.REPO_MAGENTO_PASSWORD }}
-
       - name: Start docker-compose
         run: docker-compose -f ./extension/.github/workflows/performance/docker-compose.yml up -d
 
@@ -37,6 +34,7 @@ jobs:
         run: >-
             composer create-project --repository=https://repo-magento-mirror.fooman.co.nz/ magento/project-community-edition:2.3.5 ${{ github.workspace }}/m2 --no-install --no-interaction
             && cd ${{ github.workspace }}/m2
+            && composer config platform.php 7.3
             && composer config --unset repo.0
             && composer config repo.foomanmirror composer https://repo-magento-mirror.fooman.co.nz/
             && composer install --prefer-dist
@@ -44,31 +42,33 @@ jobs:
 
       - name: Install Magento
         run: >-
-            docker-compose -f ./extension/.github/workflows/performance/docker-compose.yml exec bin/magento setup:install
-            --backend-frontname=admin
-            --db-host=mysql
-            --db-name=magento_performance_tests
-            --db-user=root
-            --db-password=123123q
-            --admin-user=admin@example.com
-            --admin-password=password1
-            --admin-email=admin@example.com
-            --admin-firstname=firstname
-            --admin-lastname=lastname
-            --base-url=http://magento2.test/
+            docker-compose -f ./extension/.github/workflows/performance/docker-compose.yml exec php-fpm
+            cd /var/ww/html/m2
+            && bin/magento setup:install
+              --backend-frontname=admin
+              --db-host=mysql
+              --db-name=magento_performance_tests
+              --db-user=root
+              --db-password=123123q
+              --admin-user=admin@example.com
+              --admin-password=password1
+              --admin-email=admin@example.com
+              --admin-firstname=firstname
+              --admin-lastname=lastname
+              --base-url=http://magento2.test/
 
       - name: Run Blackfire
         run: docker-compose -f ./extension/.github/workflows/performance/docker-compose.yml exec -e BLACKFIRE_CLIENT_ID=${{ secrets.BLACKFIRE_CLIENT_ID }} -e BLACKFIRE_CLIENT_TOKEN=${{ secrets.BLACKFIRE_CLIENT_TOKEN }} -e BLACKFIRE_SERVER_ID=${{ secrets.BLACKFIRE_SERVER_ID }} -e BLACKFIRE_SERVER_TOKEN=${{ secrets.BLACKFIRE_SERVER_TOKEN }} blackfire --json curl http://magento2.test/ -v=4
 
   static:
-    name: Magento 2 Coding Standard
+    name: M2 Coding Standard
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
       - uses: extdn/github-actions-m2/magento-coding-standard@master
 
   phpmd:
-    name: Magento 2 - Mess Detector
+    name: M2 Mess Detector
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
