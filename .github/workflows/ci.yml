@@ -13,7 +13,7 @@ jobs:
           - path: 'extension'
 
       - name: Ensure Nginx Document Root exists
-        run: mkdir -p ${{ GITHUB_WORKSPACE }}/m2
+        run: mkdir -p $GITHUB_WORKSPACE/m2
 
       - name: Get composer cache directory
         id: composer-cache
@@ -34,7 +34,7 @@ jobs:
 
       - name: Composer install
         run: >-
-            composer create-project --repository=https://repo-magento-mirror.fooman.co.nz/ magento/project-community-edition:2.3.5 ${{ GITHUB_WORKSPACE }}/m2 --no-install --no-interaction
+            composer create-project --repository=https://repo-magento-mirror.fooman.co.nz/ magento/project-community-edition:2.3.5 $GITHUB_WORKSPACE/m2 --no-install --no-interaction
             && composer config --unset repo.0
             && composer config repo.foomanmirror composer https://repo-magento-mirror.fooman.co.nz/
             && composer install --prefer-dist
