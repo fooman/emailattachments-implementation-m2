@@ -60,6 +60,7 @@ services:
     image: quay.io/warden/nginx:1.17
     environment:
       - NGINX_ROOT=/var/www/html/m2
+      - NGINX_PUBLIC=/pub
       - NGINX_TEMPLATE=magento2.conf
     ports:
       - 80:80

@@ -66,11 +66,13 @@ jobs:
           bash -c 'cd /var/www/html/m2
           && php -f bin/magento setup:performance:generate-fixtures setup/performance-toolkit/profiles/ce/small.xml'
 
-      - name: Run Blackfire Curl
-        run: docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} run blackfire-agent curl http://magento2.test/
-
       - name: Run Blackfire
         run: docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} run blackfire-agent blackfire --json curl http://magento2.test/ -v=4
+        env:
+          BLACKFIRE_CLIENT_ID: ${{ secrets.BLACKFIRE_CLIENT_ID }}
+          BLACKFIRE_CLIENT_TOKEN: ${{ secrets.BLACKFIRE_CLIENT_TOKEN }}
+          BLACKFIRE_SERVER_ID: ${{ secrets.BLACKFIRE_SERVER_ID }}
+          BLACKFIRE_SERVER_TOKEN: ${{ secrets.BLACKFIRE_SERVER_TOKEN }}
 
   static:
     name: M2 Coding Standard
