@@ -36,9 +36,11 @@ jobs:
       - name: Composer install
         run: >-
             composer create-project --repository=https://repo-magento-mirror.fooman.co.nz/ magento/project-community-edition:2.3.5 ${{ github.workspace }}/m2 --no-install --no-interaction
+            && cd ${{ github.workspace }}/m2
             && composer config --unset repo.0
             && composer config repo.foomanmirror composer https://repo-magento-mirror.fooman.co.nz/
             && composer install --prefer-dist
+        working-directory: ./m2
 
       - name: Install Magento
         run: >-
@@ -59,20 +61,21 @@ jobs:
         run: docker-compose -f ./extension/.github/workflows/performance/docker-compose.yml exec -e BLACKFIRE_CLIENT_ID=${{ secrets.BLACKFIRE_CLIENT_ID }} -e BLACKFIRE_CLIENT_TOKEN=${{ secrets.BLACKFIRE_CLIENT_TOKEN }} -e BLACKFIRE_SERVER_ID=${{ secrets.BLACKFIRE_SERVER_ID }} -e BLACKFIRE_SERVER_TOKEN=${{ secrets.BLACKFIRE_SERVER_TOKEN }} blackfire --json curl http://magento2.test/ -v=4
 
   static:
+    name: Magento 2 Coding Standard
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
       - uses: extdn/github-actions-m2/magento-coding-standard@master
 
   phpmd:
-    name: Magento 2 - Phpmd
+    name: Magento 2 - Mess Detector
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
       - uses: extdn/github-actions-m2/magento-mess-detector@master
 
   integration:
-    name: Static Code Analysis
+    name: WIP Integration Tests
     runs-on: ubuntu-latest
     container:
       image: duhon/php:7.3-alpine
