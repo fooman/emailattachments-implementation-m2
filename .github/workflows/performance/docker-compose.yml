@@ -3,12 +3,12 @@ services:
   php-fpm:
     image: quay.io/warden/php-fpm:7.3-magento2
     volumes:
-      - /home/runner/work/_temp/_github_workflow:/var/www/html
+      - ${GITHUB_WORKSPACE}:/var/www/html
 
   php-blackfire:
     image: quay.io/warden/php-fpm:7.3-magento2-blackfire
     volumes:
-      - /home/runner/work/_temp/_github_workflow:/var/www/html
+      - ${GITHUB_WORKSPACE}:/var/www/html
 
   blackfire:
     image: blackfire/blackfire:latest
@@ -41,9 +41,10 @@ services:
           - magento2.test
     user: root
     volumes:
-      - /home/runner/work/_temp/_github_workflow:/var/www/html
+      - ${GITHUB_WORKSPACE}:/var/www/html
     image: quay.io/warden/nginx:1.17
     environment:
+      - NGINX_ROOT="/var/www/html/m2"
       - NGINX_PUBLIC=""
       - NGINX_TEMPLATE=magento2.conf
     ports:

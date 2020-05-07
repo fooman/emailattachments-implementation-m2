@@ -9,6 +9,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         name: Checkout files
+        with:
+          - path: 'extension'
+
+      - name: Ensure Nginx Document Root exists
+        run: mkdir -p ${{ GITHUB_WORKSPACE }}/m2
 
       - name: Get composer cache directory
         id: composer-cache
@@ -25,18 +30,18 @@ jobs:
         run: composer config -a -g http-basic.repo.magento.com ${{ secrets.REPO_MAGENTO_USERNAME }} ${{ secrets.REPO_MAGENTO_PASSWORD }}
 
       - name: Start docker-compose
-        run: docker-compose -f .github/workflows/docker-compose.yml up -d
+        run: docker-compose -f .github/workflows/performance/docker-compose.yml up -d
 
       - name: Composer install
         run: >-
-            composer create-project --repository=https://repo-magento-mirror.fooman.co.nz/ magento/project-community-edition:2.3.5 . --no-install --no-interaction
+            composer create-project --repository=https://repo-magento-mirror.fooman.co.nz/ magento/project-community-edition:2.3.5 ${{ GITHUB_WORKSPACE }}/m2 --no-install --no-interaction
             && composer config --unset repo.0
             && composer config repo.foomanmirror composer https://repo-magento-mirror.fooman.co.nz/
             && composer install --prefer-dist
 
       - name: Install Magento
         run: >-
-            docker-compose -f .github/workflows/docker-compose.yml exec bin/magento setup:install
+            docker-compose -f .github/workflows/performance/docker-compose.yml exec bin/magento setup:install
             --backend-frontname=admin
             --db-host=mysql
             --db-name=magento_performance_tests
@@ -50,7 +55,7 @@ jobs:
             --base-url=http://magento2.test/
 
       - name: Run Blackfire
-        run: docker-compose -f .github/workflows/docker-compose.yml exec -e BLACKFIRE_CLIENT_ID=${{ secrets.BLACKFIRE_CLIENT_ID }} -e BLACKFIRE_CLIENT_TOKEN=${{ secrets.BLACKFIRE_CLIENT_TOKEN }} -e BLACKFIRE_SERVER_ID=${{ secrets.BLACKFIRE_SERVER_ID }} -e BLACKFIRE_SERVER_TOKEN=${{ secrets.BLACKFIRE_SERVER_TOKEN }} blackfire --json curl http://magento2.test/
+        run: docker-compose -f .github/workflows/performance/docker-compose.yml exec -e BLACKFIRE_CLIENT_ID=${{ secrets.BLACKFIRE_CLIENT_ID }} -e BLACKFIRE_CLIENT_TOKEN=${{ secrets.BLACKFIRE_CLIENT_TOKEN }} -e BLACKFIRE_SERVER_ID=${{ secrets.BLACKFIRE_SERVER_ID }} -e BLACKFIRE_SERVER_TOKEN=${{ secrets.BLACKFIRE_SERVER_TOKEN }} blackfire --json curl http://magento2.test/ -v=4
 
   static:
     runs-on: ubuntu-latest
