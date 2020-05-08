@@ -114,22 +114,19 @@ jobs:
         run: echo "::warning::Link ${{ steps.blackfire-profile-after.outputs.url}}"
 
       - name: Output Time
-        run: echo "::warning::Time Difference $( (($after-$before)/$before)* 100)%"
+        run: echo "::warning::Time Difference ${{ env.comparison_result}}%"
         env:
-          before: ${{ steps.blackfire-profile.outputs.time}}
-          after:  ${{ steps.blackfire-profile-after.outputs.time}}
+          comparison_result: ${{ ((steps.blackfire-profile-after.outputs.time-steps.blackfire-profile.outputs.time)/steps.blackfire-profile.outputs.time)*100 }}
 
       - name: Output Memory
-        run: echo "::warning::Memory Difference $( (($after-$before)/$before)* 100)%"
+        run: echo "::warning::Memory Difference ${{ env.comparison_result}}%"
         env:
-          before: ${{ steps.blackfire-profile.outputs.memory}}
-          after:  ${{ steps.blackfire-profile-after.outputs.memory}}
+          comparison_result: ${{ ((steps.blackfire-profile-after.outputs.memory-steps.blackfire-profile.outputs.memory)/steps.blackfire-profile.outputs.memory)*100 }}
 
       - name: Output SQL Queries
-        run: echo "::warning::Number of SQL Queries $( (($after-$before)/$before)* 100)%"
+        run: echo "::warning::Number of SQL Queries ${{ env.comparison_result}}%"
         env:
-          before: ${{ steps.blackfire-profile.outputs.queries}}
-          after:  ${{ steps.blackfire-profile-after.outputs.queries}}
+          comparison_result: ${{ ((steps.blackfire-profile-after.outputs.queries-steps.blackfire-profile.outputs.queries)/steps.blackfire-profile.outputs.queries)*100 }}
 
   static:
     name: M2 Coding Standard
