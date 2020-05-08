@@ -79,11 +79,12 @@ jobs:
           BLACKFIRE_SERVER_ID: ${{ secrets.BLACKFIRE_SERVER_ID }}
           BLACKFIRE_SERVER_TOKEN: ${{ secrets.BLACKFIRE_SERVER_TOKEN }}
 
-      - name: Extract New Profile ID
+      - name: Extract Info from Result
         id: blackfire-profile
         run: |
           echo "##[set-output name=id;]$(cat ${{ github.workspace }}/.baseline.json | jq '.id')"
-          echo "##[set-output name=url;]$(cat ${{ github.workspace }}/.baseline.json | jq '._links.self.href')"
+          echo "##[set-output name=url;]$(cat ${{ github.workspace }}/.baseline.json | jq '._links.graph_url.href')"
+          echo "##[set-output name=time;]$(cat ${{ github.workspace }}/.baseline.json | jq '.envelope.wt')"
 
       - name: Install Extension
         run: >-
@@ -105,8 +106,21 @@ jobs:
           BLACKFIRE_SERVER_ID: ${{ secrets.BLACKFIRE_SERVER_ID }}
           BLACKFIRE_SERVER_TOKEN: ${{ secrets.BLACKFIRE_SERVER_TOKEN }}
 
+      - name: Extract Info from Result
+        id: blackfire-profile-after
+        run: |
+          echo "##[set-output name=id;]$(cat ${{ github.workspace }}/.baseline.json | jq '.id')"
+          echo "##[set-output name=url;]$(cat ${{ github.workspace }}/.baseline.json | jq '._links.graph_url.href')"
+          echo "##[set-output name=time;]$(cat ${{ github.workspace }}/.baseline.json | jq '.envelope.wt')"
+
       - name: Output result
-        run: echo "::warning::Link ${{ steps.blackfire-profile.outputs.url}}"
+        run: echo "::warning::Link <a href='${{ steps.blackfire-profile-after.outputs.url}}'>${{ steps.blackfire-profile.outputs.url}}</a>"
+
+      - name: Output result
+        run: echo "::warning::Time Difference $( ($before-$after)/$before)%"
+        env:
+          before: ${{ steps.blackfire-profile.outputs.time}}
+          afger:  ${{ steps.blackfire-profile-after.outputs.time}}
 
   static:
     name: M2 Coding Standard
