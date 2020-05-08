@@ -79,7 +79,7 @@ jobs:
           echo "##[set-output name=url;]$(cat ${{ github.workspace }}/baseline.json | jq '._links.graph_url.href')"
           echo "##[set-output name=time;]$(cat ${{ github.workspace }}/baseline.json | jq '.envelope.wt')"
           echo "##[set-output name=memory;]$(cat ${{ github.workspace }}/baseline.json | jq '.envelope.pmu')"
-          echo '##[set-output name=queries;]$(cat ${{ github.workspace }}/baseline.json | jq ''.arguments."io.db.query"."*".ct'')'
+          echo "##[set-output name=queries;]$(cat ${{ github.workspace }}/baseline.json | jq '.arguments.\\"io.db.query\\".\\"*\\".ct')"
 
       - name: Install Extension
         run: >-
