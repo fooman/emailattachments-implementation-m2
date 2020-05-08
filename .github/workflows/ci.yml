@@ -83,10 +83,10 @@ jobs:
 
       - name: Install Extension
         run: >-
-          docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} exec -T php-fpm
+          docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} exec -e EXTENSION_BRANCH=${GITHUB_REF#refs/heads/} -T php-fpm
           bash -c 'cd /var/www/html/m2
           && php -f vendor/composer/composer/bin/composer config repo.extension path /var/www/html/extension
-          && php -f vendor/composer/composer/bin/composer require ${{ env.EXTENSION_PACKAGE_NAME }}:dev-${GITHUB_REF#refs/heads/}#${{ github.sha }}
+          && php -f vendor/composer/composer/bin/composer require ${{ env.EXTENSION_PACKAGE_NAME }}:dev-$EXTENSION_BRANCH#${{ github.sha }}
           && php -f bin/magento module:enable ${{ env.EXTENSION_NAME }}
           && php -f bin/magento setup:upgrade
           && php -f bin/magento cache:enable
