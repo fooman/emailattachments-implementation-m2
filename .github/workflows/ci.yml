@@ -111,7 +111,7 @@ jobs:
           echo "##[set-output name=queries;]$(cat ${{ github.workspace }}/after.json | jq jq '.arguments.\"io.db.query\".\"*".ct')"
 
       - name: Output Link
-        run: echo "::warning::Link ${{ steps.blackfire-profile-after.outputs.url}}"
+        run: echo "::warning::${{ steps.blackfire-profile-after.outputs.url}}"
 
       - name: Output Time
         run: echo "::warning::Time Difference ${{ env.comparison_result}}%"
