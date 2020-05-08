@@ -84,16 +84,12 @@ jobs:
           echo "##[set-output name=id;]$(cat ${{ github.workspace }}/.baseline.json | jq '.id')"
           echo "##[set-output name=url;]$(cat ${{ github.workspace }}/.baseline.json | jq '._links.self.href')"
 
-      - name: Install extension
-        run: >-
-          composer config repo.extension path ../extension
-          && composer require ${{ env.EXTENSION_PACKAGE_NAME }}
-        working-directory: ./m2
-
-      - name: Enable Extension
+      - name: Install Extension
         run: >-
           docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} exec -T php-fpm
           bash -c 'cd /var/www/html/m2
+          && php -f vendor/composer/composer/bin/composer config repo.extension path /var/www/html/extension
+          && php -f vendor/composer/composer/bin/composer require ${{ env.EXTENSION_PACKAGE_NAME }}
           && php -f bin/magento module:enable ${{ env.EXTENSION_NAME }}
           && php -f bin/magento setup:upgrade'
 
