@@ -3,7 +3,7 @@ on: [push, pull_request]
 
 jobs:
   performance:
-    name: WIP Performance Testing
+    name: M2 Performance Testing
     runs-on: ubuntu-latest
     env:
       DOCKER_COMPOSE_FILE: "./extension/.github/workflows/performance/docker-compose.yml"
@@ -86,7 +86,7 @@ jobs:
           docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} exec -T php-fpm
           bash -c 'cd /var/www/html/m2
           && php -f vendor/composer/composer/bin/composer config repo.extension path /var/www/html/extension
-          && php -f vendor/composer/composer/bin/composer require ${{ env.EXTENSION_PACKAGE_NAME }}:${{ github.sha }}
+          && php -f vendor/composer/composer/bin/composer require ${{ env.EXTENSION_PACKAGE_NAME }}:dev-${{GITHUB_REF#refs/heads/}}#${{ github.sha }}
           && php -f bin/magento module:enable ${{ env.EXTENSION_NAME }}
           && php -f bin/magento setup:upgrade
           && php -f bin/magento cache:enable
