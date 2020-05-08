@@ -86,11 +86,13 @@ jobs:
           docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} exec -T php-fpm
           bash -c 'cd /var/www/html/m2
           && php -f vendor/composer/composer/bin/composer config repo.extension path /var/www/html/extension
-          && php -f vendor/composer/composer/bin/composer require ${{ env.EXTENSION_PACKAGE_NAME }}:dev-${{ github.ref#refs/heads/ }}#${{ github.sha }}
+          && php -f vendor/composer/composer/bin/composer require ${{ env.EXTENSION_PACKAGE_NAME }}:dev-${{ env.EXTENSION_BRANCH }}#${{ github.sha }}
           && php -f bin/magento module:enable ${{ env.EXTENSION_NAME }}
           && php -f bin/magento setup:upgrade
           && php -f bin/magento cache:enable
           && php -f bin/magento cache:disable block_html full_page'
+        env:
+          EXTENSION_BRANCH: ${{ github.ref#refs/heads/ }}
 
       - name: Run Blackfire Again
         id: blackfire-after
