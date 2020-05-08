@@ -108,7 +108,7 @@ jobs:
           echo "##[set-output name=url;]$(cat ${{ github.workspace }}/after.json | jq '._links.graph_url.href')"
           echo "##[set-output name=time;]$(cat ${{ github.workspace }}/after.json | jq '.envelope.wt')"
           echo "##[set-output name=memory;]$(cat ${{ github.workspace }}/after.json | jq '.envelope.pmu')"
-          echo "##[set-output name=queries;]$(cat ${{ github.workspace }}/after.json | jq jq '.arguments.\"io.db.query\".\"*".ct')"
+          echo "##[set-output name=queries;]$(cat ${{ github.workspace }}/after.json | jq '.arguments.\"io.db.query\".\"*".ct')"
 
       - name: Output Link
         run: echo "::warning::${{ steps.blackfire-profile-after.outputs.url}}"
