@@ -71,7 +71,7 @@ jobs:
 
       - name: Run Blackfire
         id: blackfire-baseline
-        run: echo "##[set-output name=result;]$(docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} run blackfire-agent blackfire --json --new-reference curl http://magento2.test/category-1/category-1-1.html)"
+        run: docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} run blackfire-agent blackfire --json --new-reference curl http://magento2.test/category-1/category-1-1.html > ${{ github.workspace }}/.baseline.json
         env:
           BLACKFIRE_CLIENT_ID: ${{ secrets.BLACKFIRE_CLIENT_ID }}
           BLACKFIRE_CLIENT_TOKEN: ${{ secrets.BLACKFIRE_CLIENT_TOKEN }}
@@ -81,10 +81,8 @@ jobs:
       - name: Extract New Profile ID
         id: blackfire-profile
         run: |
-          echo "##[set-output name=id;]$($json_result | jq '.id')"
-          echo "##[set-output name=url;]$($json_result | jq '._links.self.href')"
-        env:
-          json_result: ${{ steps.blackfire-baseline.outputs.result}}
+          echo "##[set-output name=id;]$(cat ${{ github.workspace }}/.baseline.json | jq '.id')"
+          echo "##[set-output name=url;]$(cat ${{ github.workspace }}/.baseline.json | jq '._links.self.href')"
 
       - name: Install extension
         run: >-
