@@ -67,7 +67,7 @@ jobs:
           docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} exec -T php-fpm
           bash -c 'cd /var/www/html/m2
           && php -f bin/magento setup:performance:generate-fixtures setup/performance-toolkit/profiles/ce/small.xml
-          && php -f bin/magento cache:enable --all
+          && php -f bin/magento cache:enable
           && php -f bin/magento cache:disable block_html full_page'
 
       - name: Run Blackfire
@@ -93,7 +93,7 @@ jobs:
           && php -f vendor/composer/composer/bin/composer require ${{ env.EXTENSION_PACKAGE_NAME }}
           && php -f bin/magento module:enable ${{ env.EXTENSION_NAME }}
           && php -f bin/magento setup:upgrade
-          && php -f bin/magento cache:enable --all
+          && php -f bin/magento cache:enable
           && php -f bin/magento cache:disable block_html full_page'
 
       - name: Run Blackfire Again
