@@ -72,7 +72,7 @@ jobs:
 
       - name: Run Blackfire
         id: blackfire-baseline
-        run: docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} run blackfire-agent blackfire --json --new-reference curl http://magento2.test/category-1/category-1-1.html > ${{ github.workspace }}/.baseline.json
+        run: docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} run blackfire-agent blackfire --json --new-reference curl http://magento2.test/category-1/category-1-1.html > ${{ github.workspace }}/baseline.json
         env:
           BLACKFIRE_CLIENT_ID: ${{ secrets.BLACKFIRE_CLIENT_ID }}
           BLACKFIRE_CLIENT_TOKEN: ${{ secrets.BLACKFIRE_CLIENT_TOKEN }}
@@ -82,11 +82,11 @@ jobs:
       - name: Extract Info from Result
         id: blackfire-profile
         run: |
-          echo "##[set-output name=id;]$(cat ${{ github.workspace }}/.baseline.json | jq '.id')"
-          echo "##[set-output name=url;]$(cat ${{ github.workspace }}/.baseline.json | jq '._links.graph_url.href')"
-          echo "##[set-output name=time;]$(cat ${{ github.workspace }}/.baseline.json | jq '.envelope.wt')"
-          echo "##[set-output name=memory;]$(cat ${{ github.workspace }}/.baseline.json | jq '.envelope.pmu')"
-          echo "##[set-output name=queries;]$(cat ${{ github.workspace }}/.baseline.json | jq jq '.arguments.\"io.db.query\".\"*".ct')"
+          echo "##[set-output name=id;]$(cat ${{ github.workspace }}/baseline.json | jq '.id')"
+          echo "##[set-output name=url;]$(cat ${{ github.workspace }}/baseline.json | jq '._links.graph_url.href')"
+          echo "##[set-output name=time;]$(cat ${{ github.workspace }}/baseline.json | jq '.envelope.wt')"
+          echo "##[set-output name=memory;]$(cat ${{ github.workspace }}/baseline.json | jq '.envelope.pmu')"
+          echo "##[set-output name=queries;]$(cat ${{ github.workspace }}/baseline.json | jq jq '.arguments.\"io.db.query\".\"*".ct')"
 
       - name: Install Extension
         run: >-
@@ -101,7 +101,7 @@ jobs:
 
       - name: Run Blackfire Again
         id: blackfire-after
-        run: echo "##[set-output name=output;]$(docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} run blackfire-agent blackfire --json  --reference=${{ steps.blackfire-profile.outputs.id}} curl http://magento2.test/category-1/category-1-1.html)"
+        run: docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} run blackfire-agent blackfire --json  --reference=${{ steps.blackfire-profile.outputs.id}} curl http://magento2.test/category-1/category-1-1.html) > ${{ github.workspace }}/after.json
         env:
           BLACKFIRE_CLIENT_ID: ${{ secrets.BLACKFIRE_CLIENT_ID }}
           BLACKFIRE_CLIENT_TOKEN: ${{ secrets.BLACKFIRE_CLIENT_TOKEN }}
@@ -111,20 +111,32 @@ jobs:
       - name: Extract Info from Result
         id: blackfire-profile-after
         run: |
-          echo "##[set-output name=id;]$(cat ${{ github.workspace }}/.baseline.json | jq '.id')"
-          echo "##[set-output name=url;]$(cat ${{ github.workspace }}/.baseline.json | jq '._links.graph_url.href')"
-          echo "##[set-output name=time;]$(cat ${{ github.workspace }}/.baseline.json | jq '.envelope.wt')"
-          echo "##[set-output name=memory;]$(cat ${{ github.workspace }}/.baseline.json | jq '.envelope.pmu')"
-          echo "##[set-output name=queries;]$(cat ${{ github.workspace }}/.baseline.json | jq jq '.arguments.\"io.db.query\".\"*".ct')"
+          echo "##[set-output name=id;]$(cat ${{ github.workspace }}/after.json | jq '.id')"
+          echo "##[set-output name=url;]$(cat ${{ github.workspace }}/after.json | jq '._links.graph_url.href')"
+          echo "##[set-output name=time;]$(cat ${{ github.workspace }}/after.json | jq '.envelope.wt')"
+          echo "##[set-output name=memory;]$(cat ${{ github.workspace }}/after.json | jq '.envelope.pmu')"
+          echo "##[set-output name=queries;]$(cat ${{ github.workspace }}/after.json | jq jq '.arguments.\"io.db.query\".\"*".ct')"
 
-      - name: Output result
-        run: echo "::warning::Link <a href='${{ steps.blackfire-profile-after.outputs.url}}'>${{ steps.blackfire-profile.outputs.url}}</a>"
+      - name: Output Link
+        run: echo "::warning::Link ${{ steps.blackfire-profile-after.outputs.url}}"
 
-      - name: Output result
-        run: echo "::warning::Time Difference $( ($before-$after)/$before)%"
+      - name: Output Time
+        run: echo "::warning::Time Difference $( (($after-$before)/$before)* 100)%"
         env:
           before: ${{ steps.blackfire-profile.outputs.time}}
-          afger:  ${{ steps.blackfire-profile-after.outputs.time}}
+          after:  ${{ steps.blackfire-profile-after.outputs.time}}
+
+      - name: Output Memory
+        run: echo "::warning::Memory Difference $( (($after-$before)/$before)* 100)%"
+        env:
+          before: ${{ steps.blackfire-profile.outputs.memory}}
+          after:  ${{ steps.blackfire-profile-after.outputs.memory}}
+
+      - name: Output SQL Queries
+        run: echo "::warning::Number of SQL Queries $( (($after-$before)/$before)* 100)%"
+        env:
+          before: ${{ steps.blackfire-profile.outputs.queries}}
+          after:  ${{ steps.blackfire-profile-after.outputs.queries}}
 
   static:
     name: M2 Coding Standard
