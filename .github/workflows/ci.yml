@@ -116,9 +116,9 @@ jobs:
       - name: Compare Results
         id: comparison
         run: |
-          echo "##[set-output name=time;] '((${{steps.blackfire-profile-after.outputs.time}}-${{steps.blackfire-profile.outputs.time}})/${{steps.blackfire-profile.outputs.time}})*100' | node -p "
-          echo "##[set-output name=memory;] '((${{steps.blackfire-profile-after.outputs.memory}}-${{steps.blackfire-profile.outputs.memory}})/${{steps.blackfire-profile.outputs.memory}})*100' | node -p "
-          echo "##[set-output name=queries;] '((${{steps.blackfire-profile-after.outputs.queries}}-${{steps.blackfire-profile.outputs.queries}})/${{steps.blackfire-profile.outputs.queries}})*100' | node -p "
+          echo "##[set-output name=time;] $(echo '((${{steps.blackfire-profile-after.outputs.time}}-${{steps.blackfire-profile.outputs.time}})/${{steps.blackfire-profile.outputs.time}})*100' | node -p)"
+          echo "##[set-output name=memory;] $(echo '((${{steps.blackfire-profile-after.outputs.memory}}-${{steps.blackfire-profile.outputs.memory}})/${{steps.blackfire-profile.outputs.memory}})*100' | node -p)"
+          echo "##[set-output name=queries;] $(echo '((${{steps.blackfire-profile-after.outputs.queries}}-${{steps.blackfire-profile.outputs.queries}})/${{steps.blackfire-profile.outputs.queries}})*100' | node -p)"
 
       - name: Output Time
         run: echo "::warning::Time Difference ${{ steps.comparison.outputs.time}}%"
