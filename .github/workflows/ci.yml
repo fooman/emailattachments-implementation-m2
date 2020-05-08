@@ -16,9 +16,6 @@ jobs:
         with:
           path: extension
 
-      - name: Ensure Nginx Document Root exists
-        run: mkdir -p ${{ github.workspace }}/m2
-
       - name: Get composer cache directory
         id: composer-cache
         run: "echo \"::set-output name=dir::$(composer config cache-dir)\""
@@ -31,6 +28,9 @@ jobs:
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-
 
+      - name: Ensure Nginx Document Root exists
+        run: mkdir -p ${{ github.workspace }}/m2
+
       - name: Start docker-compose
         run: docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} up -d
         env:
@@ -38,13 +38,6 @@ jobs:
             BLACKFIRE_CLIENT_TOKEN: ${{ secrets.BLACKFIRE_CLIENT_TOKEN }}
             BLACKFIRE_SERVER_ID: ${{ secrets.BLACKFIRE_SERVER_ID }}
             BLACKFIRE_SERVER_TOKEN: ${{ secrets.BLACKFIRE_SERVER_TOKEN }}
-
-      - name: Docker output
-        run: >-
-          docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} ps
-          && docker inspect $(docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} ps -q blackfire-agent)
-          && docker inspect $(docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} ps -q nginx)
-          && docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} logs nginx
 
       - name: Composer install
         run: >-
@@ -93,7 +86,7 @@ jobs:
           docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} exec -T php-fpm
           bash -c 'cd /var/www/html/m2
           && php -f vendor/composer/composer/bin/composer config repo.extension path /var/www/html/extension
-          && php -f vendor/composer/composer/bin/composer require ${{ env.EXTENSION_PACKAGE_NAME }}
+          && php -f vendor/composer/composer/bin/composer require ${{ env.EXTENSION_PACKAGE_NAME }}:$GITHUB_SHA
           && php -f bin/magento module:enable ${{ env.EXTENSION_NAME }}
           && php -f bin/magento setup:upgrade
           && php -f bin/magento cache:enable
@@ -101,7 +94,7 @@ jobs:
 
       - name: Run Blackfire Again
         id: blackfire-after
-        run: docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} run blackfire-agent blackfire --json  --reference=${{ steps.blackfire-profile.outputs.id}} curl http://magento2.test/category-1/category-1-1.html) > ${{ github.workspace }}/after.json
+        run: docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} run blackfire-agent blackfire --json  --reference=${{ steps.blackfire-profile.outputs.id}} curl http://magento2.test/category-1/category-1-1.html > ${{ github.workspace }}/after.json
         env:
           BLACKFIRE_CLIENT_ID: ${{ secrets.BLACKFIRE_CLIENT_ID }}
           BLACKFIRE_CLIENT_TOKEN: ${{ secrets.BLACKFIRE_CLIENT_TOKEN }}
