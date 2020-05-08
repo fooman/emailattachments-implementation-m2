@@ -7,6 +7,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DOCKER_COMPOSE_FILE: "./extension/.github/workflows/performance/docker-compose.yml"
+      EXTENSION_NAME: "Fooman_EmailAttachments"
+      EXTENSION_PACKAGE_NAME: "fooman/emailattachments-implementation-m2"
 
     steps:
       - uses: actions/checkout@v2
@@ -69,7 +71,7 @@ jobs:
 
       - name: Run Blackfire
         id: blackfire-baseline
-        run: echo "##[set-output name=result;]$(docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} run blackfire-agent blackfire --json --new-reference curl http://magento2.test/)"
+        run: echo "##[set-output name=result;]$(docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} run blackfire-agent blackfire --json --new-reference curl http://magento2.test/category-1/category-1-1.html)"
         env:
           BLACKFIRE_CLIENT_ID: ${{ secrets.BLACKFIRE_CLIENT_ID }}
           BLACKFIRE_CLIENT_TOKEN: ${{ secrets.BLACKFIRE_CLIENT_TOKEN }}
@@ -84,9 +86,22 @@ jobs:
         env:
           json_result: ${{ steps.blackfire-baseline.outputs.result}}
 
+      - name: Install extension
+        run: >-
+          composer config repo.extension path ../extension
+          && composer require ${{ env.EXTENSION_PACKAGE_NAME }}
+        working-directory: ./m2
+
+      - name: Enable Extension
+        run: >-
+          docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} exec -T php-fpm
+          bash -c 'cd /var/www/html/m2
+          && php -f bin/magento module:enable ${{ env.EXTENSION_NAME }}
+          && php -f bin/magento setup:upgrade'
+
       - name: Run Blackfire Again
         id: blackfire-after
-        run: echo "##[set-output name=output;]$(docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} run blackfire-agent blackfire --json  --reference=${{ steps.blackfire-profile.outputs.id}} curl http://magento2.test/)"
+        run: echo "##[set-output name=output;]$(docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} run blackfire-agent blackfire --json  --reference=${{ steps.blackfire-profile.outputs.id}} curl http://magento2.test/category-1/category-1-1.html)"
         env:
           BLACKFIRE_CLIENT_ID: ${{ secrets.BLACKFIRE_CLIENT_ID }}
           BLACKFIRE_CLIENT_TOKEN: ${{ secrets.BLACKFIRE_CLIENT_TOKEN }}
@@ -94,7 +109,7 @@ jobs:
           BLACKFIRE_SERVER_TOKEN: ${{ secrets.BLACKFIRE_SERVER_TOKEN }}
 
       - name: Output result
-        run: echo "::debug ::Link"${{ steps.blackfire-profile.outputs.url}}
+        run: echo "::warning::Link ${{ steps.blackfire-profile.outputs.url}}"
 
   static:
     name: M2 Coding Standard
