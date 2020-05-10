@@ -32,6 +32,7 @@ jobs:
         with:
           extension-name: ${{ env.EXTENSION_NAME }}
           extension-package-name: ${{ env.EXTENSION_PACKAGE_NAME }}
+        env:
           BLACKFIRE_CLIENT_ID: ${{ secrets.BLACKFIRE_CLIENT_ID }}
           BLACKFIRE_CLIENT_TOKEN: ${{ secrets.BLACKFIRE_CLIENT_TOKEN }}
           BLACKFIRE_SERVER_ID: ${{ secrets.BLACKFIRE_SERVER_ID }}
