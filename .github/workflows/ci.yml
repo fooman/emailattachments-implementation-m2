@@ -30,7 +30,7 @@ jobs:
 
       - uses: extdn/github-actions-m2/magento-performance@master
         with:
-          extension-name: {{ env.EXTENSION_PACKAGE_NAME }}
+          extension-name: ${{ env.EXTENSION_NAME }}
           extension-package-name: ${{ env.EXTENSION_PACKAGE_NAME }}
           BLACKFIRE_CLIENT_ID: ${{ secrets.BLACKFIRE_CLIENT_ID }}
           BLACKFIRE_CLIENT_TOKEN: ${{ secrets.BLACKFIRE_CLIENT_TOKEN }}
