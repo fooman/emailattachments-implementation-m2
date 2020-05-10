@@ -37,50 +37,6 @@ jobs:
           BLACKFIRE_SERVER_ID: ${{ secrets.BLACKFIRE_SERVER_ID }}
           BLACKFIRE_SERVER_TOKEN: ${{ secrets.BLACKFIRE_SERVER_TOKEN }}
 
-      - name: Ensure Nginx Document Root exists
-        run: mkdir -p ${{ github.workspace }}/m2
-
-      - name: Start docker-compose
-        run: docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} up -d
-        env:
-            BLACKFIRE_CLIENT_ID: ${{ secrets.BLACKFIRE_CLIENT_ID }}
-            BLACKFIRE_CLIENT_TOKEN: ${{ secrets.BLACKFIRE_CLIENT_TOKEN }}
-            BLACKFIRE_SERVER_ID: ${{ secrets.BLACKFIRE_SERVER_ID }}
-            BLACKFIRE_SERVER_TOKEN: ${{ secrets.BLACKFIRE_SERVER_TOKEN }}
-
-      - name: Composer install
-        run: >-
-            composer create-project --repository=https://repo-magento-mirror.fooman.co.nz/ magento/project-community-edition:2.3.5 ${{ github.workspace }}/m2 --no-install --no-interaction
-            && cd ${{ github.workspace }}/m2
-            && composer config platform.php 7.3
-            && composer config --unset repo.0
-            && composer config repo.foomanmirror composer https://repo-magento-mirror.fooman.co.nz/
-            && composer install --prefer-dist
-        working-directory: ./m2
-
-      - name: Install Magento
-        run: >-
-          docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} exec -T php-fpm
-          bash -c 'cd /var/www/html/m2 && sudo chown www-data: -R /var/www/html/m2 && ls -al && id
-          && php -f bin/magento setup:install --base-url=http://magento2.test/ --backend-frontname=admin --db-host=mysql --db-name=magento_performance_tests --db-user=root --db-password=123123q --admin-user=admin@example.com --admin-password=password1 --admin-email=admin@example.com --admin-firstname=firstname --admin-lastname=lastname'
-
-      - name: Generate Performance Fixtures
-        run: >-
-          docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} exec -T php-fpm
-          bash -c 'cd /var/www/html/m2
-          && php -f bin/magento setup:performance:generate-fixtures setup/performance-toolkit/profiles/ce/small.xml
-          && php -f bin/magento cache:enable
-          && php -f bin/magento cache:disable block_html full_page'
-
-      - name: Run Blackfire
-        id: blackfire-baseline
-        run: docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} run blackfire-agent blackfire --json --new-reference curl http://magento2.test/category-1/category-1-1.html > ${{ github.workspace }}/baseline.json
-        env:
-          BLACKFIRE_CLIENT_ID: ${{ secrets.BLACKFIRE_CLIENT_ID }}
-          BLACKFIRE_CLIENT_TOKEN: ${{ secrets.BLACKFIRE_CLIENT_TOKEN }}
-          BLACKFIRE_SERVER_ID: ${{ secrets.BLACKFIRE_SERVER_ID }}
-          BLACKFIRE_SERVER_TOKEN: ${{ secrets.BLACKFIRE_SERVER_TOKEN }}
-
       - name: Extract Info from Result
         id: blackfire-profile
         run: |
