@@ -38,6 +38,9 @@ jobs:
           BLACKFIRE_SERVER_ID: ${{ secrets.BLACKFIRE_SERVER_ID }}
           BLACKFIRE_SERVER_TOKEN: ${{ secrets.BLACKFIRE_SERVER_TOKEN }}
 
+      - name: Debug
+        run: docker inspect $(docker-compose ps -q php-fpm)
+
       - name: Extract Info from Result
         id: blackfire-profile
         run: |
