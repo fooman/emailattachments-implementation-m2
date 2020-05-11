@@ -28,27 +28,45 @@ jobs:
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-
 
-      - uses: extdn/github-actions-m2/magento-performance@master
-        with:
-          extension-name: ${{ env.EXTENSION_NAME }}
-          extension-package-name: ${{ env.EXTENSION_PACKAGE_NAME }}
+      - uses: extdn/github-actions-m2/magento-performance-setup@master
         env:
           BLACKFIRE_CLIENT_ID: ${{ secrets.BLACKFIRE_CLIENT_ID }}
           BLACKFIRE_CLIENT_TOKEN: ${{ secrets.BLACKFIRE_CLIENT_TOKEN }}
           BLACKFIRE_SERVER_ID: ${{ secrets.BLACKFIRE_SERVER_ID }}
           BLACKFIRE_SERVER_TOKEN: ${{ secrets.BLACKFIRE_SERVER_TOKEN }}
 
-      - name: Debug
-        run: docker inspect $(docker-compose ps -q php-fpm)
+      - name: Composer install
+        run: >-
+          composer create-project --repository=https://repo-magento-mirror.fooman.co.nz/ magento/project-community-edition:2.3.5 ${{ github.workspace }}/m2 --no-install --no-interaction
+          && cd ${{ github.workspace }}/m2
+          && composer config platform.php 7.3
+          && composer config --unset repo.0
+          && composer config repo.foomanmirror composer https://repo-magento-mirror.fooman.co.nz/
+          && composer install --prefer-dist
+        working-directory: ./m2
 
-      - name: Extract Info from Result
-        id: blackfire-profile
-        run: |
-          echo "##[set-output name=id;]$(cat ${{ github.workspace }}/baseline.json | jq '.id')"
-          echo "##[set-output name=url;]$(cat ${{ github.workspace }}/baseline.json | jq '._links.graph_url.href')"
-          echo "##[set-output name=time;]$(cat ${{ github.workspace }}/baseline.json | jq '.envelope.wt')"
-          echo "##[set-output name=memory;]$(cat ${{ github.workspace }}/baseline.json | jq '.envelope.pmu')"
-          echo "##[set-output name=queries;]$(cat ${{ github.workspace }}/baseline.json | jq '.arguments[.arguments | keys[0]][ .arguments[.arguments | keys[0]] | keys[0]].ct')"
+      - name: Install Magento
+        run: >-
+          docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} exec -T php-fpm
+          bash -c 'cd /var/www/html/m2 && sudo chown www-data: -R /var/www/html/m2 && ls -al && id
+          && php -f bin/magento setup:install --base-url=http://magento2.test/ --backend-frontname=admin --db-host=mysql --db-name=magento_performance_tests --db-user=root --db-password=123123q --admin-user=admin@example.com --admin-password=password1 --admin-email=admin@example.com --admin-firstname=firstname --admin-lastname=lastname'
+
+      - name: Generate Performance Fixtures
+        run: >-
+          docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} exec -T php-fpm
+          bash -c 'cd /var/www/html/m2
+          && php -f bin/magento setup:performance:generate-fixtures setup/performance-toolkit/profiles/ce/small.xml
+          && php -f bin/magento cache:enable
+          && php -f bin/magento cache:disable block_html full_page'
+
+      - name: Run Blackfire
+        id: blackfire-baseline
+        run: docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} run blackfire-agent blackfire --json --new-reference curl http://magento2.test/category-1/category-1-1.html > ${{ github.workspace }}/baseline.json
+        env:
+          BLACKFIRE_CLIENT_ID: ${{ secrets.BLACKFIRE_CLIENT_ID }}
+          BLACKFIRE_CLIENT_TOKEN: ${{ secrets.BLACKFIRE_CLIENT_TOKEN }}
+          BLACKFIRE_SERVER_ID: ${{ secrets.BLACKFIRE_SERVER_ID }}
+          BLACKFIRE_SERVER_TOKEN: ${{ secrets.BLACKFIRE_SERVER_TOKEN }}
 
       - name: Install Extension
         run: >-
@@ -70,33 +88,7 @@ jobs:
           BLACKFIRE_SERVER_ID: ${{ secrets.BLACKFIRE_SERVER_ID }}
           BLACKFIRE_SERVER_TOKEN: ${{ secrets.BLACKFIRE_SERVER_TOKEN }}
 
-      - name: Extract Info from Result
-        id: blackfire-profile-after
-        run: |
-          echo "##[set-output name=id;]$(cat ${{ github.workspace }}/after.json | jq '.id')"
-          echo "##[set-output name=url;]$(cat ${{ github.workspace }}/after.json | jq '._links.graph_url.href')"
-          echo "##[set-output name=time;]$(cat ${{ github.workspace }}/after.json | jq '.envelope.wt')"
-          echo "##[set-output name=memory;]$(cat ${{ github.workspace }}/after.json | jq '.envelope.pmu')"
-          echo "##[set-output name=queries;]$(cat ${{ github.workspace }}/after.json | jq '.arguments[.arguments | keys[0]][ .arguments[.arguments | keys[0]] | keys[0]].ct')"
-
-      - name: Output Link
-        run: echo "::warning::${{ steps.blackfire-profile-after.outputs.url}}"
-
-      - name: Compare Results
-        id: comparison
-        run: |
-          echo "##[set-output name=time;] $(echo 'Number(((${{steps.blackfire-profile-after.outputs.time}}-${{steps.blackfire-profile.outputs.time}})/${{steps.blackfire-profile.outputs.time}})*100).toFixed(2);' | node -p)"
-          echo "##[set-output name=memory;] $(echo 'Number(((${{steps.blackfire-profile-after.outputs.memory}}-${{steps.blackfire-profile.outputs.memory}})/${{steps.blackfire-profile.outputs.memory}})*100).toFixed(2);' | node -p)"
-          echo "##[set-output name=queries;] $(echo 'Number(((${{steps.blackfire-profile-after.outputs.queries}}-${{steps.blackfire-profile.outputs.queries}})/${{steps.blackfire-profile.outputs.queries}})*100).toFixed(2);' | node -p)"
-
-      - name: Output Time
-        run: echo "::warning::Time Difference ${{ steps.comparison.outputs.time}}%"
-
-      - name: Output Memory
-        run: echo "::warning::Memory Difference ${{ steps.comparison.outputs.memory}}%"
-
-      - name: Output SQL Queries
-        run: echo "::warning::Number of SQL Queries ${{ steps.comparison.outputs.queries}}%"
+      - uses: extdn/github-actions-m2/magento-performance-compare@master
 
   static:
     name: M2 Coding Standard
