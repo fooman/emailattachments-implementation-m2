@@ -52,7 +52,7 @@ jobs:
 
       - name: Run Blackfire
         id: blackfire-baseline
-        run: docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} run blackfire-agent blackfire --json --new-reference curl http://magento2.test/category-1/category-1-1.html > ${{ github.workspace }}/baseline.json
+        run: docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} run blackfire-agent blackfire --json curl http://magento2.test/category-1/category-1-1.html > ${{ github.workspace }}/baseline.json
         env:
           BLACKFIRE_CLIENT_ID: ${{ secrets.BLACKFIRE_CLIENT_ID }}
           BLACKFIRE_CLIENT_TOKEN: ${{ secrets.BLACKFIRE_CLIENT_TOKEN }}
@@ -72,7 +72,7 @@ jobs:
 
       - name: Run Blackfire Again
         id: blackfire-after
-        run: docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} run blackfire-agent blackfire --json  --reference=${{ steps.blackfire-profile.outputs.id}} curl http://magento2.test/category-1/category-1-1.html > ${{ github.workspace }}/after.json
+        run: docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} run blackfire-agent blackfire --json curl http://magento2.test/category-1/category-1-1.html > ${{ github.workspace }}/after.json
         env:
           BLACKFIRE_CLIENT_ID: ${{ secrets.BLACKFIRE_CLIENT_ID }}
           BLACKFIRE_CLIENT_TOKEN: ${{ secrets.BLACKFIRE_CLIENT_TOKEN }}
