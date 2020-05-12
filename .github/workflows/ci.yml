@@ -104,7 +104,7 @@ jobs:
       - uses: extdn/github-actions-m2/magento-phpstan@master
 
   integration:
-    name: WIP Integration Tests
+    name: M2 Integration Tests
     runs-on: ubuntu-latest
     container:
       image: duhon/php:7.3-alpine
