@@ -28,7 +28,8 @@ jobs:
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-
 
-      - uses: extdn/github-actions-m2/magento-performance-setup@master
+      - name: Prepare ExtDN performance testing
+        uses: extdn/github-actions-m2/magento-performance-setup@master
         env:
           BLACKFIRE_CLIENT_ID: ${{ secrets.BLACKFIRE_CLIENT_ID }}
           BLACKFIRE_CLIENT_TOKEN: ${{ secrets.BLACKFIRE_CLIENT_TOKEN }}
@@ -78,7 +79,8 @@ jobs:
           BLACKFIRE_SERVER_ID: ${{ secrets.BLACKFIRE_SERVER_ID }}
           BLACKFIRE_SERVER_TOKEN: ${{ secrets.BLACKFIRE_SERVER_TOKEN }}
 
-      - uses: extdn/github-actions-m2/magento-performance-compare@master
+      - name: Compare Performance Results
+        uses: extdn/github-actions-m2/magento-performance-compare@master
 
   static:
     name: M2 Coding Standard
