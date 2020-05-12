@@ -6,7 +6,7 @@ jobs:
     name: M2 Performance Testing
     runs-on: ubuntu-latest
     env:
-      DOCKER_COMPOSE_FILE: "./extension/.github/workflows/performance/docker-compose.yml"
+      DOCKER_COMPOSE_FILE: "./docker-compose.yml"
       EXTENSION_NAME: "Fooman_EmailAttachments"
       EXTENSION_PACKAGE_NAME: "fooman/emailattachments-implementation-m2"
 
