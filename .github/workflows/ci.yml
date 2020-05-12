@@ -35,16 +35,6 @@ jobs:
           BLACKFIRE_SERVER_ID: ${{ secrets.BLACKFIRE_SERVER_ID }}
           BLACKFIRE_SERVER_TOKEN: ${{ secrets.BLACKFIRE_SERVER_TOKEN }}
 
-      - name: Composer install
-        run: >-
-          composer create-project --repository=https://repo-magento-mirror.fooman.co.nz/ magento/project-community-edition:2.3.5 ${{ github.workspace }}/m2 --no-install --no-interaction
-          && cd ${{ github.workspace }}/m2
-          && composer config platform.php 7.3
-          && composer config --unset repo.0
-          && composer config repo.foomanmirror composer https://repo-magento-mirror.fooman.co.nz/
-          && composer install --prefer-dist
-        working-directory: ./m2
-
       - name: Install Magento
         run: >-
           docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} exec -T php-fpm
