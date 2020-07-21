@@ -31,7 +31,7 @@ class AttachmentContainerTest extends BaseUnitTestCase
      */
     protected $attachment;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $objectManager = new \Magento\Framework\TestFramework\Unit\Helper\ObjectManager($this);
         $this->attachment = $objectManager->getObject(
@@ -52,22 +52,22 @@ class AttachmentContainerTest extends BaseUnitTestCase
 
     public function testHasAttachments(): void
     {
-        $this->assertFalse($this->attachmentContainer->hasAttachments());
+        self::assertFalse($this->attachmentContainer->hasAttachments());
         $this->attachmentContainer->addAttachment($this->attachment);
-        $this->assertTrue($this->attachmentContainer->hasAttachments());
+        self::assertTrue($this->attachmentContainer->hasAttachments());
     }
 
     public function testResetAttachments(): void
     {
         $this->attachmentContainer->addAttachment($this->attachment);
-        $this->assertTrue($this->attachmentContainer->hasAttachments());
+        self::assertTrue($this->attachmentContainer->hasAttachments());
         $this->attachmentContainer->resetAttachments();
-        $this->assertFalse($this->attachmentContainer->hasAttachments());
+        self::assertFalse($this->attachmentContainer->hasAttachments());
     }
 
     public function testAttachments(): void
     {
         $this->attachmentContainer->addAttachment($this->attachment);
-        $this->assertEquals([$this->attachment], $this->attachmentContainer->getAttachments());
+        self::assertEquals([$this->attachment], $this->attachmentContainer->getAttachments());
     }
 }

@@ -1,6 +1,11 @@
 # Change Log
 
 ## [Unreleased]
+### Added
+- Support for PHP 7.4
+- Support for Magento 2.4.0
+### Fixed
+- Mislabeled admin setting
 
 ## [107.0.1] - 2020-05-01
 ### Fixed

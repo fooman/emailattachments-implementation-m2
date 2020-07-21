@@ -70,7 +70,7 @@ class BeforeSendShipmentCommentObserverTest extends Common
         $this->sendEmail();
 
         $pdfAttachment = $this->getAttachmentOfType($this->getLastEmail(), 'application/pdf; charset=utf-8');
-        $this->assertFalse($pdfAttachment);
+        self::assertFalse($pdfAttachment);
     }
 
     /**
@@ -98,7 +98,7 @@ class BeforeSendShipmentCommentObserverTest extends Common
             $this->getLastEmail(),
             'application/pdf; charset=utf-8'
         );
-        $this->assertCount(2, $allPdfAttachments);
+        self::assertCount(2, $allPdfAttachments);
     }
 
     protected function getShipment(): \Magento\Sales\Api\Data\ShipmentInterface

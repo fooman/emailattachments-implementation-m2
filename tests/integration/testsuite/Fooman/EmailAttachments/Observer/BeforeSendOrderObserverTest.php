@@ -34,7 +34,7 @@ class BeforeSendOrderObserverTest extends Common
                 sprintf('ORDERCONFIRMATION_%s.pdf', $order->getIncrementId())
             );
         } else {
-            $this->assertTrue(true, 'Make at least 1 assertion');
+            self::assertTrue(true, 'Make at least 1 assertion');
             if ($this->moduleManager->isEnabled('Fooman_PrintOrderPdf')) {
                 $pdf = $this->objectManager->create(\Fooman\PrintOrderPdf\Model\Pdf\Order::class)->getPdf([$order]);
                 $this->compareWithReceivedPdf($pdf);
@@ -73,7 +73,7 @@ class BeforeSendOrderObserverTest extends Common
         $this->sendEmail();
 
         $pdfAttachment = $this->getAttachmentOfType($this->getLastEmail(), 'application/pdf; charset=utf-8');
-        $this->assertFalse($pdfAttachment);
+        self::assertFalse($pdfAttachment);
     }
 
     /**
