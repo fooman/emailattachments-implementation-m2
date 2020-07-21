@@ -20,7 +20,7 @@ class Common extends BaseUnitTestCase
 
     const BASE_URL = 'http://127.0.0.1:8025/api/';
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->mailhogClient = new \Zend_Http_Client();
@@ -85,7 +85,7 @@ class Common extends BaseUnitTestCase
     protected function compareWithReceivedPdf($pdf, $number = 1): void
     {
         $pdfAttachment = $this->getAttachmentOfType($this->getLastEmail($number), 'application/pdf; charset=utf-8');
-        $this->assertEquals(strlen($pdf->render()), strlen(base64_decode($pdfAttachment['Body'])));
+        self::assertEquals(strlen($pdf->render()), strlen(base64_decode($pdfAttachment['Body'])));
     }
 
     /**
@@ -96,9 +96,9 @@ class Common extends BaseUnitTestCase
     protected function comparePdfAsStringWithReceivedPdf($pdf, $title = false, $number = 1): void
     {
         $pdfAttachment = $this->getAttachmentOfType($this->getLastEmail($number), 'application/pdf; charset=utf-8');
-        $this->assertEquals(strlen($pdf), strlen(base64_decode($pdfAttachment['Body'])));
+        self::assertEquals(strlen($pdf), strlen(base64_decode($pdfAttachment['Body'])));
         if ($title !== false) {
-            $this->assertEquals($title, $this->extractFilename($pdfAttachment));
+            self::assertEquals($title, $this->extractFilename($pdfAttachment));
         }
     }
 
@@ -106,7 +106,7 @@ class Common extends BaseUnitTestCase
     {
         if ($this->moduleManager->isEnabled('Fooman_PdfCustomiser')) {
             $pdfs = $this->getAllAttachmentsOfType($this->getLastEmail($number), 'application/pdf; charset=utf-8');
-            $this->assertEquals(
+            self::assertEquals(
                 strlen($this->getExpectedPdfAgreementsString()),
                 strlen(base64_decode($pdfs[$attachmentIndex]['Body']))
             );
@@ -124,7 +124,7 @@ class Common extends BaseUnitTestCase
                     $found = true;
                 }
             }
-            $this->assertTrue($found);
+            self::assertTrue($found);
         }
     }
 
@@ -132,13 +132,13 @@ class Common extends BaseUnitTestCase
     {
         if ($this->moduleManager->isEnabled('Fooman_PdfCustomiser')) {
             $pdfs = $this->getAllAttachmentsOfType($this->getLastEmail($number), 'application/pdf; charset=utf-8');
-            $this->assertEquals(
+            self::assertEquals(
                 strlen($this->getExpectedPdfAgreementsString()),
                 strlen(base64_decode($pdfs[$attachmentIndex]['Body']))
             );
         } else {
             $termsAttachment = $this->getAttachmentOfType($this->getLastEmail($number), 'text/plain; charset=utf-8');
-            $this->assertContains(
+            self::assertContains(
                 'Checkout agreement content: TEXT',
                 base64_decode($termsAttachment['Body'])
             );
