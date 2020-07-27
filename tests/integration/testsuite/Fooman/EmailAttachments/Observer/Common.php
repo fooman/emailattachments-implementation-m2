@@ -138,7 +138,7 @@ class Common extends BaseUnitTestCase
             );
         } else {
             $termsAttachment = $this->getAttachmentOfType($this->getLastEmail($number), 'text/plain; charset=utf-8');
-            self::assertContains(
+            self::assertStringContainsString(
                 'Checkout agreement content: TEXT',
                 base64_decode($termsAttachment['Body'])
             );
