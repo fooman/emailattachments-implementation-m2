@@ -167,7 +167,7 @@ class Common extends BaseUnitTestCase
             ->getPdfAsString($agreements);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->mailhogClient->resetParameters(true);
         $this->mailhogClient->setUri(self::BASE_URL . 'v1/messages');
