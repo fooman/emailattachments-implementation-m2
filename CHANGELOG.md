@@ -1,5 +1,7 @@
 # Change Log
 
+## [Unreleased]
+
 ## [107.1.0] - 2020-07-27
 ### Added
 - Support for PHP 7.4
