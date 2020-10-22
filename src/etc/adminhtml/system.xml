@@ -165,7 +165,7 @@
                        showInDefault="1"
                        showInWebsite="1"
                        showInStore="1">
-                    <label>Attach Invoice as PDF</label>
+                    <label>Attach Packing Slip as PDF</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <tooltip>When set to Yes, your packing slip pdf document will be
                         automatically attached to the shipment email.</tooltip>

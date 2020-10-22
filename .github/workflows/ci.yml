@@ -41,7 +41,6 @@ jobs:
           docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} exec -T php-fpm
           bash -c 'cd /var/www/html/m2 && sudo chown www-data: -R /var/www/html/m2 && ls -al && id
           && php -f bin/magento setup:install --base-url=http://magento2.test/ --backend-frontname=admin --db-host=mysql --db-name=magento_performance_tests --db-user=root --db-password=123123q --admin-user=admin@example.com --admin-password=password1 --admin-email=admin@example.com --admin-firstname=firstname --admin-lastname=lastname'
-
       - name: Generate Performance Fixtures
         run: >-
           docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} exec -T php-fpm
@@ -49,7 +48,6 @@ jobs:
           && php -f bin/magento setup:performance:generate-fixtures setup/performance-toolkit/profiles/ce/small.xml
           && php -f bin/magento cache:enable
           && php -f bin/magento cache:disable block_html full_page'
-
       - name: Run Blackfire
         id: blackfire-baseline
         run: docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} run blackfire-agent blackfire --json curl http://magento2.test/category-1/category-1-1.html > ${{ github.workspace }}/baseline.json
@@ -69,7 +67,6 @@ jobs:
           && php -f bin/magento setup:upgrade
           && php -f bin/magento cache:enable
           && php -f bin/magento cache:disable block_html full_page'
-
       - name: Run Blackfire Again
         id: blackfire-after
         run: docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} run blackfire-agent blackfire --json curl http://magento2.test/category-1/category-1-1.html > ${{ github.workspace }}/after.json

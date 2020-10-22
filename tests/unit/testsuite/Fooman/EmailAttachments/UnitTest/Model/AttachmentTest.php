@@ -26,7 +26,7 @@ class AttachmentTest extends BaseUnitTestCase
      */
     protected $attachment;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $objectManager = new \Magento\Framework\TestFramework\Unit\Helper\ObjectManager($this);
         $this->attachment = $objectManager->getObject(
@@ -43,26 +43,26 @@ class AttachmentTest extends BaseUnitTestCase
 
     public function testGetContent(): void
     {
-        $this->assertEquals(self::TEST_CONTENT, $this->attachment->getContent());
+        self::assertEquals(self::TEST_CONTENT, $this->attachment->getContent());
     }
 
     public function testGetMime(): void
     {
-        $this->assertEquals(self::TEST_MIME, $this->attachment->getMimeType());
+        self::assertEquals(self::TEST_MIME, $this->attachment->getMimeType());
     }
 
     public function testGetFilename(): void
     {
-        $this->assertEquals(self::TEST_FILENAME, $this->attachment->getFilename());
+        self::assertEquals(self::TEST_FILENAME, $this->attachment->getFilename());
     }
 
     public function testGetDispositon(): void
     {
-        $this->assertEquals(self::TEST_DISPOSITION, $this->attachment->getDisposition());
+        self::assertEquals(self::TEST_DISPOSITION, $this->attachment->getDisposition());
     }
 
     public function testGetEncoding(): void
     {
-        $this->assertEquals(self::TEST_ENCODING, $this->attachment->getEncoding());
+        self::assertEquals(self::TEST_ENCODING, $this->attachment->getEncoding());
     }
 }

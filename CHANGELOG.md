@@ -1,5 +1,18 @@
 # Change Log
 
+## [Unreleased]
+
+## [107.1.0] - 2020-07-27
+### Added
+- Support for PHP 7.4
+- Support for Magento 2.4.0
+### Fixed
+- Mislabeled admin setting
+
+## [107.0.1] - 2020-05-01
+### Fixed
+- Reworked email identification to strictly cover supported types only
+
 ## [107.0.0] - 2020-01-21
 ### Added
 - Ability to attach invoices to the shipping confirmation email
