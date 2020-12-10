@@ -12,6 +12,7 @@ namespace Fooman\EmailAttachments\Model;
 class AttachmentContainer implements Api\AttachmentContainerInterface
 {
     private $attachments = [];
+    private $dedupIds = [];
 
     /**
      * @return bool
@@ -26,7 +27,11 @@ class AttachmentContainer implements Api\AttachmentContainerInterface
      */
     public function addAttachment(Api\AttachmentInterface $attachment)
     {
-        $this->attachments[] = $attachment;
+        $dedupId = hash('sha256', $attachment->getFilename());
+        if(!isset($this->dedupIds[$dedupId])) {
+            $this->attachments[] = $attachment;
+            $this->dedupIds[$dedupId] = true;
+        }        
     }
 
     /**
@@ -43,5 +48,6 @@ class AttachmentContainer implements Api\AttachmentContainerInterface
     public function resetAttachments()
     {
         $this->attachments = [];
+        $this->dedupIds = [];
     }
 }

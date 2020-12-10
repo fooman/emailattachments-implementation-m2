@@ -18,6 +18,7 @@ class AttachmentContainerTest extends BaseUnitTestCase
     private const TEST_CONTENT = 'Testing content';
     private const TEST_MIME = 'text/plain';
     private const TEST_FILENAME = 'filename.txt';
+    private const TEST_SECOND_FILENAME = 'filename2.txt';
     private const TEST_DISPOSITION = 'Disposition';
     private const TEST_ENCODING = 'ENCODING';
 
@@ -31,6 +32,11 @@ class AttachmentContainerTest extends BaseUnitTestCase
      */
     protected $attachment;
 
+    /**
+     * @var \Fooman\EmailAttachments\Model\Attachment
+     */
+    protected $secondAttachment;
+
     protected function setUp(): void
     {
         $objectManager = new \Magento\Framework\TestFramework\Unit\Helper\ObjectManager($this);
@@ -40,6 +46,16 @@ class AttachmentContainerTest extends BaseUnitTestCase
                 'content'     => self::TEST_CONTENT,
                 'mimeType'    => self::TEST_MIME,
                 'fileName'    => self::TEST_FILENAME,
+                'disposition' => self::TEST_DISPOSITION,
+                'encoding'    => self::TEST_ENCODING
+            ]
+        );
+        $this->secondAttachment = $objectManager->getObject(
+            \Fooman\EmailAttachments\Model\Attachment::class,
+            [
+                'content'     => self::TEST_CONTENT,
+                'mimeType'    => self::TEST_MIME,
+                'fileName'    => self::TEST_SECOND_FILENAME,
                 'disposition' => self::TEST_DISPOSITION,
                 'encoding'    => self::TEST_ENCODING
             ]
@@ -69,5 +85,19 @@ class AttachmentContainerTest extends BaseUnitTestCase
     {
         $this->attachmentContainer->addAttachment($this->attachment);
         self::assertEquals([$this->attachment], $this->attachmentContainer->getAttachments());
+    }
+
+    public function testDoubleAttachments(): void
+    {
+        $this->attachmentContainer->addAttachment($this->attachment);
+        $this->attachmentContainer->addAttachment($this->attachment);
+        self::assertEquals([$this->attachment], $this->attachmentContainer->getAttachments());
+    }
+
+    public function testTwoAttachments(): void
+    {
+        $this->attachmentContainer->addAttachment($this->attachment);
+        $this->attachmentContainer->addAttachment($this->secondAttachment);
+        self::assertEquals([$this->attachment, $this->secondAttachment], $this->attachmentContainer->getAttachments());
     }
 }
