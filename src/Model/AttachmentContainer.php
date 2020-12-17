@@ -28,10 +28,10 @@ class AttachmentContainer implements Api\AttachmentContainerInterface
     public function addAttachment(Api\AttachmentInterface $attachment)
     {
         $dedupId = hash('sha256', $attachment->getFilename());
-        if(!isset($this->dedupIds[$dedupId])) {
+        if (!isset($this->dedupIds[$dedupId])) {
             $this->attachments[] = $attachment;
             $this->dedupIds[$dedupId] = true;
-        }        
+        }
     }
 
     /**
