@@ -1,5 +1,7 @@
 # Change Log
 
+## [Unreleased]
+
 ## [107.1.1] - 2020-12-10
 ### Fixed
 - Don't send the same named attachment twice
