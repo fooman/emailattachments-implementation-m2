@@ -3,7 +3,7 @@
     "license": "OSL-3.0",
     "description": "Automatically attach pdf and terms and conditions documents to outgoing sales emails.",
     "type": "magento2-module",
-    "version": "107.1.1",
+    "version": "107.2.0",
     "autoload": {
         "psr-4": {
             "Fooman\\EmailAttachments\\": "src/"
@@ -13,20 +13,16 @@
         ]
     },
     "require": {
-        "php": "~7.1.0|~7.2.0|~7.3.0|~7.4.0",
-        "magento/framework": "^102.0.3 | ^103.0.0",
-        "magento/module-backend": "^101.0.0 | ^102.0.0",
-        "magento/module-sales": "^102.0.0 | ^103.0.0",
+        "php": "~7.1.0||~7.2.0||~7.3.0||~7.4.0",
+        "magento/framework": "^102.0.5 || ^103.0.0",
+        "magento/module-backend": "^101.0.0 || ^102.0.0",
+        "magento/module-sales": "^102.0.0 || ^103.0.0",
         "magento/module-checkout-agreements": "^100.0.2",
         "magento/module-email": "^101.0.3",
-        "zendframework/zend-mime": "^2.5"
+        "laminas/laminas-mime": "^2.5"
     },
     "require-dev": {
-        "phpunit/phpunit": "^6.2 | ^9.1",
-        "fooman/magento2-phpunit-bridge": "^0.9",
-        "captainhook/captainhook": "^4.2",
-        "magento/magento-coding-standard": "*",
-        "fooman/phpstan-magento2-magic-methods": "^0.7.0"
+        "fooman/testing-and-quality-tools": "^1.0"
     },
     "repositories": [
         {
