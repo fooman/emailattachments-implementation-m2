@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased]
+### Changed
+- Switch to Laminas Mime package, minimum Magento version is now 2.3.5
 
 ## [107.1.1] - 2020-12-10
 ### Fixed
