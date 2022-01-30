@@ -1,6 +1,6 @@
 # Change Log
 
-## [Unreleased]
+## [107.2.1] - 2022-01-30
 ### Added
 - Support for PHP 8.0 and 8.1
 
