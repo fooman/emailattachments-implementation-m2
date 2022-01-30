@@ -23,12 +23,14 @@ class Common extends BaseUnitTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->mailhogClient = new \Zend_Http_Client();
+        $this->mailhogClient = new \Laminas\Http\Client();
         $this->objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
         $this->objectManager->configure(
             ['preferences' =>
-                [\Magento\Framework\Mail\TransportInterface::class => \Magento\Email\Model\Transport::class],
-                [\Magento\Framework\Mail\Template\TransportBuilder::class => TransportBuilder::class]
+                [
+                    \Magento\Framework\Mail\TransportInterface::class => \Magento\Email\Model\Transport::class,
+                    \Magento\Framework\Mail\Template\TransportBuilder::class => TransportBuilder::class
+                ]
             ]
         );
 
@@ -38,11 +40,11 @@ class Common extends BaseUnitTestCase
     public function getLastEmail($number = 1)
     {
         $this->mailhogClient->setUri(self::BASE_URL . 'v2/messages?limit=' . $number);
-        $lastEmail = json_decode($this->mailhogClient->request()->getBody(), true);
+        $lastEmail = json_decode($this->mailhogClient->send()->getBody(), true);
         $lastEmailId = $lastEmail['items'][$number - 1]['ID'];
         $this->mailhogClient->resetParameters(true);
         $this->mailhogClient->setUri(self::BASE_URL . 'v1/messages/' . $lastEmailId);
-        return json_decode($this->mailhogClient->request()->getBody(), true);
+        return json_decode($this->mailhogClient->send()->getBody(), true);
     }
 
     public function getAttachmentOfType($email, $type)
@@ -171,6 +173,7 @@ class Common extends BaseUnitTestCase
     {
         $this->mailhogClient->resetParameters(true);
         $this->mailhogClient->setUri(self::BASE_URL . 'v1/messages');
-        $this->mailhogClient->request('DELETE');
+        $this->mailhogClient->setMethod('DELETE');
+        $this->mailhogClient->send();
     }
 }
