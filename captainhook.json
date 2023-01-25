@@ -26,7 +26,7 @@
                 "conditions": []
             },
             {
-                "action": "vendor/bin/phpcs --config-set installed_paths ../../magento/magento-coding-standard/ && vendor/bin/phpcs --standard=Magento2 src",
+                "action": "vendor/bin/phpcs --config-set installed_paths ../../magento/magento-coding-standard/,../../phpcompatibility/php-compatibility && vendor/bin/phpcs --severity=7 -s --standard=Magento2 src",
                 "options": [],
                 "conditions": []
             },
