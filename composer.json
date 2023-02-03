@@ -24,12 +24,6 @@
     "require-dev": {
         "fooman/testing-and-quality-tools": "^1.0"
     },
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "https://repo-magento-mirror.fooman.co.nz/"
-        }
-    ],
     "minimum-stability": "dev",
     "prefer-stable": true,
     "suggest": {
