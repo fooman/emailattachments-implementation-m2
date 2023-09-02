@@ -17,7 +17,8 @@
         <plugin name="fooman_emailattachments_transportbuilder" type="Fooman\EmailAttachments\Plugin\TransportBuilder"/>
     </type>
     <type name="\Magento\Framework\Mail\MimeMessageInterfaceFactory">
-        <plugin name="fooman_emailattachments_mimemessagefactory" type="Fooman\EmailAttachments\Plugin\MimeMessageFactory"/>
+        <plugin name="fooman_emailattachments_mimemessagefactory"
+            type="Fooman\EmailAttachments\Plugin\MimeMessageFactory"/>
     </type>
 
     <!-- module introduced preferences -->
@@ -59,7 +60,8 @@
         </arguments>
     </type>
 
-    <virtualType name="fooman_emailattachments_creditmemo_pdf_renderer" type="\Fooman\EmailAttachments\Model\PdfRenderer">
+    <virtualType name="fooman_emailattachments_creditmemo_pdf_renderer"
+        type="\Fooman\EmailAttachments\Model\PdfRenderer">
         <arguments>
             <argument name="pdfRenderer" xsi:type="object">\Magento\Sales\Model\Order\Pdf\Creditmemo</argument>
         </arguments>

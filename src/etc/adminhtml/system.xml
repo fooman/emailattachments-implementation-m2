@@ -37,7 +37,8 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <label>Attach Terms and Conditions</label>
                     <tooltip><![CDATA[When set to Yes, your Terms and Conditions
-                                (from <b>Stores &gt; Terms and Conditions</b>) will be automatically attached to the email.]]></tooltip>
+                                (from <b>Stores &gt; Terms and Conditions</b>) 
+                                will be automatically attached to the email.]]></tooltip>
                 </field>
             </group>
             <group id="order_comment">
@@ -64,7 +65,8 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <label>Attach Terms and Conditions</label>
                     <tooltip><![CDATA[When set to Yes, your Terms and Conditions
-                                (from <b>Stores &gt; Terms and Conditions</b>) will be automatically attached to the email.]]></tooltip>
+                                (from <b>Stores &gt; Terms and Conditions</b>) 
+                                will be automatically attached to the email.]]></tooltip>
                 </field>
             </group>
             <group id="invoice">
@@ -90,7 +92,8 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <label>Attach Terms and Conditions</label>
                     <tooltip><![CDATA[When set to Yes, your Terms and Conditions
-                                (from <b>Stores &gt; Terms and Conditions</b>) will be automatically attached to the email.]]></tooltip>
+                                (from <b>Stores &gt; Terms and Conditions</b>) 
+                                will be automatically attached to the email.]]></tooltip>
                 </field>
             </group>
             <group id="invoice_comment">
@@ -116,7 +119,8 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <label>Attach Terms and Conditions</label>
                     <tooltip><![CDATA[When set to Yes, your Terms and Conditions
-                                (from <b>Stores &gt; Terms and Conditions</b>) will be automatically attached to the email.]]></tooltip>
+                                (from <b>Stores &gt; Terms and Conditions</b>) 
+                                will be automatically attached to the email.]]></tooltip>
                 </field>
             </group>
             <group id="shipment">
@@ -154,7 +158,8 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <label>Attach Terms and Conditions</label>
                     <tooltip><![CDATA[When set to Yes, your Terms and Conditions
-                                (from <b>Stores &gt; Terms and Conditions</b>) will be automatically attached to the email.]]></tooltip>
+                                (from <b>Stores &gt; Terms and Conditions</b>) 
+                                will be automatically attached to the email.]]></tooltip>
                 </field>
             </group>
             <group id="shipment_comment">
@@ -192,7 +197,8 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <label>Attach Terms and Conditions</label>
                     <tooltip><![CDATA[When set to Yes, your Terms and Conditions
-                                (from <b>Stores &gt; Terms and Conditions</b>) will be automatically attached to the email.]]></tooltip>
+                                (from <b>Stores &gt; Terms and Conditions</b>) 
+                                will be automatically attached to the email.]]></tooltip>
                 </field>
             </group>
             <group id="creditmemo">
@@ -218,7 +224,8 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <label>Attach Terms and Conditions</label>
                     <tooltip><![CDATA[When set to Yes, your Terms and Conditions
-                                (from <b>Stores &gt; Terms and Conditions</b>) will be automatically attached to the email.]]></tooltip>
+                                (from <b>Stores &gt; Terms and Conditions</b>) 
+                                will be automatically attached to the email.]]></tooltip>
                 </field>
             </group>
             <group id="creditmemo_comment">
@@ -244,7 +251,8 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <label>Attach Terms and Conditions</label>
                     <tooltip><![CDATA[When set to Yes, your Terms and Conditions
-                                (from <b>Stores &gt; Terms and Conditions</b>) will be automatically attached to the email.]]></tooltip>
+                                (from <b>Stores &gt; Terms and Conditions</b>) 
+                                will be automatically attached to the email.]]></tooltip>
                 </field>
             </group>
         </section>

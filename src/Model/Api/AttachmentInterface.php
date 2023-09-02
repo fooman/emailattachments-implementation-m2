@@ -11,8 +11,8 @@ namespace Fooman\EmailAttachments\Model\Api;
  */
 interface AttachmentInterface
 {
-    const ENCODING_BASE64          = 'base64';
-    const DISPOSITION_ATTACHMENT   = 'attachment';
+    public const ENCODING_BASE64          = 'base64';
+    public const DISPOSITION_ATTACHMENT   = 'attachment';
 
     public function getMimeType();
 
