@@ -32,7 +32,7 @@ class TermsAndConditionsAttacher
          * @var \Magento\CheckoutAgreements\Model\ResourceModel\Agreement\Collection $agreements
          */
         $agreements = $this->termsCollection->create();
-        $agreements->addStoreFilter($storeId)->addFieldToFilter('is_active', 1);
+        $agreements->addStoreFilter($storeId)->addFieldToFilter('is_active', "1");
 
         foreach ($agreements as $agreement) {
             $this->attachAgreement($agreement, $attachmentContainer);

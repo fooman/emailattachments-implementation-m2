@@ -11,5 +11,5 @@ namespace Fooman\EmailAttachments\Observer;
  */
 class BeforeSendInvoiceShipmentCommentObserver extends AbstractSendInvoiceShipmentObserver
 {
-    const XML_PATH_ATTACH_PDF = 'sales_email/shipment_comment/attachinvoicepdf';
+    public const XML_PATH_ATTACH_PDF = 'sales_email/shipment_comment/attachinvoicepdf';
 }
