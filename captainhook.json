@@ -26,12 +26,12 @@
                 "conditions": []
             },
             {
-                "action": "vendor/bin/phpcs --config-set installed_paths ../../magento/magento-coding-standard/,../../phpcompatibility/php-compatibility && vendor/bin/phpcs --severity=7 -s --standard=Magento2 src",
+                "action": "vendor/bin/phpcs --config-set installed_paths ../../magento/magento-coding-standard,../../magento/php-compatibility-fork,../../phpcsstandards/phpcsutils && vendor/bin/phpcs --severity=6 -s --standard=Magento2 src",
                 "options": [],
                 "conditions": []
             },
             {
-                "action": "vendor/bin/phpstan analyse src/ -l 4",
+                "action": "vendor/bin/phpstan analyse src/ -l 5",
                 "options": [],
                 "conditions": []
             }

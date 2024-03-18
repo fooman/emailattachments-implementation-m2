@@ -1,6 +1,10 @@
 # Change Log
 
 ## [Unreleased]
+### Added
+- Support for Php 8.3
+### Changed
+- Code style updates for newer Magento Coding Standard
 
 ## [107.3.0] - 2023-02-07
 ### Added
