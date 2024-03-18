@@ -13,10 +13,10 @@ use Fooman\EmailAttachments\Model\Api\AttachmentContainerInterface as ContainerI
  */
 class ContentAttacher
 {
-    const MIME_PDF = 'application/pdf';
-    const TYPE_OCTETSTREAM = 'application/octet-stream';
-    const MIME_TXT = 'text/plain';
-    const MIME_HTML = 'text/html';
+    public const MIME_PDF = 'application/pdf';
+    public const TYPE_OCTETSTREAM = 'application/octet-stream';
+    public const MIME_TXT = 'text/plain';
+    public const MIME_HTML = 'text/html';
 
     private $attachmentFactory;
 
