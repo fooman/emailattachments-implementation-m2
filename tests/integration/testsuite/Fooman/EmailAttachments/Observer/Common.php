@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Fooman\EmailAttachments\Observer;
 
 use Fooman\EmailAttachments\TransportBuilder;
-use \Fooman\PhpunitBridge\BaseUnitTestCase;
+use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 
 /**
  * @copyright  Copyright (c) 2015 Fooman Limited (http://www.fooman.co.nz)
@@ -12,7 +12,7 @@ use \Fooman\PhpunitBridge\BaseUnitTestCase;
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-class Common extends BaseUnitTestCase
+class Common extends TestCase
 {
     protected $mailhogClient;
     protected $objectManager;
