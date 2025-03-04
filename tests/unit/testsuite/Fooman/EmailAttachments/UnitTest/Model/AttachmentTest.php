@@ -11,9 +11,9 @@ declare(strict_types=1);
  */
 namespace Fooman\EmailAttachments\Test\Unit\Model;
 
-use Fooman\PhpunitBridge\BaseUnitTestCase;
+use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 
-class AttachmentTest extends BaseUnitTestCase
+class AttachmentTest extends TestCase
 {
     private const TEST_CONTENT = 'Testing content';
     private const TEST_MIME = 'text/plain';
