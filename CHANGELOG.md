@@ -1,5 +1,7 @@
 # Change Log
 
+## [Unreleased]
+
 ## [107.5.0] - 2025-03-04
 ### Added
 - Support for Magento 2.4.8
