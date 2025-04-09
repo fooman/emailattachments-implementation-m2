@@ -14,7 +14,7 @@ use Yoast\PHPUnitPolyfills\TestCases\TestCase;
  */
 class Common extends TestCase
 {
-    protected $mailhogClient;
+    protected $apiClient;
     protected $objectManager;
     protected $moduleManager;
 
@@ -23,7 +23,7 @@ class Common extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->mailhogClient = new \Laminas\Http\Client();
+        $this->apiClient = new \GuzzleHttp\Client();
         $this->objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
         $this->objectManager->configure(
             ['preferences' =>
@@ -39,22 +39,26 @@ class Common extends TestCase
 
     public function getLastEmail($number = 1)
     {
-        $this->mailhogClient->setUri(self::BASE_URL . 'v2/messages?limit=' . $number);
-        $lastEmail = json_decode($this->mailhogClient->send()->getBody(), true);
-        $lastEmailId = $lastEmail['items'][$number - 1]['ID'];
-        $this->mailhogClient->resetParameters(true);
-        $this->mailhogClient->setUri(self::BASE_URL . 'v1/messages/' . $lastEmailId);
-        return json_decode($this->mailhogClient->send()->getBody(), true);
+        $result = $this->apiClient->request('GET', self::BASE_URL . 'v1/messages?limit=' . $number);
+        $messages = json_decode((string)$result->getBody(), true);
+        $lastEmailId = $messages['messages'][$number - 1]['ID'];
+        $result = $this->apiClient->request('GET',self::BASE_URL . 'v1/message/' . $lastEmailId);
+        return json_decode((string)$result->getBody(), true);
     }
 
     public function getAttachmentOfType($email, $type)
     {
-        if (isset($email['MIME']['Parts'])) {
-            foreach ($email['MIME']['Parts'] as $part) {
-                if (!isset($type, $part['Headers']['Content-Type'])) {
+        if (isset($email['Attachments'])) {
+            foreach ($email['Attachments'] as $part) {
+                if (!isset($type, $part['ContentType'])) {
                     continue;
                 }
-                if ($part['Headers']['Content-Type'][0] == $type) {
+                if ($part['ContentType'] == $type) {
+                    $result = $this->apiClient->request(
+                        'GET',
+                        self::BASE_URL . 'v1/message/'.$email['ID'].'/part/'.$part['PartID']
+                    );
+                    $part['Body'] = $result->getBody()->getContents();
                     return $part;
                 }
             }
@@ -66,12 +70,17 @@ class Common extends TestCase
     public function getAllAttachmentsOfType($email, $type)
     {
         $parts = [];
-        if (isset($email['MIME']['Parts'])) {
-            foreach ($email['MIME']['Parts'] as $part) {
-                if (!isset($type, $part['Headers']['Content-Type'])) {
+        if (isset($email['Attachments'])) {
+            foreach ($email['Attachments'] as $part) {
+                if (!isset($type, $part['ContentType'])) {
                     continue;
                 }
-                if ($part['Headers']['Content-Type'][0] == $type) {
+                if ($part['ContentType'] == $type) {
+                    $result = $this->apiClient->request(
+                        'GET',
+                        self::BASE_URL . 'v1/message/'.$email['ID'].'/part/'.$part['PartID']
+                    );
+                    $part['Body'] = $result->getBody()->getContents();
                     $parts[] = $part;
                 }
             }
@@ -86,8 +95,8 @@ class Common extends TestCase
      */
     protected function compareWithReceivedPdf($pdf, $number = 1): void
     {
-        $pdfAttachment = $this->getAttachmentOfType($this->getLastEmail($number), 'application/pdf; charset=utf-8');
-        self::assertEquals(strlen($pdf->render()), strlen(base64_decode($pdfAttachment['Body'])));
+        $pdfAttachment = $this->getAttachmentOfType($this->getLastEmail($number), 'application/pdf');
+        self::assertEquals(strlen($pdf->render()), strlen($pdfAttachment['Body']));
     }
 
     /**
@@ -97,8 +106,8 @@ class Common extends TestCase
      */
     protected function comparePdfAsStringWithReceivedPdf($pdf, $title = false, $number = 1): void
     {
-        $pdfAttachment = $this->getAttachmentOfType($this->getLastEmail($number), 'application/pdf; charset=utf-8');
-        self::assertEquals(strlen($pdf), strlen(base64_decode($pdfAttachment['Body'])));
+        $pdfAttachment = $this->getAttachmentOfType($this->getLastEmail($number), 'application/pdf');
+        self::assertEquals(strlen($pdf), strlen($pdfAttachment['Body']));
         if ($title !== false) {
             self::assertEquals($title, $this->extractFilename($pdfAttachment));
         }
@@ -107,7 +116,7 @@ class Common extends TestCase
     protected function checkReceivedHtmlTermsAttachment($number = 1, $attachmentIndex = 0): void
     {
         if ($this->moduleManager->isEnabled('Fooman_PdfCustomiser')) {
-            $pdfs = $this->getAllAttachmentsOfType($this->getLastEmail($number), 'application/pdf; charset=utf-8');
+            $pdfs = $this->getAllAttachmentsOfType($this->getLastEmail($number), 'application/pdf');
             self::assertEquals(
                 strlen($this->getExpectedPdfAgreementsString()),
                 strlen(base64_decode($pdfs[$attachmentIndex]['Body']))
@@ -116,11 +125,11 @@ class Common extends TestCase
             $found = false;
             $termsAttachments = $this->getAllAttachmentsOfType(
                 $this->getLastEmail($number),
-                'text/html; charset=utf-8'
+                'text/html'
             );
             foreach ($termsAttachments as $termsAttachment) {
                 if (strpos(
-                    base64_decode($termsAttachment['Body']),
+                    $termsAttachment['Body'],
                     'Checkout agreement content: <b>HTML</b>'
                 ) !== false) {
                     $found = true;
@@ -133,24 +142,23 @@ class Common extends TestCase
     protected function checkReceivedTxtTermsAttachment($number = 1, $attachmentIndex = 0): void
     {
         if ($this->moduleManager->isEnabled('Fooman_PdfCustomiser')) {
-            $pdfs = $this->getAllAttachmentsOfType($this->getLastEmail($number), 'application/pdf; charset=utf-8');
+            $pdfs = $this->getAllAttachmentsOfType($this->getLastEmail($number), 'application/pdf');
             self::assertEquals(
                 strlen($this->getExpectedPdfAgreementsString()),
                 strlen(base64_decode($pdfs[$attachmentIndex]['Body']))
             );
         } else {
-            $termsAttachment = $this->getAttachmentOfType($this->getLastEmail($number), 'text/plain; charset=utf-8');
+            $termsAttachment = $this->getAttachmentOfType($this->getLastEmail($number), 'text/plain');
             self::assertStringContainsString(
                 'Checkout agreement content: TEXT',
-                base64_decode($termsAttachment['Body'])
+                $termsAttachment['Body']
             );
         }
     }
 
     protected function extractFilename($input)
     {
-        $input = substr($input['Headers']['Content-Disposition'][0], strlen('attachment; filename="=?utf-8?B?'), -2);
-        return base64_decode($input);
+        return $input['FileName'];
     }
 
     protected function getExpectedPdfAgreementsString()
@@ -169,11 +177,8 @@ class Common extends TestCase
             ->getPdfAsString($agreements);
     }
 
-    protected function tearDown(): void
+    /*protected function tearDown(): void
     {
-        $this->mailhogClient->resetParameters(true);
-        $this->mailhogClient->setUri(self::BASE_URL . 'v1/messages');
-        $this->mailhogClient->setMethod('DELETE');
-        $this->mailhogClient->send();
-    }
+        $this->apiClient->request('DELETE', self::BASE_URL . 'v1/messages');
+    }*/
 }

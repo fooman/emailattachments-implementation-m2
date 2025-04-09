@@ -75,7 +75,7 @@ class BeforeSendInvoiceObserverTest extends Common
     {
         $this->sendEmail();
 
-        $pdfAttachment = $this->getAttachmentOfType($this->getLastEmail(), 'application/pdf; charset=utf-8');
+        $pdfAttachment = $this->getAttachmentOfType($this->getLastEmail(), 'application/pdf');
         self::assertFalse($pdfAttachment);
     }
 
@@ -126,7 +126,7 @@ class BeforeSendInvoiceObserverTest extends Common
         $this->comparePdfs($invoice, 1);
         $mail = $this->getLastEmail();
 
-        $allPdfAttachments = $this->getAllAttachmentsOfType($mail, 'application/pdf; charset=utf-8');
+        $allPdfAttachments = $this->getAllAttachmentsOfType($mail, 'application/pdf');
         if ($this->moduleManager->isEnabled('Fooman_PdfCustomiser')) {
             self::assertCount(2, $allPdfAttachments);
         } else {
@@ -148,9 +148,9 @@ class BeforeSendInvoiceObserverTest extends Common
         $this->testWithAttachment();
         $this->checkReceivedHtmlTermsAttachment(1, 1);
         $mail = $this->getLastEmail();
-        self::assertEquals('copyto@example.com', $mail['Content']['Headers']['Bcc'][0]);
+        self::assertEquals('copyto@example.com', $mail['Bcc'][0]['Address']);
 
-        $allPdfAttachments = $this->getAllAttachmentsOfType($mail, 'application/pdf; charset=utf-8');
+        $allPdfAttachments = $this->getAllAttachmentsOfType($mail, 'application/pdf');
         if ($this->moduleManager->isEnabled('Fooman_PdfCustomiser')) {
             self::assertCount(2, $allPdfAttachments);
         } else {

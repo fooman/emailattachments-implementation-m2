@@ -33,19 +33,4 @@ class TransportBuilder
     ) {
         $this->nextEmail->setTemplateVars($templateVars);
     }
-
-    public function aroundGetTransport(
-        \Magento\Framework\Mail\Template\TransportBuilder $subject,
-        \Closure $proceed
-    ) {
-        $mailTransport = $proceed();
-        $this->reset();
-        return $mailTransport;
-    }
-
-    private function reset()
-    {
-        $this->nextEmail->setTemplateIdentifier(null);
-        $this->nextEmail->setTemplateVars(null);
-    }
 }

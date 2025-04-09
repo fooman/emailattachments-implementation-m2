@@ -42,6 +42,7 @@ class EmailEventDispatcher
     {
         if ($this->nextEmailInfo->getTemplateIdentifier()) {
             $this->determineEmailAndDispatch($attachmentContainer);
+            $this->nextEmailInfo->reset();
         }
     }
 

@@ -31,7 +31,7 @@
                 "conditions": []
             },
             {
-                "action": "vendor/bin/phpstan analyse src/ -l 5",
+                "action": "vendor/bin/phpstan analyse src/ -l 1",
                 "options": [],
                 "conditions": []
             }

@@ -33,4 +33,10 @@ class NextEmailInfo
     {
         return $this->templateIdentifier;
     }
+
+    public function reset()
+    {
+        $this->templateIdentifier = null;
+        $this->templateVars = null;
+    }
 }

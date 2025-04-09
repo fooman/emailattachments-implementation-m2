@@ -69,7 +69,7 @@ class BeforeSendShipmentCommentObserverTest extends Common
     {
         $this->sendEmail();
 
-        $pdfAttachment = $this->getAttachmentOfType($this->getLastEmail(), 'application/pdf; charset=utf-8');
+        $pdfAttachment = $this->getAttachmentOfType($this->getLastEmail(), 'application/pdf');
         self::assertFalse($pdfAttachment);
     }
 
@@ -96,7 +96,7 @@ class BeforeSendShipmentCommentObserverTest extends Common
         $this->testWithAttachment();
         $allPdfAttachments = $this->getAllAttachmentsOfType(
             $this->getLastEmail(),
-            'application/pdf; charset=utf-8'
+            'application/pdf'
         );
         self::assertCount(2, $allPdfAttachments);
     }
