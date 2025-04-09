@@ -18,8 +18,14 @@ use Symfony\Component\Mime\Part\Multipart\MixedPart;
 class Transport
 {
 
+    /**
+     * @var AttachmentContainerFactory
+     */
     private $attachmentContainerFactory;
 
+    /**
+     * @var EmailEventDispatcher
+     */
     private $emailEventDispatcher;
 
     public function __construct(

@@ -33,6 +33,9 @@ class MimeMessageFactory
      */
     private $mailProcessor;
 
+    /**
+     * @var bool|int
+     */
     private $isLaminasMode;
 
     public function __construct(
