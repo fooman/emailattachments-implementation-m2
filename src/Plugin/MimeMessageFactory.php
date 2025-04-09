@@ -6,6 +6,7 @@ namespace Fooman\EmailAttachments\Plugin;
 use Fooman\EmailAttachments\Model\Api\MailProcessorInterface;
 use Fooman\EmailAttachments\Model\Api\AttachmentContainerInterface;
 use Fooman\EmailAttachments\Model\AttachmentContainerFactory;
+use Magento\Framework\Mail\TransportInterface;
 
 /**
  * @copyright  Copyright (c) 2015 Fooman Limited (http://www.fooman.co.nz)
@@ -31,14 +32,18 @@ class MimeMessageFactory
      */
     private $mailProcessor;
 
+    private $isLaminasMode;
+
     public function __construct(
         \Fooman\EmailAttachments\Model\EmailEventDispatcher $emailEventDispatcher,
         AttachmentContainerFactory $attachmentContainer,
-        MailProcessorInterface $mailProcessor
+        MailProcessorInterface $mailProcessor,
+        TransportInterface $transport
     ) {
         $this->emailEventDispatcher = $emailEventDispatcher;
         $this->attachmentContainerFactory = $attachmentContainer;
         $this->mailProcessor = $mailProcessor;
+        $this->isLaminasMode = strpos(get_class($transport->getTransport()), 'Laminas') !== false;
     }
 
     public function aroundCreate(
@@ -46,11 +51,13 @@ class MimeMessageFactory
         \Closure $proceed,
         array $data = []
     ) {
-        if (isset($data['parts'])) {
+        //Legacy Mode for Laminas Mail prior to Magento 2.4.8
+        if ($this->isLaminasMode && isset($data['parts'])) {
             $attachmentContainer = $this->attachmentContainerFactory->create();
             $this->emailEventDispatcher->dispatch($attachmentContainer);
             $data['parts'] = $this->attachIfNeeded($data['parts'], $attachmentContainer);
         }
+
         return $proceed($data);
     }
 

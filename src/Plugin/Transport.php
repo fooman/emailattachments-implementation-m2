@@ -37,15 +37,6 @@ class Transport
         $this->emailEventDispatcher->dispatch($attachmentContainer);
         if (method_exists($subject->getMessage(), 'getSymfonyMessage')) {
             $this->handleSymfonyMail($attachmentContainer, $subject);
-        } else {
-            $body = $subject->getMessage()->getBody();
-            foreach ($attachmentContainer->getAttachments() as $attachment) {
-                $newPart = new \Laminas\Mime\Part($attachment->getContent()); // @phpstan-ignore-line
-                $newPart->setFileName($attachment->getFilename(true));
-                $newPart->setType($attachment->getMimeType());
-                $newPart->setEncoding($attachment->getEncoding());
-                $body->addPart($newPart);
-            }
         }
 
         return null;

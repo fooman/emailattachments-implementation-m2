@@ -19,6 +19,10 @@
     <type name="Magento\Framework\Mail\TransportInterface">
         <plugin name="fooman_emailattachments_transport" type="Fooman\EmailAttachments\Plugin\Transport"/>
     </type>
+    <type name="\Magento\Framework\Mail\MimeMessageInterfaceFactory">
+        <plugin name="fooman_emailattachments_mimemessagefactory"
+            type="Fooman\EmailAttachments\Plugin\MimeMessageFactory"/>
+    </type>
 
     <!-- module introduced preferences -->
     <preference for="Fooman\EmailAttachments\Model\Api\AttachmentContainerInterface"

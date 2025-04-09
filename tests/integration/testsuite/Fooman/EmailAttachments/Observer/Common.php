@@ -177,8 +177,8 @@ class Common extends TestCase
             ->getPdfAsString($agreements);
     }
 
-    /*protected function tearDown(): void
+    protected function tearDown(): void
     {
         $this->apiClient->request('DELETE', self::BASE_URL . 'v1/messages');
-    }*/
+    }
 }
