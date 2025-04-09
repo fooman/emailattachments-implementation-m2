@@ -6,7 +6,8 @@ namespace Fooman\EmailAttachments\Plugin;
 use Fooman\EmailAttachments\Model\Api\MailProcessorInterface;
 use Fooman\EmailAttachments\Model\Api\AttachmentContainerInterface;
 use Fooman\EmailAttachments\Model\AttachmentContainerFactory;
-use Magento\Framework\Mail\TransportInterface;
+use Fooman\EmailAttachments\Model\EmailEventDispatcher;
+use Magento\Framework\App\ProductMetadataInterface;
 
 /**
  * @copyright  Copyright (c) 2015 Fooman Limited (http://www.fooman.co.nz)
@@ -18,7 +19,7 @@ class MimeMessageFactory
 {
 
     /**
-     * @var \Fooman\EmailAttachments\Model\EmailEventDispatcher
+     * @var EmailEventDispatcher
      */
     private $emailEventDispatcher;
 
@@ -35,15 +36,15 @@ class MimeMessageFactory
     private $isLaminasMode;
 
     public function __construct(
-        \Fooman\EmailAttachments\Model\EmailEventDispatcher $emailEventDispatcher,
+        EmailEventDispatcher $emailEventDispatcher,
         AttachmentContainerFactory $attachmentContainer,
         MailProcessorInterface $mailProcessor,
-        TransportInterface $transport
+        ProductMetadataInterface $productMetadata
     ) {
         $this->emailEventDispatcher = $emailEventDispatcher;
         $this->attachmentContainerFactory = $attachmentContainer;
         $this->mailProcessor = $mailProcessor;
-        $this->isLaminasMode = strpos(get_class($transport->getTransport()), 'Laminas') !== false;
+        $this->isLaminasMode = version_compare($productMetadata->getVersion(), '2.4.8', '<');
     }
 
     public function aroundCreate(
