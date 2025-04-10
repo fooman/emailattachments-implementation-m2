@@ -1,6 +1,6 @@
 # Change Log
 
-## [Unreleased]
+## [107.5.2] - 2025-04-10
 ### Fixed
 - Adjust test output for mailpit response 
 
