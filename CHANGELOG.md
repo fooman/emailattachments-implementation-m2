@@ -1,5 +1,7 @@
 # Change Log
 
+## [Unreleased]
+
 ## [107.5.1] - 2025-04-10
 ### Fixed
 - Rework extension to also support Symfony Mailer
