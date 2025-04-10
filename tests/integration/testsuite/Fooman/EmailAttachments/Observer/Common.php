@@ -119,7 +119,7 @@ class Common extends TestCase
             $pdfs = $this->getAllAttachmentsOfType($this->getLastEmail($number), 'application/pdf');
             self::assertEquals(
                 strlen($this->getExpectedPdfAgreementsString()),
-                strlen(base64_decode($pdfs[$attachmentIndex]['Body']))
+                strlen($pdfs[$attachmentIndex]['Body'])
             );
         } else {
             $found = false;
@@ -145,7 +145,7 @@ class Common extends TestCase
             $pdfs = $this->getAllAttachmentsOfType($this->getLastEmail($number), 'application/pdf');
             self::assertEquals(
                 strlen($this->getExpectedPdfAgreementsString()),
-                strlen(base64_decode($pdfs[$attachmentIndex]['Body']))
+                strlen($pdfs[$attachmentIndex]['Body'])
             );
         } else {
             $termsAttachment = $this->getAttachmentOfType($this->getLastEmail($number), 'text/plain');
