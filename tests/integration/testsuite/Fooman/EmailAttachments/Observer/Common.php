@@ -4,6 +4,13 @@ declare(strict_types=1);
 namespace Fooman\EmailAttachments\Observer;
 
 use Fooman\EmailAttachments\TransportBuilder;
+use Fooman\PdfCustomiser\Model\PdfRenderer\TermsAndConditionsAdapter;
+use GuzzleHttp\Client;
+use Magento\CheckoutAgreements\Model\ResourceModel\Agreement\Collection;
+use Magento\Email\Model\Transport;
+use Magento\Framework\Mail\Template\TransportBuilder as MagentoFrameworkTransportBuilder;
+use Magento\Framework\Mail\TransportInterface;
+use Magento\TestFramework\Helper\Bootstrap;
 use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 
 /**
@@ -23,13 +30,13 @@ class Common extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->apiClient = new \GuzzleHttp\Client();
-        $this->objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
+        $this->apiClient = new Client();
+        $this->objectManager = Bootstrap::getObjectManager();
         $this->objectManager->configure(
             ['preferences' =>
                 [
-                    \Magento\Framework\Mail\TransportInterface::class => \Magento\Email\Model\Transport::class,
-                    \Magento\Framework\Mail\Template\TransportBuilder::class => TransportBuilder::class
+                    TransportInterface::class => Transport::class,
+                    MagentoFrameworkTransportBuilder::class => TransportBuilder::class
                 ]
             ]
         );
@@ -37,12 +44,17 @@ class Common extends TestCase
         $this->moduleManager = $this->objectManager->create(\Magento\Framework\Module\Manager::class);
     }
 
+    protected function getBaseUrl()
+    {
+        return getenv('MAILPIT_URL')?:self::BASE_URL;
+    }
+
     public function getLastEmail($number = 1)
     {
-        $result = $this->apiClient->request('GET', self::BASE_URL . 'v1/messages?limit=' . $number);
+        $result = $this->apiClient->request('GET', $this->getBaseUrl() . 'v1/messages?limit=' . $number);
         $messages = json_decode((string)$result->getBody(), true);
         $lastEmailId = $messages['messages'][$number - 1]['ID'];
-        $result = $this->apiClient->request('GET',self::BASE_URL . 'v1/message/' . $lastEmailId);
+        $result = $this->apiClient->request('GET',$this->getBaseUrl() . 'v1/message/' . $lastEmailId);
         return json_decode((string)$result->getBody(), true);
     }
 
@@ -56,7 +68,7 @@ class Common extends TestCase
                 if ($part['ContentType'] == $type) {
                     $result = $this->apiClient->request(
                         'GET',
-                        self::BASE_URL . 'v1/message/'.$email['ID'].'/part/'.$part['PartID']
+                        $this->getBaseUrl() . 'v1/message/'.$email['ID'].'/part/'.$part['PartID']
                     );
                     $part['Body'] = $result->getBody()->getContents();
                     return $part;
@@ -78,7 +90,7 @@ class Common extends TestCase
                 if ($part['ContentType'] == $type) {
                     $result = $this->apiClient->request(
                         'GET',
-                        self::BASE_URL . 'v1/message/'.$email['ID'].'/part/'.$part['PartID']
+                        $this->getBaseUrl() . 'v1/message/'.$email['ID'].'/part/'.$part['PartID']
                     );
                     $part['Body'] = $result->getBody()->getContents();
                     $parts[] = $part;
@@ -164,7 +176,7 @@ class Common extends TestCase
     protected function getExpectedPdfAgreementsString()
     {
         $termsCollection = $this->objectManager->create(
-            \Magento\CheckoutAgreements\Model\ResourceModel\Agreement\Collection::class
+            Collection::class
         );
         $termsCollection->addStoreFilter(1)->addFieldToFilter('is_active', 1);
         $agreements = [];
@@ -173,12 +185,12 @@ class Common extends TestCase
         }
 
         return $this->objectManager
-            ->create(\Fooman\PdfCustomiser\Model\PdfRenderer\TermsAndConditionsAdapter::class)
+            ->create(TermsAndConditionsAdapter::class)
             ->getPdfAsString($agreements);
     }
 
     protected function tearDown(): void
     {
-        $this->apiClient->request('DELETE', self::BASE_URL . 'v1/messages');
+        $this->apiClient->request('DELETE', $this->getBaseUrl() . 'v1/messages');
     }
 }
