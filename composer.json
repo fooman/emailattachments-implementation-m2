@@ -21,7 +21,7 @@
         "magento/module-sales": "^102.0.0 || ^103.0.0"
     },
     "require-dev": {
-        "fooman/testing-and-quality-tools": "^1.0"
+        "fooman/testing-and-quality-tools": "^1.5.2"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
