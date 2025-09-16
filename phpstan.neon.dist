@@ -1,10 +1,13 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#Instantiated class Symfony\\Component\\Mime\\Part\\DataPart not found\.#'
-			path: Plugin/Transport.php
+			message: "#^Instantiated class Symfony\\\\Component\\\\Mime\\\\Part\\\\DataPart not found\\.$#"
+			count: 1
+			path: src/Plugin/Transport.php
 			reportUnmatched: false
+
 		-
-			message: '#Instantiated class Symfony\\Component\\Mime\\Part\\Multipart\\MixedPart not found\.#'
-			path: Plugin/Transport.php
+			message: "#^Instantiated class Symfony\\\\Component\\\\Mime\\\\Part\\\\Multipart\\\\MixedPart not found\\.$#"
+			count: 1
+			path: src/Plugin/Transport.php
 			reportUnmatched: false
