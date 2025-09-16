@@ -1,6 +1,12 @@
 parameters:
 	ignoreErrors:
 		-
+			message: "#^Call to an undefined method Magento\\\\Framework\\\\Mail\\\\MessageInterface\\:\\:getSymfonyMessage\\(\\)\\.$#"
+			count: 2
+			path: src/Plugin/Transport.php
+			reportUnmatched: false
+
+		-
 			message: "#^Instantiated class Symfony\\\\Component\\\\Mime\\\\Part\\\\DataPart not found\\.$#"
 			count: 1
 			path: src/Plugin/Transport.php
