@@ -1,6 +1,6 @@
 # Change Log
 
-## [Unreleased]
+## [107.5.3] - 2025-09-16
 ### Changed
 - Allow mailpit url override via environment variable in tests
 
