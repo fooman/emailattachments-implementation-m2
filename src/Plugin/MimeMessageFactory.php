@@ -34,7 +34,7 @@ class MimeMessageFactory
     private $mailProcessor;
 
     /**
-     * @var bool|int
+     * @var bool
      */
     private $isLaminasMode;
 
