@@ -1,6 +1,6 @@
 # Change Log
 
-## [Unreleased]
+## [107.6.0] - 2026-04-02
 ### Added
 - Support for Magento 2.4.9
 - Support for Php 8.5
